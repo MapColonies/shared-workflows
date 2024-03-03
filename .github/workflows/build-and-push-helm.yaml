@@ -2,6 +2,10 @@ name: Match chart version and push to registry
 
 on:
   workflow_call:
+    inputs:
+      reopistory:
+        required: true
+        type: string  
 
 env:
   HELM_EXPERIMENTAL_OCI: 1
