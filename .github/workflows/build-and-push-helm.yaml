@@ -1,4 +1,4 @@
-name: Match chart version and push to ACR
+name: Match chart version and push to registry
 
 on:
   workflow_call:
@@ -11,34 +11,8 @@ permissions:
   pull-requests: write
 
 jobs:
-  build_and_push_docker:
-    name: Build and publish docker image to ACR
-    runs-on: ubuntu-latest
-    env:
-      Docker_Repository: ${{ secrets.ACR_URL }}/${{ github.event.repository.name }}:${{ github.ref_name }}
-    steps:
-      - name: Checkout repository from latest commit
-        uses: actions/checkout@v2
-
-      - name: Login to ACR using helm
-        uses: azure/docker-login@v1
-        with:
-          login-server: ${{ secrets.ACR_URL }}
-          username: ${{ secrets.ACR_PUSH_USER }}
-          password: ${{ secrets.ACR_PUSH_TOKEN }}
-
-      - name: Downcase repository
-        run: |
-          echo "Docker_Repository=${Docker_Repository,,}" >>${GITHUB_ENV}
-
-      - name: Build docker image
-        run: docker build . -t ${{ env.Docker_Repository }}
-
-      - name: Push docker image
-        run: docker push ${{ env.Docker_Repository }}
-
   build_and_push_helm:
-    name: Build and publish helm package to ACR
+    name: Build and publish helm package to registry
     runs-on: ubuntu-latest
     steps:    
       - name: Checkout repository from latest commit
