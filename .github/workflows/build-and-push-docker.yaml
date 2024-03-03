@@ -2,6 +2,10 @@ name: Build docker image and push it to registry
 
 on:
   workflow_call:
+    inputs:
+      reopistory:
+        required: true
+        type: string    
 
 permissions:
   contents: write
