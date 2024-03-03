@@ -31,10 +31,11 @@ jobs:
       - name: Setup docker image name
         run: |
           if [[ -z "${{ inputs.reopistory }}" ]]; then
-            export DOCKER_IMAGE_NAME="${{ secrets.ACR_URL }}/${{ github.event.repository.name }}:${{ github.ref_name }}"
-          else
             export DOCKER_IMAGE_NAME="${{ secrets.ACR_URL }}/${{ inputs.reopistory }}:${{ github.ref_name }}"
+          else
+            export DOCKER_IMAGE_NAME="${{ secrets.ACR_URL }}/${{ github.event.repository.name }}:${{ github.ref_name }}"
           fi
+        shell: bash
 
       - name: Downcase docker image name
         run: |
