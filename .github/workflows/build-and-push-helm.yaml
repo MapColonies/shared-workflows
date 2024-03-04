@@ -2,10 +2,6 @@ name: Match chart version and push to registry
 
 on:
   workflow_call:
-    inputs:
-      version:
-        required: false
-        type: string  
 
 env:
   HELM_EXPERIMENTAL_OCI: 1
@@ -27,7 +23,7 @@ jobs:
         with:
           version: 'v3.12.0'
 
-      - name: Login to ACR using helm
+      - name: Login to registry
         run: |
           helm registry login ${{ secrets.ACR_URL }} --username ${{ secrets.ACR_PUSH_USER }} --password ${{ secrets.ACR_PUSH_TOKEN }} 
 
@@ -37,18 +33,13 @@ jobs:
           echo "CHART=$CHART" >> $GITHUB_ENV
         working-directory: ./helm
 
-      - name: Setup helm version and downcase it
+      - name: Get chart's version 
         run: |
-          if [[ -z "${{ inputs.version }}" ]]; then
-            export VER="$(cat Chart.yaml | grep version | awk '{print $2; exit}')"
-          else
-            export VER="${{ inputs.version }}"
-          fi
+          export "VER=$(cat Chart.yaml | grep version | awk '{print $2; exit}')"
           echo "VER=$VER" >> $GITHUB_ENV
-        shell: bash        
-        working-directory: ./helm
+        working-directory: ./helm    
 
-      - name: Save helm chart to local registry
+      - name: Package chart into tgz file
         run: |
           helm package . --dependency-update 
         working-directory: ./helm
