@@ -1,7 +1,7 @@
 name: Github Readme Generator
 
 on:
-  workflow_call:
+  workflow_disptach:
 
 permissions:
   contents: write
