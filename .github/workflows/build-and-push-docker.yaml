@@ -8,6 +8,7 @@ on:
         type: string
       context:
         required: false
+        default: "."
         type: string
 
 permissions:
@@ -41,10 +42,6 @@ jobs:
 
       - name: Build docker image
         if: "${{ inputs.context != '' }}"
-        run: docker build . -t ${{ env.DOCKER_IMAGE_NAME }}
-
-      - name: Build docker image
-        if: "${{ inputs.context == '' }}"
         run: docker build ${{ inputs.context }} -t ${{ env.DOCKER_IMAGE_NAME }}
 
       - name: Push docker image
