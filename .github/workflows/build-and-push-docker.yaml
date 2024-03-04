@@ -15,8 +15,6 @@ jobs:
   build_and_push_docker:
     name: Build and publish docker image to registry
     runs-on: ubuntu-latest
-    env:
-      DOCKER_IMAGE_NAME: ${{ secrets.ACR_URL }}/${{ github.event.repository.name }}:${{ github.ref_name }}
     steps:
       - name: Checkout repository from latest commit
         uses: actions/checkout@v2
@@ -28,19 +26,15 @@ jobs:
           username: ${{ secrets.ACR_PUSH_USER }}
           password: ${{ secrets.ACR_PUSH_TOKEN }}
 
-      - name: Setup docker image name
+      - name: Setup docker image name and downcase it
         run: |
           if [[ -z "${{ inputs.reopistory }}" ]]; then
             export DOCKER_IMAGE_NAME="${{ secrets.ACR_URL }}/${{ github.event.repository.name }}:${{ github.ref_name }}"
           else
             export DOCKER_IMAGE_NAME="${{ secrets.ACR_URL }}/${{ inputs.reopistory }}:${{ github.ref_name }}"
           fi
-          echo $DOCKER_IMAGE_NAME
-        shell: bash
-
-      - name: Downcase docker image name
-        run: |
           echo "DOCKER_IMAGE_NAME=${DOCKER_IMAGE_NAME,,}" >>${GITHUB_ENV}
+        shell: bash
 
       - name: Build docker image
         run: docker build . -t ${{ env.DOCKER_IMAGE_NAME }}
