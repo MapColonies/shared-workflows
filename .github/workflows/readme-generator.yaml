@@ -1,6 +1,9 @@
 name: Github Readme Generator
 
-on: workflow_dispatch
+on:
+  push:
+    branches:    
+      - '*'
 
 permissions:
   contents: write
