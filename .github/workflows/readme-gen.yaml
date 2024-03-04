@@ -16,7 +16,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository from latest commit
-        uses: bitflight-devops/github-action-readme-generator@v1.8.0
+        uses: bitflight-devops/github-action-readme-generator@v1.7.2
         with:
           action: "action.yml"
           readme: "README.md"
