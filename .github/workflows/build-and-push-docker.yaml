@@ -35,6 +35,7 @@ jobs:
           else
             export DOCKER_IMAGE_NAME="${{ secrets.ACR_URL }}/${{ github.event.repository.name }}:${{ github.ref_name }}"
           fi
+          echo $DOCKER_IMAGE_NAME
         shell: bash
 
       - name: Downcase docker image name
