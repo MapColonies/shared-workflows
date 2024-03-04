@@ -4,8 +4,8 @@ on:
   workflow_call:
     inputs:
       reopistory:
-        required: true
-        type: string    
+        required: false
+        type: string
 
 permissions:
   contents: write
