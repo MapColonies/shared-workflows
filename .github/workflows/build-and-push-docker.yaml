@@ -19,7 +19,7 @@ jobs:
       - name: Checkout repository from latest commit
         uses: actions/checkout@v2
 
-      - name: Login to ACR using helm
+      - name: Login to registry
         uses: azure/docker-login@v1
         with:
           login-server: ${{ secrets.ACR_URL }}
