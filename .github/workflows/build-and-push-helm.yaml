@@ -2,9 +2,10 @@ name: Match chart version and push to registry
 
 on:
   workflow_call:
-    version:
-      required: false
-      type: string  
+    inputs:
+      version:
+        required: false
+        type: string  
 
 env:
   HELM_EXPERIMENTAL_OCI: 1
