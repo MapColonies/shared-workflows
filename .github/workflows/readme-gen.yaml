@@ -17,3 +17,6 @@ jobs:
     steps:
       - name: Checkout repository from latest commit
         uses: bitflight-devops/github-action-readme-generator@v1.8.0
+        with:
+          action: "action.yml"
+          readme: "README.md"
