@@ -46,6 +46,7 @@ jobs:
           fi
           echo "VER=$VER" >> $GITHUB_ENV
         shell: bash        
+        working-directory: ./helm
 
       - name: Save helm chart to local registry
         run: |
