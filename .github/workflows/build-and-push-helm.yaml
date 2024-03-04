@@ -37,20 +37,6 @@ jobs:
           echo "CHART=$CHART" >> $GITHUB_ENV
         working-directory: ./helm
 
-      - name: Get chart's version
-        if: "${{ inputs.version == '' }}"
-        run: |
-          export "VER=$(cat Chart.yaml | grep version | awk '{print $2; exit}')"
-          echo "VER=$VER" >> $GITHUB_ENV
-        working-directory: ./helm    
-
-      - name: Get chart's version
-        if: "${{ inputs.version != '' }}"
-        run: |
-          export "VER=${{ inputs.version != '' }}"
-          echo "VER=$VER" >> $GITHUB_ENV
-        working-directory: ./helm
-
       - name: Setup helm version and downcase it
         run: |
           if [[ -z "${{ inputs.version }}" ]]; then
