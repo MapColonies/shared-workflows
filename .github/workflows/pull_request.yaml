@@ -42,18 +42,18 @@ jobs:
         if: ${{ github.event.inputs.enableOpenApiCheck == 'true' }}
         uses: nwestfall/openapi-action@v1.0.2
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          file: ${{ github.event.inputs.openApiFilePath }}
-          
+         github_token: ${{ secrets.GITHUB_TOKEN }}
+         file: ${{ github.event.inputs.openApiFilePath }}
+
   security:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@master
-      - name: Run Snyk to check for vulnerabilities
-        uses: snyk/actions/node@master
-        continue-on-error: true
-        env:
-          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+    - uses: actions/checkout@master
+    - name: Run Snyk to check for vulnerabilities
+      uses: snyk/actions/node@master
+      continue-on-error: true
+      env:
+        SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
 
   tests:
     name: Run Tests
