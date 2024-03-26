@@ -54,6 +54,7 @@ jobs:
   tests:
     name: Run Tests
     runs-on: ubuntu-latest
+    needs: eslint
     strategy:
       matrix:
         node: [18.x, 20.x]
