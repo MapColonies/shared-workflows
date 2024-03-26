@@ -6,7 +6,7 @@ on:
       openApi:
         description: 'Path to the OpenAPI file'
         type: string
-        required: false
+        required: true
         default: './openapi3.yaml'
 
 jobs:
