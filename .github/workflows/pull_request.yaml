@@ -5,6 +5,7 @@ on:
     inputs:
       openApi:
         description: 'Path to the OpenAPI file'
+        type: string
         required: false
         default: './openapi3.yaml'
 
