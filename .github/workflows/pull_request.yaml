@@ -2,6 +2,12 @@ name: pull_request
 
 on: 
   workflow_call:
+    inputs:
+      openApi:
+        description: 'Path to the OpenAPI file'
+        type: string
+        required: true
+        default: './openapi3.yaml'
 
 jobs:
   eslint:
@@ -30,24 +36,26 @@ jobs:
           eslint_extensions: ts
 
       - name: OpenAPI Lint Checks
+        if: ${{ github.event.inputs.openApi.required == 'true' }}
         uses: nwestfall/openapi-action@v1.0.2
         with:
-         github_token: ${{ secrets.GITHUB_TOKEN }}
-         file: ./openapi3.yaml
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          file: ${{ github.event.inputs.openApi }}
 
   security:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@master
-    - name: Run Snyk to check for vulnerabilities
-      uses: snyk/actions/node@master
-      continue-on-error: true
-      env:
-        SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+      - uses: actions/checkout@master
+      - name: Run Snyk to check for vulnerabilities
+        uses: snyk/actions/node@master
+        continue-on-error: true
+        env:
+          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
 
   tests:
     name: Run Tests
     runs-on: ubuntu-latest
+    needs: eslint
     strategy:
       matrix:
         node: [18.x, 20.x]
