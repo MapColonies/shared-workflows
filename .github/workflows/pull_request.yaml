@@ -2,6 +2,10 @@ name: pull_request
 
 on: 
   workflow_call:
+    inputs:
+      openApi:
+        required: false
+        file: ./openapi3.yaml
 
 jobs:
   eslint:
@@ -29,11 +33,13 @@ jobs:
           prettier: true
           eslint_extensions: ts
 
+      # Conditionally run OpenAPI lint checks
       - name: OpenAPI Lint Checks
+        if: ${{ github.event.inputs.openApi.required == 'true' }}
         uses: nwestfall/openapi-action@v1.0.2
         with:
          github_token: ${{ secrets.GITHUB_TOKEN }}
-         file: ./openapi3.yaml
+         file: ${{ github.event.inputs.openApi.file }}
 
   security:
     runs-on: ubuntu-latest
