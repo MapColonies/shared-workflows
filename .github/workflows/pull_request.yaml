@@ -5,11 +5,13 @@ on:
     inputs:
       enableOpenApiCheck:
         description: 'Flag to enable OpenAPI lint checks'
-        type: string
-        default: 'true'
+        type: boolean
+        required: false
+        default: true
       openApiFilePath:
         description: 'Path to the OpenAPI file (if enableOpenApiCheck is true)'
         type: string
+        required: false
         default: './openapi3.yaml'
 
 jobs:
