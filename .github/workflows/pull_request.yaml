@@ -40,8 +40,8 @@ jobs:
           prettier: true
           eslint_extensions: ts
 
-        if: ${{ github.event.inputs.enableOpenApiCheck == true }}
       - name: OpenAPI Lint Checks
+        if: ${{ github.event.inputs.enableOpenApiCheck == true }}
         uses: nwestfall/openapi-action@v1.0.2
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
