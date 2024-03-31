@@ -2,7 +2,12 @@ name: "Publish release on tag push"
 
 on:
   workflow_call:
-
+    inputs:
+      enableOpenApiToPostman:
+        description: "Flag to enable OpenAPI to Postman collection conversion"
+        type: boolean
+        required: false
+        default: true
 
 jobs:
   publish_release:
@@ -18,7 +23,7 @@ jobs:
       - name: Generate postman collection for service
         uses: actions/setup-node@v2
         with:
-          node-version: '20'
+          node-version: "20"
 
       - name: Set File name
         uses: myci-actions/export-env-var@1
@@ -26,7 +31,9 @@ jobs:
           name: P_COLLECTION_FILE_NAME
           value: ${{ steps.package.outputs.name }}-v${{ steps.package.outputs.version }}-postman-collection.json
 
-      - run: 'npx openapi-to-postmanv2 -s openapi3.yaml -o ${{ env.P_COLLECTION_FILE_NAME }}'
+      - name: Generate Postman Collection
+        if: ${{ inputs.enableOpenApiToPostman == true }}
+        run: "npx openapi-to-postmanv2 -s openapi3.yaml -o ${{ env.P_COLLECTION_FILE_NAME }}"
 
       - name: Publish Release to Github
         uses: softprops/action-gh-release@v1
