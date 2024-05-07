@@ -6,10 +6,6 @@ on:
 env:
   HELM_EXPERIMENTAL_OCI: 1
 
-permissions:
-  contents: write
-  pull-requests: write
-
 jobs:
   build_and_push_helm:
     name: Build and publish helm package to registry
