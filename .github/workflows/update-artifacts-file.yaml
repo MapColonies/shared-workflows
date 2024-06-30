@@ -35,16 +35,21 @@ jobs:
         path: helm-charts
         token: ${{ secrets.GH_PAT }}
 
-    - name: Install jq
-      run: sudo apt-get install -y jq
+    - name: Set up Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '16'
 
     - name: Modify artifacts.json
       run: |
-        cd helm-charts/${{ inputs.scope }}
-        if [ ! -f artifacts.json ]; then
-          echo '{}' > artifacts.json
-        fi
-        jq '.${{ inputs.registry }}.${{ inputs.artifact-name }} = ${{ inputs.artifact-tag }}' artifacts.json > tmp.json && mv tmp.json artifacts.json
+        cd helm-charts/lol
+        node -e "
+        const fs = require('fs');
+        const path = './artifacts.json';
+        const data = JSON.parse(fs.readFileSync(path, 'utf8'));
+        data.key = 'new value'; // Replace 'key' and 'new value' with the key and new value you want to modify
+        fs.writeFileSync(path, JSON.stringify(data, null, 2));
+        "
 
     - name: Commit changes
       run: |
