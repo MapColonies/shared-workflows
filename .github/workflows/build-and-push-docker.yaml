@@ -54,5 +54,5 @@ jobs:
       secrets: inherit
       with:
         scope: ${{ inputs.scope }}
-        artifact-name: ${{ github.event.repository.name }}
+        artifact-name: ${{ github.event.repository.name || github.repository }}
         artifact-tag: ${{ github.ref_name }}
