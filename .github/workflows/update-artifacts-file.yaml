@@ -15,7 +15,7 @@ on:
       registry:
         description: 'Registry of the artifact'
         type: string
-        required: true
+        required: false
       artifact-name:
         description: 'Artifact`s name'
         type: string
