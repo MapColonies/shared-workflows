@@ -51,8 +51,7 @@ jobs:
 
   update-helm-artifact-yaml:
       uses: MapColonies/shared-workflows/.github/workflows/update-artifacts-file.yaml@update-artifacts-file.yaml
-      secrets:
-        registry: ${{ secrets.ACR_URL }}
+      secrets: inherit
       with:
         scope: ${{ inputs.scope }}
         artifact-name: ${{ github.event.repository.name }}
