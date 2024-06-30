@@ -47,7 +47,7 @@ jobs:
         const fs = require('fs');
         const path = './artifacts.json';
         const data = JSON.parse(fs.readFileSync(path, 'utf8'));
-        data["${{ inputs.registry }}"]["${{ inputs.artifact-name }}"] = "${{ inputs.artifact-tag }}";
+        data['${{ inputs.registry }}']['${{ inputs.artifact-name }}'] = '${{ inputs.artifact-tag }}';
         fs.writeFileSync(path, JSON.stringify(data, null, 2));
         "
 
