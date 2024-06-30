@@ -50,6 +50,7 @@ jobs:
       uses: MapColonies/shared-workflows/.github/workflows/update-artifacts-file.yaml@update-artifacts-file.yaml
       secrets: inherit
       with:
-       scope: infra
-       artifact-name: ${{ github.event.repository.name }}
-       artifact-tag: ${{ github.ref_name }}        
+        scope: infra
+        registry: ${{ secrets.ACR_URL }}
+        artifact-name: ${{ github.event.repository.name }}
+        artifact-tag: ${{ github.ref_name }}        
