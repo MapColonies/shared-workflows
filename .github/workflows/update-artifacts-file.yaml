@@ -49,8 +49,8 @@ jobs:
         const path = './artifacts.json';
         const data = JSON.parse(fs.readFileSync(path, 'utf8'));
         if (!data['${{ inputs.type }}']) data['${{ inputs.type }}'] = {};
-        if (!data['${{ inputs.type }}']['${{ env.ACR_URL }}']) data['${{ inputs.type }}']['${{ env.ACR_URL }}'] = {};
-        data['${{ inputs.type }}']['${{ env.ACR_URL }}']['${{ inputs.artifact-name }}'] = '${{ inputs.artifact-tag }}';
+        if (!data['${{ inputs.type }}']['${{ secrets.ACR_URL }}']) data['${{ inputs.type }}']['${{ secrets.ACR_URL }}'] = {};
+        data['${{ inputs.type }}']['${{ secrets.ACR_URL }}']['${{ inputs.artifact-name }}'] = '${{ inputs.artifact-tag }}';
         fs.writeFileSync(path, JSON.stringify(data, null, 2));
         "
 
