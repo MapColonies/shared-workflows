@@ -7,6 +7,11 @@ on:
         description: 'Scope of artifacts.json file to update'
         type: string
         required: true
+      type:
+        description: 'Artifact`s type'
+        type: string
+        required: false
+        default: 'docker'
       registry:
         description: 'Registry of the artifact'
         type: string
@@ -47,8 +52,9 @@ jobs:
         const fs = require('fs');
         const path = './artifacts.json';
         const data = JSON.parse(fs.readFileSync(path, 'utf8'));
-        if (!data['${{ inputs.registry }}']) data['${{ inputs.registry }}'] = {};
-        data['${{ inputs.registry }}']['${{ inputs.artifact-name }}'] = '${{ inputs.artifact-tag }}';
+        if (!data['${{ inputs.type }}']) data['${{ inputs.type }}'] = {};
+        if (!data['${{ inputs.type }}']['${{ inputs.registry }}']) data['${{ inputs.type }}']['${{ inputs.registry }}'] = {};
+        data['${{ inputs.type }}']['${{ inputs.registry }}']['${{ inputs.artifact-name }}'] = '${{ inputs.artifact-tag }}';
         fs.writeFileSync(path, JSON.stringify(data, null, 2));
         "
 
