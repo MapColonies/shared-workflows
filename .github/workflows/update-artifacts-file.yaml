@@ -42,12 +42,12 @@ jobs:
 
     - name: Modify artifacts.json
       run: |
-        cd helm-charts/lol
+        cd helm-charts/${{ inputs.scope }}
         node -e "
         const fs = require('fs');
         const path = './artifacts.json';
         const data = JSON.parse(fs.readFileSync(path, 'utf8'));
-        data.key = 'new value'; // Replace 'key' and 'new value' with the key and new value you want to modify
+        data[${{ inputs.registry }}][${{ inputs.artifact-name }}] = {{ inputs.artifact-tag }};
         fs.writeFileSync(path, JSON.stringify(data, null, 2));
         "
 
