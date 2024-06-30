@@ -12,10 +12,6 @@ on:
         type: string
         required: false
         default: 'docker'
-      registry:
-        description: 'Registry of the artifact'
-        type: string
-        required: false
       artifact-name:
         description: 'Artifact`s name'
         type: string
@@ -46,8 +42,6 @@ jobs:
         node-version: '18'
 
     - name: Modify artifacts.json
-      env:
-        REGISTRY_URL: ${{ inputs.registry || ${{ env.ACR_URL }} }}
       run: |
         cd helm-charts/${{ inputs.scope }}
         node -e "
@@ -55,8 +49,8 @@ jobs:
         const path = './artifacts.json';
         const data = JSON.parse(fs.readFileSync(path, 'utf8'));
         if (!data['${{ inputs.type }}']) data['${{ inputs.type }}'] = {};
-        if (!data['${{ inputs.type }}']['${{ env.REGISTRY_URL }}']) data['${{ inputs.type }}']['${{ env.REGISTRY_URL }}'] = {};
-        data['${{ inputs.type }}']['${{ env.REGISTRY_URL }}']['${{ inputs.artifact-name }}'] = '${{ inputs.artifact-tag }}';
+        if (!data['${{ inputs.type }}']['${{ inputs.registry }}']) data['${{ inputs.type }}']['${{ inputs.registry }}'] = {};
+        data['${{ inputs.type }}']['${{ inputs.registry }}']['${{ inputs.artifact-name }}'] = '${{ inputs.artifact-tag }}';
         fs.writeFileSync(path, JSON.stringify(data, null, 2));
         "
 
