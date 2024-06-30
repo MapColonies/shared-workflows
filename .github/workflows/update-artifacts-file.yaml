@@ -20,6 +20,9 @@ on:
         description: 'Aritfact`s tag'
         type: string
         required: true
+    secrets:        
+      registry:
+        required: true
 
 jobs:
   update-artifacts-json:
