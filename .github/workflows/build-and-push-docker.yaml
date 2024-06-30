@@ -6,7 +6,7 @@ on:
       scope:
         required: true
         type: string
-      reopistory:
+      repository:
         required: false
         type: string
       context:
