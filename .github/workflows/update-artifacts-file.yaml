@@ -1,0 +1,58 @@
+name: Edit artifacts.json in helm-charts
+
+on:
+  workflow_call:
+    inputs:
+      scope:
+        description: 'Scope of artifacts.json file to update'
+        type: string
+        required: true
+      registry:
+        description: 'Registry of the artifact'
+        type: string
+        required: true
+      artifact-name:
+        description: 'Artifact`s name'
+        type: string
+        required: true
+      artifact-tag:
+        description: 'Aritfact`s tag'
+        type: string
+        required: true
+
+jobs:
+  update-artifacts-json:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+
+    - name: Checkout helm-charts repository
+      uses: actions/checkout@v3
+      with:
+        repository: MapColonies/helm-charts
+        path: helm-charts
+        token: ${{ secrets.GITHUB_TOKEN }}
+
+    - name: Install jq
+      run: sudo apt-get install -y jq
+
+    - name: Modify artifacts.json
+      run: |
+        cd helm-charts/${{ inputs.scope }}
+        if [ ! -f artifacts.json ]; then
+          echo '{}' > artifacts.json
+        fi
+        jq '.${{ inputs.registry }}.${{ inputs.artifact-name }} = ${{ inputs.artifact-tag }}' artifacts.json > tmp.json && mv tmp.json artifacts.json
+
+    - name: Commit changes
+      run: |
+        cd helm-charts
+        git config --global user.name "mapcolonies[bot]"
+        git config --global user.email "devops[bot]@mapcolonies.com"
+        git add .
+        git commit -m "Update artifacts.json"
+        git push
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
