@@ -47,7 +47,7 @@ jobs:
 
     - name: Modify artifacts.json
       env:
-        REGISTRY_URL: ${{ inputs.registry || ${{ secrets.ACR_URL }} }}
+        REGISTRY_URL: ${{ inputs.registry || ${{ env.ACR_URL }} }}
       run: |
         cd helm-charts/${{ inputs.scope }}
         node -e "
