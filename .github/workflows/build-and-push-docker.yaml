@@ -51,6 +51,5 @@ jobs:
       secrets: inherit
       with:
         scope: infra
-        registry: ${{ secrets.ACR_URL }}
         artifact-name: ${{ github.event.repository.name }}
         artifact-tag: ${{ github.ref_name }}        
