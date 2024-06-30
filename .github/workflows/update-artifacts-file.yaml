@@ -38,12 +38,12 @@ jobs:
       with:
         repository: MapColonies/helm-charts
         path: helm-charts
-        token: ${{ secrets.GH_PAT }}
+        token: ${{ secrets.GITHUB_TOKEN }}
 
     - name: Set up Node.js
       uses: actions/setup-node@v3
       with:
-        node-version: '16'
+        node-version: '18'
 
     - name: Modify artifacts.json
       run: |
@@ -67,4 +67,4 @@ jobs:
         git commit -m "Update artifacts.json"
         git push
       env:
-        GITHUB_TOKEN: ${{ secrets.GH_PAT }}
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
