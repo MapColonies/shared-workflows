@@ -16,8 +16,8 @@ jobs:
     runs-on: ubuntu-latest
 
     outputs:
-      chart: ${{ steps.build_and_push_helm.outputs.chart }}
-      ver: ${{ steps.build_and_push_helm.outputs.ver }}
+      chart: ${{ steps.set-chart-name.outputs.chart }}
+      ver: ${{ steps.set-chart-version.outputs.ver }}
 
     steps:    
       - name: Checkout repository from latest commit
@@ -35,13 +35,14 @@ jobs:
       - name: Get chart's name
         run: |
           export "CHART=$(cat Chart.yaml | grep name | awk '{print $2; exit}')"
-          echo "CHART=$CHART" >> $GITHUB_ENV
+          echo "CHART=$CHART" >> $GITHUB_OUTPUT
         working-directory: ./helm
 
       - name: Get chart's version 
+        id: set-chart-version
         run: |
           export "VER=$(cat Chart.yaml | grep version | awk '{print $2; exit}')"
-          echo "VER=$VER" >> $GITHUB_ENV
+          echo "VER=$VER" >> $GITHUB_OUTPUT
         working-directory: ./helm    
 
       - name: Package chart into tgz file
@@ -50,6 +51,7 @@ jobs:
         working-directory: ./helm
 
       - name: Publish chart to ACR
+        id: set-chart-name
         run: |
           helm push ${{ env.CHART }}-${{ env.VER }}.tgz oci://${{ secrets.ACR_URL }}/helm
         working-directory: ./helm
@@ -60,5 +62,5 @@ jobs:
       with:
         scope: ${{ inputs.scope }}
         type: helm
-        artifact-name: ${{ needs.set-env-variables.outputs.chart }}
-        artifact-tag: ${{ needs.set-env-variables.outputs.ver }}
+        artifact-name: ${{ needs.build-and-push-helm.outputs.chart }}
+        artifact-tag: ${{ needs.build-and-push-helm.outputs.ver }}
