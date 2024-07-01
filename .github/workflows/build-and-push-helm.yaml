@@ -58,6 +58,7 @@ jobs:
 
   update-docker-artifact-yaml:
       uses: MapColonies/shared-workflows/.github/workflows/update-artifacts-file.yaml@update-artifacts-file
+      needs: build-and-push-helm
       secrets: inherit
       with:
         scope: ${{ inputs.scope }}
