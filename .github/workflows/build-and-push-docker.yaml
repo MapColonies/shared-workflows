@@ -5,14 +5,8 @@ on:
     inputs:
       scope:
         required: true
-        type: choice
-        options:
-        - 3d
-        - dem
-        - app
-        - raster
-        - infra
-        - common        
+        type: string
+     
       repository:
         required: false
         type: string

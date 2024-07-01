@@ -5,14 +5,8 @@ on:
     inputs:
       scope:
         description: 'Scope of artifacts.json file to update'
-        type: choice
-        options:
-        - 3d
-        - dem
-        - app
-        - raster
-        - infra
-        - common
+        type: string
+
         required: true
       type:
         description: 'Artifact`s type'

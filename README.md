@@ -9,7 +9,7 @@ This workflow also utilizes `update-artifact-file` workflow, to edit the `artifa
 ### Workflow parameters:
 | Name       | Description                                                               | Type   | Required? | Default Value |
 |------------|---------------------------------------------------------------------------|--------|-----------|---------------|
-| scope         | This is the subdirectory in the helm-charts repository: `helm-charts/<scope>` | choice 3d/dem/app/infra/raster/common | yes       |  
+| scope         | This is the subdirectory in the helm-charts repository: `helm-charts/<scope>` | string | yes       |  
 | repository | If you want to override default's docker image name                       | string | no        |               |
 | context    | From where the CI should build the docker image                           | string | no        | . (Current context)             |
 
@@ -21,7 +21,7 @@ Helm chart's name and version are inferred automatically from the `Chart.yaml` f
 ### Workflow parameters:
 | Name       | Description                                                               | Type   | Required? | Default Value |
 |------------|---------------------------------------------------------------------------|--------|-----------|---------------|
-| scope         | This is the subdirectory in the helm-charts repository: `helm-charts/<scope>` | choice 3d/dem/app/infra/raster/common | yes       |  
+| scope         | This is the subdirectory in the helm-charts repository: `helm-charts/<scope>` | string | yes       |  
 
 ## 3. pull_request
 This workflow should be used in your pull requests; here linters run, Snyk checks for vulnerabilities, tests of the service, and a dummy docker build to check that docker image can be still built and hasn't broken.
@@ -46,7 +46,7 @@ This workflow edits the `artifacts.json` according to the input.
 ### Workflow parameters:
 | Name          | Description                            | Type                                  | Required? | Default Value |
 |---------------|----------------------------------------|---------------------------------------|-----------|---------------|
-| scope         | This is the subdirectory in the helm-charts repository: `helm-charts/<scope>` | choice 3d/dem/app/infra/raster/common | yes       |               |
+| scope         | This is the subdirectory in the helm-charts repository: `helm-charts/<scope>` | string | yes       |               |
 | type          | Artifact`s type                        | string                                | no        | docker        |
 | artifact-name | Artifact`s name                        | string                                | yes       |               |
 | artifact-tag  | Aritfact`s tag                         | string                                | yes       |               |

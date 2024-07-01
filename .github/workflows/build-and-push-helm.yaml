@@ -5,14 +5,7 @@ on:
     inputs:
       scope:
         required: true
-        type: choice
-        options:
-        - 3d
-        - dem
-        - app
-        - raster
-        - infra
-        - common          
+        type: string     
 
 env:
   HELM_EXPERIMENTAL_OCI: 1
