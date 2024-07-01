@@ -44,3 +44,12 @@ jobs:
         run: |
           helm push ${{ env.CHART }}-${{ env.VER }}.tgz oci://${{ secrets.ACR_URL }}/helm
         working-directory: ./helm
+
+  update-docker-artifact-yaml:
+      uses: MapColonies/shared-workflows/.github/workflows/update-artifacts-file.yaml@update-artifacts-file.yaml
+      secrets: inherit
+      with:
+        scope: ${{ inputs.scope }}
+        type: helm
+        artifact-name: ${{ env.CHART }}
+        artifact-tag: ${{ env.VER }}
