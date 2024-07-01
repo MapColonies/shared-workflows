@@ -42,4 +42,3 @@ jobs:
           files: ${{ env.P_COLLECTION_FILE_NAME }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-	
