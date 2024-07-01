@@ -50,7 +50,7 @@ jobs:
         working-directory: ./helm
 
   update-docker-artifact-yaml:
-      uses: MapColonies/shared-workflows/.github/workflows/update-artifacts-file.yaml@update-artifacts-file.yaml
+      uses: MapColonies/shared-workflows/.github/workflows/update-artifacts-file.yaml@update-artifacts-file
       secrets: inherit
       with:
         scope: ${{ inputs.scope }}
