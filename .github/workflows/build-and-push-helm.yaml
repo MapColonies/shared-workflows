@@ -35,14 +35,13 @@ jobs:
       - name: Get chart's name
         run: |
           export "CHART=$(cat Chart.yaml | grep name | awk '{print $2; exit}')"
-          echo "CHART=$CHART" >> $GITHUB_OUTPUT
+          echo "CHART=$CHART" >> $GITHUB_ENV
         working-directory: ./helm
 
-      - name: Get chart's version 
-        id: set-chart-version
+      - name: Get chart's version
         run: |
           export "VER=$(cat Chart.yaml | grep version | awk '{print $2; exit}')"
-          echo "VER=$VER" >> $GITHUB_OUTPUT
+          echo "VER=$VER" >> $GITHUB_ENV
         working-directory: ./helm    
 
       - name: Package chart into tgz file
@@ -51,17 +50,15 @@ jobs:
         working-directory: ./helm
 
       - name: Publish chart to ACR
-        id: set-chart-name
         run: |
           helm push ${{ env.CHART }}-${{ env.VER }}.tgz oci://${{ secrets.ACR_URL }}/helm
         working-directory: ./helm
 
-  update-docker-artifact-yaml:
-      uses: MapColonies/shared-workflows/.github/workflows/update-artifacts-file.yaml@update-artifacts-file
-      needs: build-and-push-helm
-      secrets: inherit
-      with:
-        scope: ${{ inputs.scope }}
-        type: helm
-        artifact-name: ${{ needs.build-and-push-helm.outputs.chart }}
-        artifact-tag: ${{ needs.build-and-push-helm.outputs.ver }}
+      - name: Call reusable workflow
+        uses: MapColonies/shared-workflows/.github/workflows/update-artifacts-file.yaml@update-artifacts-file
+        secrets: inherit
+        with:
+          scope: ${{ inputs.scope }}
+          type: helm
+          artifact-name: ${{ env.CHART }}
+          artifact-tag: ${{ env.VER }}
