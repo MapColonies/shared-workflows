@@ -33,15 +33,17 @@ jobs:
           helm registry login ${{ secrets.ACR_URL }} --username ${{ secrets.ACR_PUSH_USER }} --password ${{ secrets.ACR_PUSH_TOKEN }} 
 
       - name: Get chart's name
+        id: set-chart-name
         run: |
           export "CHART=$(cat Chart.yaml | grep name | awk '{print $2; exit}')"
-          echo "CHART=$CHART" >> $GITHUB_ENV
+          echo "CHART=$CHART" >> $GITHUB_OUTPUT
         working-directory: ./helm
 
-      - name: Get chart's version
+      - name: Get chart's version 
+        id: set-chart-version
         run: |
           export "VER=$(cat Chart.yaml | grep version | awk '{print $2; exit}')"
-          echo "VER=$VER" >> $GITHUB_ENV
+          echo "VER=$VER" >> $GITHUB_OUTPUT
         working-directory: ./helm    
 
       - name: Package chart into tgz file
@@ -54,11 +56,12 @@ jobs:
           helm push ${{ env.CHART }}-${{ env.VER }}.tgz oci://${{ secrets.ACR_URL }}/helm
         working-directory: ./helm
 
-      - name: Call reusable workflow
-        uses: MapColonies/shared-workflows/.github/workflows/update-artifacts-file.yaml@update-artifacts-file
-        secrets: inherit
-        with:
-          scope: ${{ inputs.scope }}
-          type: helm
-          artifact-name: ${{ env.CHART }}
-          artifact-tag: ${{ env.VER }}
+  update-docker-artifact-yaml:
+      uses: MapColonies/shared-workflows/.github/workflows/update-artifacts-file.yaml@update-artifacts-file
+      needs: build-and-push-helm
+      secrets: inherit
+      with:
+        scope: ${{ inputs.scope }}
+        type: helm
+        artifact-name: ${{ needs.build-and-push-helm.outputs.chart }}
+        artifact-tag: ${{ needs.build-and-push-helm.outputs.ver }}
