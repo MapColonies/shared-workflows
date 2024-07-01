@@ -1,0 +1,72 @@
+name: Edit artifacts.json in helm-charts
+
+on:
+  workflow_call:
+    inputs:
+      scope:
+        description: 'Scope of artifacts.json file to update'
+        type: string
+        required: true
+      type:
+        description: 'Artifact`s type'
+        type: string
+        required: false
+        default: 'docker'
+      artifact-name:
+        description: 'Artifact`s name'
+        type: string
+        required: true
+      artifact-tag:
+        description: 'Aritfact`s tag'
+        type: string
+        required: true
+
+jobs:
+  update-artifacts-json:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+
+    - name: Checkout helm-charts repository
+      uses: actions/checkout@v3
+      with:
+        repository: MapColonies/helm-charts
+        path: helm-charts
+        token: ${{ secrets.GH_PAT }}
+
+    - name: Set up Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '18'
+
+    - name: Modify artifacts.json
+      run: |
+        cd helm-charts/${{ inputs.scope }}
+        node -e "
+        const fs = require('fs');
+        const path = './artifacts.json';
+        let data = {};
+        // Check if 'artifacts.json' file already exists
+        if (fs.existsSync(path)) {
+          data = JSON.parse(fs.readFileSync(path, 'utf8'));
+        }
+        // Ensure nested structure: docker -> registry -> artifact:tag
+        if (!data['${{ inputs.type }}']) data['${{ inputs.type }}'] = {};
+        if (!data['${{ inputs.type }}']['${{ secrets.ACR_URL }}']) data['${{ inputs.type }}']['${{ secrets.ACR_URL }}'] = {};
+        data['${{ inputs.type }}']['${{ secrets.ACR_URL }}']['${{ inputs.artifact-name }}'] = '${{ inputs.artifact-tag }}';
+        // Writing new file contents
+        fs.writeFileSync(path, JSON.stringify(data, null, 2));
+        "
+
+    - name: Commit changes
+      run: |
+        cd helm-charts
+        git config --global user.name "mapcolonies[bot]"
+        git config --global user.email "devops[bot]@mapcolonies.com"
+        git add .
+        git commit -m "Update artifacts.json"
+        git push
+      env:
+        GITHUB_TOKEN: ${{ secrets.GH_PAT }}

@@ -3,7 +3,10 @@ name: Build docker image and push it to registry
 on:
   workflow_call:
     inputs:
-      reopistory:
+      scope:
+        required: true
+        type: string
+      repository:
         required: false
         type: string
       context:
@@ -32,10 +35,10 @@ jobs:
 
       - name: Setup docker image name and downcase it
         run: |
-          if [[ -z "${{ inputs.reopistory }}" ]]; then
+          if [[ -z "${{ inputs.repository }}" ]]; then
             export DOCKER_IMAGE_NAME="${{ secrets.ACR_URL }}/${{ github.event.repository.name }}:${{ github.ref_name }}"
           else
-            export DOCKER_IMAGE_NAME="${{ secrets.ACR_URL }}/${{ inputs.reopistory }}:${{ github.ref_name }}"
+            export DOCKER_IMAGE_NAME="${{ secrets.ACR_URL }}/${{ inputs.repository }}:${{ github.ref_name }}"
           fi
           echo "DOCKER_IMAGE_NAME=${DOCKER_IMAGE_NAME,,}" >>${GITHUB_ENV}
         shell: bash
@@ -45,3 +48,11 @@ jobs:
 
       - name: Push docker image
         run: docker push ${{ env.DOCKER_IMAGE_NAME }}
+
+  update-docker-artifact-yaml:
+      uses: MapColonies/shared-workflows/.github/workflows/update-artifacts-file.yaml@update-artifacts-file.yaml
+      secrets: inherit
+      with:
+        scope: ${{ inputs.scope }}
+        artifact-name: ${{ inputs.repository || github.event.repository.name }}
+        artifact-tag: ${{ github.ref_name }}
