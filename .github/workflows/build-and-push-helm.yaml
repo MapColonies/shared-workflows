@@ -36,14 +36,14 @@ jobs:
         id: set-chart-name
         run: |
           export "CHART=$(cat Chart.yaml | grep name | awk '{print $2; exit}')"
-          echo "CHART=$CHART" >> $GITHUB_OUTPUT
+          echo "CHART=$CHART" >> $GITHUB_ENV
         working-directory: ./helm
 
       - name: Get chart's version 
         id: set-chart-version
         run: |
           export "VER=$(cat Chart.yaml | grep version | awk '{print $2; exit}')"
-          echo "VER=$VER" >> $GITHUB_OUTPUT
+          echo "VER=$VER" >> $GITHUB_ENV
         working-directory: ./helm    
 
       - name: Package chart into tgz file
