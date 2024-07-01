@@ -56,7 +56,7 @@ jobs:
           helm push ${{ steps.set-chart-name.outputs.chart }}-${{ steps.set-chart-version.outputs.ver }}.tgz oci://${{ secrets.ACR_URL }}/helm
         working-directory: ./helm
 
-  update-docker-artifact-yaml:
+  update-helm-artifact-yaml:
       uses: MapColonies/shared-workflows/.github/workflows/update-artifacts-file.yaml@update-artifacts-file
       needs: build-and-push-helm
       secrets: inherit
