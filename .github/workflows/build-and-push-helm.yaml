@@ -11,9 +11,14 @@ env:
   HELM_EXPERIMENTAL_OCI: 1
 
 jobs:
-  build_and_push_helm:
+  build-and-push-helm:
     name: Build and publish helm package to registry
     runs-on: ubuntu-latest
+
+    outputs:
+      chart: ${{ steps.build_and_push_helm.outputs.chart }}
+      ver: ${{ steps.build_and_push_helm.outputs.ver }}
+
     steps:    
       - name: Checkout repository from latest commit
         uses: actions/checkout@v2
@@ -55,5 +60,5 @@ jobs:
       with:
         scope: ${{ inputs.scope }}
         type: helm
-        artifact-name: ${{ env.CHART }}
-        artifact-tag: ${{ env.VER }}
+        artifact-name: ${{ needs.set-env-variables.outputs.chart }}
+        artifact-tag: ${{ needs.set-env-variables.outputs.ver }}
