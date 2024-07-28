@@ -51,7 +51,7 @@ jobs:
         run: docker push ${{ env.DOCKER_IMAGE_NAME }}
 
   update-docker-artifact-yaml:
-      uses: MapColonies/shared-workflows/.github/workflows/update-artifacts-file.yaml@master
+      uses: MapColonies/shared-workflows/.github/workflows/update-artifacts-file.yaml@feat/retry
       secrets: inherit
       with:
         scope: ${{ inputs.scope }}
