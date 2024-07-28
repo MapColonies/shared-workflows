@@ -66,8 +66,25 @@ jobs:
         cd helm-charts
         git config --global user.name "mapcolonies[bot]"
         git config --global user.email "devops[bot]@mapcolonies.com"
-        git add .
-        git commit -m "Update artifacts.json"
-        git push
+
+        success=false
+        for ((i=1; i<=5; i++)); do
+          git add .
+          git commit -m "Update artifacts.json"
+          git push
+          if git push; then
+            success=true
+            break
+          else
+            sleep 5
+            git pull --rebase
+          fi
+        done
+
+        if [ "$success" = false ]; then
+          echo "Failed to push changes after."
+          exit 1
+        fi
       env:
         GITHUB_TOKEN: ${{ secrets.GH_PAT }}
+        
