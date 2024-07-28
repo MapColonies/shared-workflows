@@ -85,7 +85,7 @@ jobs:
         done
 
         if [ "$success" = false ]; then
-          echo "Failed to push changes after."
+          echo "Failed to push changes."
           exit 1
         fi
       env:
