@@ -73,13 +73,13 @@ jobs:
           git add .
           # Add "|| true" for not failing on this line
           git commit -m "Update artifacts.json" || true
-          git push
           if git push; then
             success=true
             break
           else
             sleep 5
-            git pull --rebase
+            # --ff for fast-forward
+            git pull origin master --ff
           fi
         done
 
