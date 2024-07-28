@@ -69,6 +69,7 @@ jobs:
 
         success=false
         for ((i=1; i<=5; i++)); do
+          echo "Attempt number $i"
           git add .
           git commit -m "Update artifacts.json"
           git push
