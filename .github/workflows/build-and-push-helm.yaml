@@ -57,7 +57,7 @@ jobs:
         working-directory: ./helm
 
   update-helm-artifact-yaml:
-      uses: MapColonies/shared-workflows/.github/workflows/update-artifacts-file.yaml@feat/retry
+      uses: MapColonies/shared-workflows/.github/workflows/update-artifacts-file.yaml@master
       needs: build-and-push-helm
       secrets: inherit
       with:
