@@ -71,7 +71,8 @@ jobs:
         for ((i=1; i<=5; i++)); do
           echo "Attempt number $i"
           git add .
-          git commit -m "Update artifacts.json"
+          # Add "|| true" for not failing on this line
+          git commit -m "Update artifacts.json" || true
           git push
           if git push; then
             success=true
