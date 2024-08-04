@@ -69,9 +69,9 @@ jobs:
       matrix:
         node: [18.x, 20.x]
     services:
-      if: input.usePostgres == 'true'
       # Label used to access the service container
       postgres:
+        if: input.usePostgres == 'true'
         # Docker Hub image
         image: postgis/postgis:13-3.4
         # Provide the password for postgres
