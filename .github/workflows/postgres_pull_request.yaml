@@ -12,6 +12,11 @@ on:
         type: string
         required: false
         default: "./openapi3.yaml"
+      USE_POSTGRES:
+        description: "Flag to set up postgres database for tests"
+        type: boolean
+        required: false
+        default: false
 jobs:
   eslint:
     name: Run eslint
@@ -55,6 +60,7 @@ jobs:
       matrix:
         node: [18.x, 20.x]
     services:
+      if: env.USE_POSTGRES == 'true'
       # Label used to access the service container
       postgres:
         # Docker Hub image
