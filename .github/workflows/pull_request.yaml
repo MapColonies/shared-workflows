@@ -1,18 +1,23 @@
 name: pull_request
 
-on: 
+on:
   workflow_call:
     inputs:
       enableOpenApiCheck:
-        description: 'Flag to enable OpenAPI lint checks'
+        description: "Flag to enable OpenAPI lint checks"
         type: boolean
         required: false
         default: true
       openApiFilePath:
-        description: 'Path to the OpenAPI file (if enableOpenApiCheck is true)'
+        description: "Path to the OpenAPI file (if enableOpenApiCheck is true)"
         type: string
         required: false
-        default: './openapi3.yaml'
+        default: "./openapi3.yaml"
+      USE_POSTGRES:
+        description: "Flag to set up postgres database for tests"
+        type: boolean
+        required: false
+        default: false
 
 jobs:
   eslint:
@@ -44,18 +49,18 @@ jobs:
         if: ${{ inputs.enableOpenApiCheck == true }}
         uses: nwestfall/openapi-action@v1.0.2
         with:
-         github_token: ${{ secrets.GITHUB_TOKEN }}
-         file: ${{ inputs.openApiFilePath }}
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          file: ${{ inputs.openApiFilePath }}
 
   security:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@master
-    - name: Run Snyk to check for vulnerabilities
-      uses: snyk/actions/node@master
-      continue-on-error: true
-      env:
-        SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+      - uses: actions/checkout@master
+      - name: Run Snyk to check for vulnerabilities
+        uses: snyk/actions/node@master
+        continue-on-error: true
+        env:
+          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
 
   tests:
     name: Run Tests
@@ -63,7 +68,25 @@ jobs:
     strategy:
       matrix:
         node: [18.x, 20.x]
-
+    services:
+      if: env.USE_POSTGRES == 'true'
+      # Label used to access the service container
+      postgres:
+        # Docker Hub image
+        image: postgis/postgis:13-3.4
+        # Provide the password for postgres
+        env:
+          POSTGRES_PASSWORD: 1234
+          POSTGRES_USER: postgres
+          POSTGRES_DB: postgres
+        ports:
+          - 5432:5432
+        # Set health checks to wait until postgres has started
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
     steps:
       - name: Check out Git repository
         uses: actions/checkout@v2
