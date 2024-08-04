@@ -71,7 +71,7 @@ jobs:
     services:
       # Label used to access the service container
       postgres:
-        if: input.usePostgres == 'true'
+        if: ${{ inputs.usePostgres == 'true' }}
         # Docker Hub image
         image: postgis/postgis:13-3.4
         # Provide the password for postgres
