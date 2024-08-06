@@ -70,8 +70,8 @@ jobs:
         node: [18.x, 20.x]
     services:
       # Label used to access the service container
+      if: ${{ inputs.usePostgres == 'true' }}
       postgres:
-        if: ${{ inputs.usePostgres == 'true' }}
         # Docker Hub image
         image: postgis/postgis:13-3.4
         # Provide the password for postgres
