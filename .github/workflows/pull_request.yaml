@@ -89,51 +89,51 @@ jobs:
           name: Test Reporters
           path: reports/**
 
-    tests-with-prostgres:
-      name: Run Tests
-      runs-on: ubuntu-latest
-      if: ${{ inputs.usePostgres == true }}
-      strategy:
-        matrix:
-          node: [18.x, 20.x]
-      services:
-        # Label used to access the service container
-        if: ${{ inputs.usePostgres == 'true' }}
-        postgres:
-          # Docker Hub image
-          image: postgis/postgis:13-3.4
-          # Provide the password for postgres
-          env:
-            POSTGRES_PASSWORD: 1234
-            POSTGRES_USER: postgres
-            POSTGRES_DB: postgres
-          ports:
-            - 5432:5432
-          # Set health checks to wait until postgres has started
-          options: >-
-            --health-cmd pg_isready
-            --health-interval 10s
-            --health-timeout 5s
-            --health-retries 5
-      steps:
-        - name: Check out Git repository
-          uses: actions/checkout@v2
+  tests-with-prostgres:
+    name: Run Tests
+    runs-on: ubuntu-latest
+    if: ${{ inputs.usePostgres == true }}
+    strategy:
+      matrix:
+        node: [18.x, 20.x]
+    services:
+      # Label used to access the service container
+      if: ${{ inputs.usePostgres == 'true' }}
+      postgres:
+        # Docker Hub image
+        image: postgis/postgis:13-3.4
+        # Provide the password for postgres
+        env:
+          POSTGRES_PASSWORD: 1234
+          POSTGRES_USER: postgres
+          POSTGRES_DB: postgres
+        ports:
+          - 5432:5432
+        # Set health checks to wait until postgres has started
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+    steps:
+      - name: Check out Git repository
+        uses: actions/checkout@v2
 
-        - name: Set up Node.js
-          uses: actions/setup-node@v1
-          with:
-            node-version: ${{ matrix.node }}
+      - name: Set up Node.js
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{ matrix.node }}
 
-        - name: Install Node.js dependencies
-          run: npm ci
+      - name: Install Node.js dependencies
+        run: npm ci
 
-        - name: Run tests
-          run: npm run test
+      - name: Run tests
+        run: npm run test
 
-        - uses: actions/upload-artifact@v2
-          with:
-            name: Test Reporters
-            path: reports/**
+      - uses: actions/upload-artifact@v2
+        with:
+          name: Test Reporters
+          path: reports/**
 
   build_image:
     name: Build Image
