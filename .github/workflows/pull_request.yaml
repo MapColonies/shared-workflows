@@ -89,7 +89,7 @@ jobs:
           name: Test Reporters
           path: reports/**
 
-  tests-with-prostgres:
+  tests-with-postgres:
     name: Run Tests
     runs-on: ubuntu-latest
     if: ${{ inputs.usePostgres == true }}
