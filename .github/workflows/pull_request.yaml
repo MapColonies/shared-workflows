@@ -65,34 +65,6 @@ jobs:
   tests:
     name: Run Tests
     runs-on: ubuntu-latest
-    if: ${{ inputs.usePostgres == false }}
-    strategy:
-      matrix:
-        node: [18.x, 20.x]
-    steps:
-      - name: Check out Git repository
-        uses: actions/checkout@v2
-
-      - name: Set up Node.js
-        uses: actions/setup-node@v1
-        with:
-          node-version: ${{ matrix.node }}
-
-      - name: Install Node.js dependencies
-        run: npm ci
-
-      - name: Run tests
-        run: npm run test
-
-      - uses: actions/upload-artifact@v2
-        with:
-          name: Test Reporters
-          path: reports/**
-
-  tests-with-postgres:
-    name: Run Tests
-    runs-on: ubuntu-latest
-    if: ${{ inputs.usePostgres == true }}
     strategy:
       matrix:
         node: [18.x, 20.x]
@@ -100,7 +72,7 @@ jobs:
       # Label used to access the service container
       postgres:
         # Docker Hub image
-        image: postgis/postgis:13-3.4
+        image: ${{ (inputs.usePostgres == true) && postgis/postgis:13-3.4 || ''}}
         # Provide the password for postgres
         env:
           POSTGRES_PASSWORD: 1234
