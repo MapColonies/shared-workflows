@@ -6,7 +6,7 @@ on:
       scope:
         required: false
         type: string
-        default: ''
+        default: ""
 
 env:
   HELM_EXPERIMENTAL_OCI: 1
@@ -20,18 +20,18 @@ jobs:
       chart: ${{ steps.set-chart-name.outputs.chart }}
       ver: ${{ steps.set-chart-version.outputs.ver }}
 
-    steps:    
+    steps:
       - name: Checkout repository from latest commit
         uses: actions/checkout@v2
 
       - name: Setup helm
         uses: azure/setup-helm@v3.5
         with:
-          version: 'v3.12.0'
+          version: "v3.12.0"
 
       - name: Login to registry
         run: |
-          helm registry login ${{ secrets.ACR_URL }} --username ${{ secrets.ACR_PUSH_USER }} --password ${{ secrets.ACR_PUSH_TOKEN }} 
+          helm registry login ${{ secrets.ACR_URL }} --username ${{ secrets.ACR_PUSH_USER }} --password ${{ secrets.ACR_PUSH_TOKEN }}
 
       - name: Get chart's name
         id: set-chart-name
@@ -40,16 +40,16 @@ jobs:
           echo "chart=$CHART" >> $GITHUB_OUTPUT
         working-directory: ./helm
 
-      - name: Get chart's version 
+      - name: Get chart's version
         id: set-chart-version
         run: |
           export "VER=$(cat Chart.yaml | grep version | awk '{print $2; exit}')"
           echo "ver=$VER" >> $GITHUB_OUTPUT
-        working-directory: ./helm    
+        working-directory: ./helm
 
       - name: Package chart into tgz file
         run: |
-          helm package . --dependency-update 
+          helm package . --dependency-update
         working-directory: ./helm
 
       - name: Publish chart to ACR
@@ -58,12 +58,12 @@ jobs:
         working-directory: ./helm
 
   update-helm-artifact-yaml:
-      uses: MapColonies/shared-workflows/.github/workflows/update-artifacts-file.yaml@master
-      needs: build-and-push-helm
-      secrets: inherit
-      if: "${{ inputs.scope != '' }}"
-      with:
-        scope: ${{ inputs.scope }}
-        type: helm
-        artifact-name: ${{ needs.build-and-push-helm.outputs.chart }}
-        artifact-tag: ${{ needs.build-and-push-helm.outputs.ver }}
+    uses: MapColonies/shared-workflows/.github/workflows/update-artifacts-file.yaml@master
+    needs: build-and-push-helm
+    secrets: inherit
+    if: "${{ inputs.scope != '' }}"
+    with:
+      scope: ${{ inputs.scope }}
+      type: helm
+      artifact-name: ${{ needs.build-and-push-helm.outputs.chart }}
+      artifact-tag: ${{ needs.build-and-push-helm.outputs.ver }}

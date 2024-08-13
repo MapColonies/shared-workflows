@@ -6,8 +6,7 @@ on:
       scope:
         required: false
         type: string
-        default: ''
-     
+        default: ""
       repository:
         required: false
         type: string
@@ -52,11 +51,11 @@ jobs:
         run: docker push ${{ env.DOCKER_IMAGE_NAME }}
 
   update-docker-artifact-yaml:
-      uses: MapColonies/shared-workflows/.github/workflows/update-artifacts-file.yaml@master
-      secrets: inherit
-      needs: build-and-push-docker
-      if: "${{ inputs.scope != '' }}"
-      with:
-        scope: ${{ inputs.scope }}
-        artifact-name: ${{ inputs.repository || github.event.repository.name }}
-        artifact-tag: ${{ github.ref_name }}
+    uses: MapColonies/shared-workflows/.github/workflows/update-artifacts-file.yaml@master
+    secrets: inherit
+    needs: build-and-push-docker
+    if: "${{ inputs.scope != '' }}"
+    with:
+      scope: ${{ inputs.scope }}
+      artifact-name: ${{ inputs.repository || github.event.repository.name }}
+      artifact-tag: ${{ github.ref_name }}
