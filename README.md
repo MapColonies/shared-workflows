@@ -18,11 +18,11 @@ flowchart TD
     classDef head fill:#5882FA
     classDef workflow fill:#1E4E20
     A[Build And Push Docker]:::head --> B[Checkout latest commit]
-    B --> C(Login to Azure)
-    C --> D(Get Docker Image Name)
+    B --> C(Login to Remote Registry)
+    C --> D(Generate Docker Image Name)
     D --> E( Build Image)
     E --> F[Push Image]
-    G[workflow: Edit artifacts.json in helm-charts]:::workflow
+    A --> G[workflow: Edit artifacts.json in helm-charts]:::workflow
 ```
 
 ## 2. build-and-push-helm
@@ -57,6 +57,7 @@ This workflow should be used in your pull requests; here linters run, Snyk check
 |--------------------|----------------------------------------------------------|---------|-----------|-----------------|
 | enableOpenApiCheck | Flag to enable OpenAPI lint checks                       | boolean | no        | true            |
 | openApiFilePath    | Path to the OpenAPI file (if enableOpenApiCheck is true) | string  | no        | ./openapi3.yaml |
+| usePostgres    | Flag whether to initiate postgres service or not             | boolean | no        | false           |
 
 ```mermaid
 flowchart TD
@@ -68,7 +69,7 @@ flowchart TD
     D --> E[Set up Node.js]
     E --> F[Install dependencies]
     F --> G[Run linters]
-    G -->|enableOpenApiCheck==true| H["OpenAPI Lint Checks \n (on `openApiFilePath`)"]
+    G -->|enableOpenApiCheck==true| H[Lint Checks on OpenAPI File]
     B --> I[Security Job]:::parent
     I --> J[Checkout Git repository]
     J --> K[Run Snyk to check for vulnerabilities]
