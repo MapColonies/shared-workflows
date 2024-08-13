@@ -14,11 +14,15 @@ This workflow also utilizes `update-artifact-file` workflow, to edit the `artifa
 | context    | From where the CI should build the docker image                           | string | no        | . (Current context)             |
 
 ```mermaid
-flowchart LR
-    A[Checkout latest commit] --> B(Login to Azure)
-    B --> C(Get Docker Image Name)
-    C --> D( Build Image)
-    D --> E[Push Image]
+flowchart TD
+    classDef head fill:#5882FA
+    classDef workflow fill:#1E4E20
+    A[Build And Push Docker]:::head --> B[Checkout latest commit]
+    B --> C(Login to Azure)
+    C --> D(Get Docker Image Name)
+    D --> E( Build Image)
+    E --> F[Push Image]
+    G[workflow: Edit artifacts.json in helm-charts]:::workflow
 ```
 
 ## 2. build-and-push-helm
@@ -33,12 +37,16 @@ Helm chart's name and version are inferred automatically from the `Chart.yaml` f
 
 ```mermaid
 flowchart TD
-    A[Checkout latest commit] --> B[Setup Helm]
-    B --> C[Login to Azure]
-    C --> D(Get Chart Name)
-    D --> E[Get Chart Version]
-    E --> F[Package Chart into TGZ]
-    F --> G[Publish Chart to ACR]
+    classDef head fill:#5882FA
+    classDef workflow fill:#1E4E20
+    A[Build And Push Helm]:::head --> B[Checkout latest commit]
+    B --> C[Setup Helm]
+    C --> D[Login to Azure]
+    D --> E(Get Chart Name)
+    E --> F[Get Chart Version]
+    F --> G[Package Chart into TGZ]
+    G --> H[Publish Chart to ACR]
+    I[workflow: Edit artifacts.json in helm-charts]:::workflow
 ```
 
 ## 3. pull_request
