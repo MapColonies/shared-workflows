@@ -22,7 +22,7 @@ flowchart TD
     C --> D(Generate Docker Image Name)
     D --> E( Build Image)
     E --> F[Push Image]
-    A --> G[workflow: Edit artifacts.json in helm-charts]:::workflow
+    F --> G[Trigger update-artifacts-file workflow]:::workflow
 ```
 
 ## 2. build-and-push-helm
@@ -46,7 +46,7 @@ flowchart TD
     E --> F[Retrieve Chart Version]
     F --> G[Package Chart into TGZ]
     G --> H[Publish Chart to ACR]
-    A --> I[workflow: Edit artifacts.json in helm-charts]:::workflow
+    H --> I[Trigger update-artifacts-file workflow]:::workflow
 ```
 
 ## 3. pull_request
