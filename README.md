@@ -97,7 +97,7 @@ This workflow creates a release. Its trigger event should be when a new tag is c
 ```mermaid
 flowchart TD
     classDef head fill:#5882FA
-    A[Release On Tag Push]:::head -->|INPUTS: \n enableOpenApiToPostman| C["Checkout code for CHANGELOG.md \n (for release notes)"]
+    A[Release On Tag Push]:::head -->|INPUTS: \n enableOpenApiToPostman| C["Checkout Git repository for CHANGELOG.md \n (for release notes)"]
     C --> D[Get package info]
     D --> E["Setup Node.js \n (for postman collection)"]
     E --> F[Set Collection File Name Env]
