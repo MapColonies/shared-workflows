@@ -66,7 +66,7 @@ jobs:
 
           git add .
           # Add "|| true" for not failing on this line
-          git commit -m "Update artifacts.json" || true
+          git commit -m "Update artifacts.json for ${{ inputs.scope }}" -m "with ${{ inputs.type }} artifact: ${{ inputs.artifact-name }}:${{ inputs.artifact-tag }}" || true
 
           success=false
           for ((i=1; i<=5; i++)); do
