@@ -41,12 +41,12 @@ flowchart TD
     classDef workflow fill:#1E4E20
     A[Build And Push Helm]:::head --> B[Checkout latest commit]
     B --> C[Setup Helm]
-    C --> D[Login to Azure]
-    D --> E(Get Chart Name)
-    E --> F[Get Chart Version]
+    C --> D[Login to Remote Registry]
+    D --> E(Retrieve Chart Name)
+    E --> F[Retrieve Chart Version]
     F --> G[Package Chart into TGZ]
     G --> H[Publish Chart to ACR]
-    I[workflow: Edit artifacts.json in helm-charts]:::workflow
+    A --> I[workflow: Edit artifacts.json in helm-charts]:::workflow
 ```
 
 ## 3. pull_request
