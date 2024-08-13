@@ -18,7 +18,7 @@ on:
         type: string
         required: true
       artifact-tag:
-        description: "Aritfact`s tag"
+        description: "Artifact`s tag"
         type: string
         required: true
 
