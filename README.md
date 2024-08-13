@@ -14,9 +14,17 @@ This workflow also utilizes `update-artifact-file` workflow, to edit the `artifa
 | context    | From where the CI should build the docker image                           | string | no        | . (Current context)             |
 
 ```mermaid
+%%{
+  init: {
+    'theme': 'forest',
+    'themeVariables': {
+      'lineColor': '#F8B229'
+    }
+  }
+}%%
 flowchart TD
     classDef head fill:#5882FA
-    classDef workflow fill:#1E4E20
+    classDef workflow fill:#8258FA
     A[Build And Push Docker]:::head --> B[Checkout latest commit]
     B --> C(Login to Remote Registry)
     C --> D(Generate Docker Image Name)
@@ -36,9 +44,17 @@ Helm chart's name and version are inferred automatically from the `Chart.yaml` f
 | scope         | This is the subdirectory in the helm-charts repository: `helm-charts/<scope>` | string | no       |  ''
 
 ```mermaid
+%%{
+  init: {
+    'theme': 'forest',
+    'themeVariables': {
+      'lineColor': '#F8B229'
+    }
+  }
+}%%
 flowchart TD
     classDef head fill:#5882FA
-    classDef workflow fill:#1E4E20
+    classDef workflow fill:#8258FA
     A[Build And Push Helm]:::head --> B[Checkout latest commit]
     B --> C[Setup Helm]
     C --> D[Login to Remote Registry]
@@ -60,6 +76,14 @@ This workflow should be used in your pull requests; here linters run, Snyk check
 | usePostgres    | Flag whether to initiate postgres service or not             | boolean | no        | false           |
 
 ```mermaid
+%%{
+  init: {
+    'theme': 'forest',
+    'themeVariables': {
+      'lineColor': '#F8B229'
+    }
+  }
+}%%
 flowchart TD
     classDef parent fill:#f946
     classDef head fill:#5882FA
@@ -95,6 +119,14 @@ This workflow creates a release. Its trigger event should be when a new tag is c
 | enableOpenApiToPostman | Flag to enable OpenAPI to Postman collection conversion                       | boolean | no        | true            |
 
 ```mermaid
+%%{
+  init: {
+    'theme': 'forest',
+    'themeVariables': {
+      'lineColor': '#F8B229'
+    }
+  }
+}%%
 flowchart TD
     classDef head fill:#5882FA
     A[Release On Tag Push]:::head -->|INPUTS: \n enableOpenApiToPostman| C["Checkout Git repository for CHANGELOG.md \n (for release notes)"]
@@ -118,6 +150,14 @@ This workflow edits the `artifacts.json` according to the input.
 | artifact-tag  | Aritfact`s tag                         | string                                | yes       |               |
 
 ```mermaid
+%%{
+  init: {
+    'theme': 'forest',
+    'themeVariables': {
+      'lineColor': '#F8B229'
+    }
+  }
+}%%
 flowchart TD
     classDef head fill:#5882FA
     A[Edit artifacts.json in helm-charts]:::head -->|INPUTS: \n artifact-name \n artifact-tag| D["Checkout helm-charts Repository \n (access the helm-charts repository for modification)"]
