@@ -144,7 +144,7 @@ This workflow edits the `artifacts.json` according to the input.
 ### Workflow parameters:
 | Name          | Description                            | Type                                  | Required? | Default Value |
 |---------------|----------------------------------------|---------------------------------------|-----------|---------------|
-| scope         | This is the subdirectory in the helm-charts repository: `helm-charts/<scope>` | string | no       | ''              |
+| scope         | This is the subdirectory in the helm-charts repository: `helm-charts/<scope>` | string | yes       |               |
 | type          | Artifact`s type                        | string                                | no        | docker        |
 | artifact-name | Artifact`s name                        | string                                | yes       |               |
 | artifact-tag  | Aritfact`s tag                         | string                                | yes       |               |
