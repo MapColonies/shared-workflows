@@ -25,12 +25,12 @@ This workflow also utilizes `update-artifact-file` workflow, to edit the `artifa
 flowchart TD
     classDef head fill:#5882FA
     classDef workflow fill:#8258FA
-    A[Build And Push Docker]:::head --> B[Checkout latest commit]
+    A[Build And Push Docker]:::head -->|INPUTS: \n scope \n repository \n context| B[Checkout latest commit]
     B --> C(Login to Remote Registry)
-    C --> D(Generate Docker Image Name)
+    C --> D("Generate Docker Image Name \n (using repository and context)")
     D --> E( Build Image)
     E --> F[Push Image]
-    F --> G[Trigger update-artifacts-file workflow]:::workflow
+    F -->|scope != #quot;#quot;| G[Trigger update-artifacts-file workflow]:::workflow
 ```
 
 ## 2. build-and-push-helm
@@ -55,14 +55,14 @@ Helm chart's name and version are inferred automatically from the `Chart.yaml` f
 flowchart TD
     classDef head fill:#5882FA
     classDef workflow fill:#8258FA
-    A[Build And Push Helm]:::head --> B[Checkout latest commit]
+    A[Build And Push Helm]:::head -->|INPUTS: \n scope| B[Checkout latest commit]
     B --> C[Setup Helm]
     C --> D[Login to Remote Registry]
     D --> E(Retrieve Chart Name)
     E --> F[Retrieve Chart Version]
     F --> G[Package Chart into TGZ]
     G --> H[Publish Chart to ACR]
-    H --> I[Trigger update-artifacts-file workflow]:::workflow
+    H -->|scope != #quot;#quot;| I[Trigger update-artifacts-file workflow]:::workflow
 ```
 
 ## 3. pull_request
