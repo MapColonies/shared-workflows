@@ -6,8 +6,7 @@ on:
       scope:
         description: "Scope of artifacts.json file to update"
         type: string
-        required: false
-        default: ""
+        required: true
       type:
         description: "Artifact`s type"
         type: string
