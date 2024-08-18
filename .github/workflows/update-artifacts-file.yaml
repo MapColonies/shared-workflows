@@ -42,6 +42,7 @@ jobs:
         run: |
           # Split string by comma
           echo "{{ inputs.scope }}" | tr ',' '\n' | while read -r element; do
+            echo "helm-charts/$element"
             cd helm-charts/$element
             node -e "
             const fs = require('fs');
