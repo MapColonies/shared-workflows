@@ -59,6 +59,7 @@ jobs:
             // Writing new file contents
             fs.writeFileSync(path, JSON.stringify(data, null, 2));
             "
+            cd ..
           done
 
       - name: Commit changes
