@@ -3,6 +3,12 @@
 In this repository we can find reusable workflows that can be used from within other repositories in this organization.
 Here's the shared workflows we can find in this repository:
 
+- [1. Build And Push Docker](#1-build-and-push-docker)
+- [2. Build And Push Helm](#2-build-and-push-helm)
+- [3. Pull Request](#3-pull_request)
+- [4. Release On Tag Push](#4-release-on-tag-push)
+- [5. Update Artifacts File](#5-update-artifacts-file)
+
 ## 1. build-and-push-docker
 This workflow builds a docker image and and pushes it to the registry.
 This workflow also utilizes `update-artifact-file` workflow, to edit the `artifacts.yaml` file in the [common helm charts](https://github.com/mapcolonies/helm-charts/) repository.
