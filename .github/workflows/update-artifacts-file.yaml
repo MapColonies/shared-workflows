@@ -42,7 +42,7 @@ jobs:
         run: |
           # Split string by comma
           echo "${{ inputs.scope }}" | tr ',' '\n' | while read -r element; do
-            echo "helm-charts/$element"
+            # cd to directory
             pushd helm-charts/$element
             node -e "
             const fs = require('fs');
@@ -59,6 +59,7 @@ jobs:
             // Writing new file contents
             fs.writeFileSync(path, JSON.stringify(data, null, 2));
             "
+            # go back to before pushd
             popd
           done
 
@@ -70,7 +71,7 @@ jobs:
 
           git add .
           # Add "|| true" for not failing on this line
-          git commit -m "Update artifacts.json for ${{ inputs.scope }}" -m "with ${{ inputs.type }} artifact: ${{ inputs.artifact-name }}:${{ inputs.artifact-tag }}" || true
+          git commit -m "chore: update artifacts.json for ${{ inputs.scope }}" -m "with ${{ inputs.type }} artifact: ${{ inputs.artifact-name }}:${{ inputs.artifact-tag }}" || true
 
           success=false
           for ((i=1; i<=5; i++)); do
