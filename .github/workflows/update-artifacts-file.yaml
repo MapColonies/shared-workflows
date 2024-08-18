@@ -41,7 +41,7 @@ jobs:
       - name: Modify artifacts.json
         run: |
           # Split string by comma
-          echo "{{ inputs.scope }}" | tr ',' '\n' | while read -r element; do
+          echo "${{ inputs.scope }}" | tr ',' '\n' | while read -r element; do
             echo "helm-charts/$element"
             cd helm-charts/$element
             node -e "
