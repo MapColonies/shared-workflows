@@ -43,7 +43,7 @@ jobs:
           # Split string by comma
           echo "${{ inputs.scope }}" | tr ',' '\n' | while read -r element; do
             echo "helm-charts/$element"
-            cd helm-charts/$element
+            pushd helm-charts/$element
             node -e "
             const fs = require('fs');
             const path = './artifacts.json';
@@ -59,7 +59,7 @@ jobs:
             // Writing new file contents
             fs.writeFileSync(path, JSON.stringify(data, null, 2));
             "
-            cd ..
+            popd
           done
 
       - name: Commit changes
