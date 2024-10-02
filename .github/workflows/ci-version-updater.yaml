@@ -1,0 +1,81 @@
+name: CI Version Updater
+
+on:
+  workflow_call:
+    inputs:
+      scope:
+        required: true
+        type: string
+      repository:
+        required: false
+        type: string
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  update-versions:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Shared Workflows repository
+        uses: actions/checkout@v4
+        with:
+          repository: MapColonies/shared-workflows
+          path: shared-workflows
+          token: ${{ secrets.GH_PAT }}
+
+      - name: Checkout helm-charts repository
+        uses: actions/checkout@v4
+        with:
+          repository: MapColonies/helm-charts
+          path: helm-charts
+          token: ${{ secrets.GH_PAT }}
+
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r shared-workflows/.github/scripts/ci_requirements.txt
+
+      - name: Run Python ci version updater
+        run: |
+          service_name="${{ inputs.repository || github.event.repository.name }}"
+          python shared-workflows/.github/scripts/ci_version_updater.py --charts-root-path helm-charts --scope "${{ inputs.scope }}" --service-name "${service_name}" --service-version ${{ github.ref_name }}
+
+      - name: Commit changes
+        run: |
+          cd helm-charts
+          git config --global user.name "mapcolonies[bot]"
+          git config --global user.email "devops[bot]@mapcolonies.com"
+
+          git add .
+          # Add "|| true" for not failing on this line
+          service_name="${{ inputs.repository || github.event.repository.name }}"
+          git commit -m "chore: update charts for ${{ inputs.scope }}/${service_name} with version ${{ github.ref_name }}" || true
+
+          success=false
+          for ((i=1; i<=5; i++)); do
+            echo "Attempt number $i"
+            if git push; then
+              success=true
+              break
+            else
+              sleep 5
+              # --ff for fast-forward
+              git pull origin master --ff
+            fi
+          done
+
+          if [ "$success" = false ]; then
+            echo "Failed to push changes."
+            exit 1
+          fi
+        env:
+          GITHUB_TOKEN: ${{ secrets.GH_PAT }}
