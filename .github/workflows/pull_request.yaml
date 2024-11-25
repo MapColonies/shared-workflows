@@ -67,7 +67,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        node: [18.x, 20.x]
+        node: [20.x, 22.x]
     services:
       # Label used to access the service container
       postgres:
