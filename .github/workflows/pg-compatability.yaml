@@ -1,0 +1,105 @@
+name: pg_compatability
+
+on:
+  issue_comment:
+    types: [created]
+  workflow_dispatch:
+
+env: 
+  DB_HOST: localhost
+  
+
+jobs:
+  create_comment:
+    name: Create comment
+    runs-on: ubuntu-latest
+    if: github.event.comment.body == 'pg-check'
+
+    steps:
+      # Find our bot's comment
+      - name: Find Comment
+        uses: peter-evans/find-comment@v1
+        id: fc
+        with:
+          issue-number: ${{ github.event.issue.number }}
+          comment-author: 'github-actions[bot]'
+          body-includes: Postgres and postgis compatability
+
+      # Create a comment if it doesn't exist
+      - name: Create comment
+        if: steps.fc.outputs.comment-id == ''
+        uses: peter-evans/create-or-update-comment@v4
+        with:
+          issue-number: ${{ github.event.issue.number }}
+          body: |
+            **Postgres and postgis compatability:**
+
+      # If a comment exists, update it with the date and time
+      - name: Update comment
+        if: steps.fc.outputs.comment-id != ''
+        uses: peter-evans/create-or-update-comment@v4
+        with:
+          comment-id: ${{ steps.fc.outputs.comment-id }}
+          body: |
+            **${{ github.event.comment.created_at }}**
+
+  tests:
+    name: Run Tests
+    runs-on: ubuntu-latest
+
+    strategy:
+      fail-fast: false
+      matrix:
+        node: [20.x]
+        postgres: [12-2.5, 13-3.3, 14-3.3, 14-3.5, 16-3.5, 17-3.5]
+
+    services:
+      postgres:
+        image: postgis/postgis:${{matrix.postgres}}
+        env:
+          POSTGRES_PASSWORD: 1234
+          POSTGRES_USER: postgres
+          POSTGRES_DB: postgres
+        ports:
+          - 5432:5432
+        # Set health checks to wait until postgres has started
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    steps:
+      - name: Check out Git repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node }}
+
+      - name: Install TS Project dependencies
+        run: npm ci
+
+      - name: Run tests
+        id: test
+        run: npm run test
+
+      # Find our bot's comment
+      - name: Find Comment
+        uses: peter-evans/find-comment@v3
+        if: always() && github.event.comment.body == 'pg-check'
+        id: fc
+        with:
+          issue-number: ${{ github.event.issue.number }}
+          comment-author: 'github-actions[bot]'
+          body-includes: Postgres and postgis compatability
+  
+      # If a comment exists, update it with the test result
+      - name: Update comment
+        if: always() && github.event.comment.body == 'pg-check' && steps.fc.outputs.comment-id != ''
+        uses: peter-evans/create-or-update-comment@v4
+        with:
+          comment-id: ${{ steps.fc.outputs.comment-id }}
+          body: |
+            ${{ steps.test.outcome == 'success' && ':white_check_mark:' || ':x:' }} run for `postgis/postgis:${{matrix.postgres}}`
