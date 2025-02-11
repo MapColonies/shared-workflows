@@ -1,0 +1,30 @@
+name: Lint PR Title
+
+on:
+  pull_request:
+    types: [opened, edited, synchronize]
+
+jobs:
+  pr-title-lint:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out Git repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+
+      - name: Install Commitlint
+        run: |
+          npm install @commitlint/{config-conventional,cli}
+
+      - name: Lint PR Title
+        run: |
+          # Extract the PR title
+          pr_title=$(echo "${{ github.event.pull_request.title }}")
+          # Validate the PR title using commitlint
+          echo "$pr_title" | npx commitlint --config commitlint.config.mjs
