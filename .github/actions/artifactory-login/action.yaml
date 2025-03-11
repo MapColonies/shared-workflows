@@ -15,9 +15,9 @@ runs:
         path: _shared-workflows-artifactory-login
         persist-credentials: false
 
-    # - name: Login to registry
-    #   uses: azure/docker-login@83efeb77770c98b620c73055fbb59b2847e17dc0 # v1
-    #   with:
-    #     login-server: ${{ secrets.ACR_URL }}
-    #     username: ${{ secrets.ACR_PUSH_USER }}
-    #     password: ${{ secrets.ACR_PUSH_TOKEN }}
+    - name: Login to registry
+      uses: azure/docker-login@83efeb77770c98b620c73055fbb59b2847e17dc0 # v1
+      with:
+        login-server: ${{ secrets.ACR_URL }}
+        username: ${{ secrets.ACR_PUSH_USER }}
+        password: ${{ secrets.ACR_PUSH_TOKEN }}

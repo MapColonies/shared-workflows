@@ -33,4 +33,9 @@ jobs:
 
       - name: Test Login to Artifactory Action
         id: test-artifactory-login
-        uses: ./actions/artifactory-login
+        uses: mapcolonies/shared-workflows/actions/artifactory-login@actions
+
+      - name: Echo Success Message
+        run: |
+          echo "Login succssefully" 
+        shell: bash
