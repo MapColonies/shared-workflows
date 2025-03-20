@@ -75,8 +75,9 @@ jobs:
 
       - name: Run linters
         run: npm run lint
+        
       - name: OpenAPI Lint Checks
-        run: npx @redocly/cli lint --format=github-actions openapi3.yaml
+        run: npx @redocly/cli lint --format=github-actions ${{ inputs.openApiFilePath }}
 
   security:
     runs-on: ubuntu-latest
