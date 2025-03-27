@@ -1,0 +1,35 @@
+name: "Artifactory Login"
+description: "Logs into the Artifactory registry."
+inputs:
+  registry:
+    description: |
+      Azure Registry to authenticate against.
+    required: true
+  username:
+    description: |
+      Azure Registry username.
+    required: true
+  password:
+    description: |
+      Azure Registry password.
+    required: true
+
+runs:
+  using: composite
+  steps:
+    - name: Checkout shared workflows
+      env:
+        action_repo: ${{ github.action_repository }}
+        action_ref: ${{ github.action_ref }}
+      uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+      with:
+        repository: ${{ env.action_repo }}
+        ref: ${{ env.action_ref }}
+        path: _shared-workflows-artifactory-login
+      
+    - name: Login to registry
+      uses: azure/docker-login@83efeb77770c98b620c73055fbb59b2847e17dc0 # v1
+      with:
+        login-server: ${{ inputs.registry }}
+        username: ${{ inputs.username }}
+        password: ${{ inputs.password }}

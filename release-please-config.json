@@ -1,0 +1,88 @@
+{
+    "$schema": "https://raw.githubusercontent.com/googleapis/release-please/main/schemas/config.json",
+    "changelog-sections": [
+      {
+        "section": "🎉 Features",
+        "type": "feat"
+      },
+      {
+        "section": "🐛 Bug Fixes",
+        "type": "fix"
+      },
+      {
+        "section": "⚡ Performance Improvements",
+        "type": "perf"
+      },
+      {
+        "section": "🔗 Dependencies",
+        "type": "deps"
+      },
+      {
+        "section": "📝 Documentation",
+        "type": "docs"
+      },
+      {
+        "section": "🏗️ Build System",
+        "type": "build"
+      },
+      {
+        "section": "🤖 Continuous Integration",
+        "type": "ci"
+      },
+      {
+        "section": "🔧 Miscellaneous Chores",
+        "type": "chore"
+      },
+      {
+        "section": "⏪ Reverts",
+        "type": "revert"
+      },
+      {
+        "section": "✅ Tests",
+        "type": "test"
+      },
+      {
+        "section": "💄 Style",
+        "type": "style"
+      },
+      {
+        "section": "♻️ Code Refactoring",
+        "type": "refactor"
+      }
+    ],
+    "draft-pull-request": false,
+    "include-v-in-tag": true,
+    "separate-pull-requests": false,
+    "packages": {
+      "actions/artifactory-login": {
+        "release-type": "simple",
+        "package-name": "artifactory-login",
+        "extra-files": ["README.md"]
+      },
+      "actions/build-and-push-docker": {
+        "release-type": "simple",
+        "package-name": "build-and-push-docker",
+        "extra-files": ["README.md"]
+      },
+      "actions/build-and-push-helm": {
+        "release-type": "simple",
+        "package-name": "build-and-push-helm",
+        "extra-files": ["README.md"]
+      },
+      "actions/helm-lint": {
+        "release-type": "simple",
+        "package-name": "helm-lint",
+        "extra-files": ["README.md"]
+      },
+      "actions/npm-publish": {
+        "release-type": "simple",
+        "package-name": "npm-publish",
+        "extra-files": ["README.md"]
+      },
+      "actions/update-artifacts-file": {
+        "release-type": "simple",
+        "package-name": "update-artifacts-file",
+        "extra-files": ["README.md"]
+      }
+    }
+}

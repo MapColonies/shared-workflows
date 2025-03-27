@@ -1,0 +1,63 @@
+name: "Build and Push Helm Chart"
+description: "Builds and publishes a Helm chart to the specified registry."
+inputs:
+  scope:
+    description: "Scope or namespace for the Helm chart."
+    required: true
+    default: ""
+  repository:
+    description: "Repository for the Helm Chart."
+    required: true
+  context:
+    description: "Path to the helm directory."
+    required: true
+    default: "./helm"
+outputs:
+  chart:
+    description: "Name of the Helm chart."
+  ver:
+    description: "Version of the Helm chart."
+runs:
+  using: "composite"
+  steps:
+    - name: Checkout helm chart repository
+      env:
+        action_repo: ${{ github.action_repository }}
+        action_ref: ${{ github.action_ref }}
+      uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+      with:
+        repository: ${{ inputs.repository }}
+
+    - name: Setup Helm
+      uses: azure/setup-helm@5119fcb9089d432beecbf79bb2c7915207344b78 # v3.5
+      with:
+        version: "v3.12.0"
+
+    - name: Get chart's name
+      id: set-chart-name
+      run: |
+        CHART=$(grep '^name:' Chart.yaml | awk '{print $2}')
+        echo "chart=$CHART" >> $GITHUB_OUTPUT
+      working-directory: ${{ inputs.context }}
+      shell: bash
+
+    - name: Get the chart's version
+      id: set-chart-version
+      run: |
+        VER=$(grep '^version:' Chart.yaml | awk '{print $2}')
+        echo "ver=$VER" >> $GITHUB_OUTPUT
+      working-directory: ${{ inputs.context }}
+      shell: bash
+
+    - name: Package chart into tgz file
+      run: |
+        helm package . --dependency-update
+      working-directory: ${{ inputs.context }}
+      shell: bash
+
+    - name: Publish chart to ACR
+      run: |
+        helm push ${{ steps.set-chart-name.outputs.chart }}-${{ steps.set-chart-version.outputs.ver }}.tgz \
+          oci://${{ inputs.registry }}/helm/${{ inputs.scope }}
+      working-directory: ${{ inputs.context }}
+      shell: bash

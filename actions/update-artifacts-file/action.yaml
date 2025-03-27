@@ -1,0 +1,71 @@
+name: "Build and Push Helm Chart"
+description: "Builds and publishes a Helm chart to the specified registry."
+inputs:
+  scope:
+    description: "Scope or namespace for the Helm chart."
+    required: true
+    default: ""
+  repository:
+    description: "Repository for the Helm Chart."
+    required: true
+  registry:
+    description: "Registry to push the artifact to."
+    required: true
+  context:
+    description: "Path to the helm directory."
+    required: true
+    default: "./helm"
+  type:
+    description: "Artifact`s type"
+    type: string
+    required: true
+    default: "docker"
+  artifact-name:
+    description: "Artifact`s name"
+    type: string
+    required: true
+  artifact-tag:
+    description: "Artifact`s tag"
+    type: string
+    required: true
+runs:
+  using: "composite"
+  steps:
+    - name: Checkout helm chart repository
+      env:
+        action_repo: ${{ github.action_repository }}
+        action_ref: ${{ github.action_ref }}
+      uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+      with:
+        repository: ${{ inputs.repository }}
+
+    - name: Set Execute Permission
+      run: chmod +x ./modify_artifacts.sh
+      shell: bash
+      working-directory: ${{ inputs.context }}
+
+    - name: Run modify artifacts Script
+      run: ${{ inputs.context }}/modify_artifacts.sh 
+      shell: bash
+      env:
+        SCOPE: ${{ inputs.scope }}
+        ARTIFACT_NAME: ${{ inputs.artifact-name }}
+        ARTIFACT_TAG: ${{ inputs.artifact-tag }}
+        TYPE: ${{ inputs.type }}
+        REGISTRY: ${{ inputs.registry }}
+
+    - name: Set commit Permission
+      run: chmod +x ./commit-changes.sh
+      shell: bash
+      working-directory: ${{ inputs.context }}
+
+    - name: Run commit changes script
+      run: ${{ inputs.context }}/commit-changes.sh
+      shell: bash
+      env:
+        SCOPE: ${{ inputs.scope }}
+        ARTIFACT_NAME: ${{ inputs.artifact-name }}
+        ARTIFACT_TAG: ${{ inputs.artifact-tag }}
+        TYPE: ${{ inputs.type }}
+        GITHUB_TOKEN: ${{ inputs.github_token }}
+        REPOSITORY: ${{ inputs.repository }}

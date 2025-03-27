@@ -1,0 +1,29 @@
+name: Update artifacts.json
+
+on:
+  workflow_dispatch:
+  workflow_call:
+  push:
+    branches:
+      - master
+    paths:
+      - "actions/update-artifacts-file/**"
+
+jobs:
+  update-artifacts-json:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+
+      - name: Update artifacts.json
+        uses: ./actions/update-artifacts-file
+        with:
+          type: "docker"
+          context: actions/update-artifacts-file
+          scope: infra
+          repository: ${{ env.action_repo }}
+          artifact-name: "sftpgo"
+          artifact-tag: "v2.0.2"
+          registry: ${{ secrets.ACR_URL }}
+          github_token: ${{ secrets.GH_PAT }}

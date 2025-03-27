@@ -1,0 +1,47 @@
+name: "Build and Push Docker Image"
+description: "Builds a Docker image"
+inputs:
+  context:
+    description: "Path to the Docker build context."
+    required: true
+  repository:
+    description: "Repository for the Docker image."
+    required: true
+  scope:
+    description: "Scope or namespace for the Docker image."
+    required: true
+  registry:
+    description: |
+      Azure Registry to authenticate against.
+    required: true
+runs:
+  using: "composite"
+  steps:
+    - name: Checkout shared workflows
+      env:
+        action_repo: ${{ github.action_repository }}
+        action_ref: ${{ github.action_ref }}
+      uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+      with:
+        repository: ${{ env.action_repo }}
+        ref: ${{ env.action_ref }}
+        path: _shared-workflows-build-and-push-docker
+
+    - name: Setup docker image name and downcase it
+      id: setup_image_name
+      run: |
+        if [[ -z "${{ inputs.repository }}" ]]; then
+          DOCKER_IMAGE_NAME="${{ inputs.registry }}/${{ inputs.scope }}/${{ github.event.repository.name }}:${{ github.ref_name }}"
+        else
+          DOCKER_IMAGE_NAME="${{ inputs.registry }}/${{ inputs.repository }}:${{ github.ref_name }}"
+        fi
+        echo "DOCKER_IMAGE_NAME=${DOCKER_IMAGE_NAME,,}" >> $GITHUB_ENV
+      shell: bash
+
+    - name: Build the docker image
+      run: docker build ${{ inputs.context }} -t ${{ env.DOCKER_IMAGE_NAME }}
+      shell: bash
+
+    - name: Push docker image
+      run: docker push ${{ env.DOCKER_IMAGE_NAME }}
+      shell: bash

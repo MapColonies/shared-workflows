@@ -1,0 +1,48 @@
+{
+  "docker": {
+    "acrarolibotnonprod.azurecr.io": {
+      "infra/blackbox-exporter": "v0.24.0",
+      "infra/alertmanager": "v0.25.0",
+      "infra/jimmidyson/configmap-reload": "v0.8.0",
+      "infra/prometheus-config-reloader": "v0.67.0",
+      "infra/prometheus": "v2.46.0",
+      "infra/grafana/grafana": "9.4.7",
+      "infra/opentelemetry-collector-contrib": "0.77.0",
+      "infra/memcached": "1.5.17-alpine",
+      "infra/grafana/tempo": "2.3.0",
+      "infra/nginxinc/nginx-unprivileged": "1.19-alpine",
+      "infra/jenkins/jenkins": "2.440.1-jdk17",
+      "infra/kiwigrid/k8s-sidecar": "1.25.4",
+      "infra/jenkins/inbound-agent": "3206.vb_15dcf73f6a_9-3",
+      "infra/prometheus/node-exporter": "v1.7.0",
+      "sftpgo": "v2.5-openshift",
+      "infra/auth-manager": "v1.2.0",
+      "infra/auth-cron": "v1.2.0",
+      "infra/skopeo-with-tools/stable": "v1.15.0",
+      "openpolicyagent/opa": "0.53.0-envoy-3",
+      "elastic-alertmanager-connector": "v1.0.0",
+      "infra/sftpgo": "v2.0.2"
+    },
+    "docker.io": {
+      "bitnami/postgresql": "17.0.0-debian-12-r1",
+      "bitnami/minio": "2024.8.3-debian-12-r1",
+      "bitnami/redis": "7.2.3"
+    }
+  },
+  "helm": {
+    "acrarolibotnonprod.azurecr.io": {
+      "prometheus-blackbox-exporter": "8.2.0",
+      "alertmanager": "0.33.1",
+      "prometheus": "23.3.0",
+      "grafana": "6.52.8",
+      "opentelemetry-collector": "0.57.2",
+      "tempo-distributed": "1.7.3",
+      "jenkins": "5.0.16",
+      "opa-la": "1.2.0",
+      "elasticsearch-alertmanager-connector": "1.0.0"
+    }
+  },
+  "git": [
+    "MapColonies/helm-charts"
+  ]
+}

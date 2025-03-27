@@ -1,0 +1,11 @@
+{
+    "name": "publish-npm-package-action",
+    "version": "1.0.0",
+    "description": "A GitHub Action to publish npm packages.",
+    "main": "index.js",
+    "scripts": {
+      "prepack": "echo \"Running prepack script...\""
+    },
+    "author": "Your Name",
+    "license": "MIT"
+  }
