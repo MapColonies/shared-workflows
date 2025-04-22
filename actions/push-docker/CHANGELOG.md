@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.0.1](https://github.com/MapColonies/shared-workflows/compare/push-docker-v1.0.0...push-docker-v1.0.1) (2025-04-22)
+
+
+### 📝 Documentation
+
+* change tags to sha ([#61](https://github.com/MapColonies/shared-workflows/issues/61)) ([1fc958d](https://github.com/MapColonies/shared-workflows/commit/1fc958d115218f9a928c489b085a806fd1fd6330))
+
 ## 1.0.0 (2025-04-22)
 
 
