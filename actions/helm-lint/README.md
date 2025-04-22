@@ -23,7 +23,7 @@ It detects which charts have changed and only tests those.
 
 ```yaml
 - name: Lint and Test Charts
-  uses: MapColonies/shared-workflows/actions/helm-lint@helm-lint-v0.0.0
+  uses: MapColonies/shared-workflows/actions/helm-lint@helm-lint-v1.0.0
   with:
     chartDirs: infra/monitoring,infra/sftpgo
 ```
