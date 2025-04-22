@@ -22,14 +22,14 @@ This GitHub Action builds a Docker image from a specified context
 
 ```yaml
 - name: Artifactory Login
-  uses: MapColonies/shared-workflows/actions/artifactory-login@artifactory-login-v1.0.0
+  uses: MapColonies/shared-workflows/actions/artifactory-login@artifactory-login-v2.0.0
   with:
     registry: ${{ secrets.ACR_URL }}
     username: ${{ secrets.ACR_PUSH_USER }}
     password: ${{ secrets.ACR_PUSH_TOKEN }}
 
 - name: Build Docker Image
-  uses: MapColonies/shared-workflows/actions/build-docker@build-docker-v1.0.0
+  uses: MapColonies/shared-workflows/actions/build-docker@build-docker-v2.0.0
   with:
     context: .
     domain: infra
