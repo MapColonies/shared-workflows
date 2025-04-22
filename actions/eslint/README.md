@@ -15,7 +15,7 @@ This GitHub Action installs dependencies and runs ESLint to lint your project co
 
 ```yaml
 - name: Run ESLint
-  uses: MapColonies/shared-workflows/actions/eslint@eslint-v1.0.0
+  uses: MapColonies/shared-workflows/actions/eslint@eslint-v2.0.0
   with:
     path: ./test
 ```
