@@ -1,5 +1,5 @@
 {
-    "actions/artifactory-login": "1.0.0",
+    "actions/artifactory-login": "2.0.0",
     "actions/build-docker": "1.0.0",
     "actions/push-docker": "1.0.0",
     "actions/build-and-push-helm": "1.0.0",
