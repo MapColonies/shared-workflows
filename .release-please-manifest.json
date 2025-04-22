@@ -1,4 +1,11 @@
 {
     ".": "6.0.0",
-    "actions/build-and-push-helm": "1.0.0"
+    "actions/build-and-push-helm": "1.0.0",
+    "actions/helm-lint": "1.0.0",
+    "actions/eslint": "1.0.0",
+    "actions/push-docker": "1.0.0",
+    "actions/artifactory-login": "1.0.0",
+    "actions/update-artifacts-file": "1.0.0",
+    "actions/build-docker": "1.0.0",
+    "actions/openapi-lint": "1.0.0"
 }
