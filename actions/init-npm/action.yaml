@@ -6,7 +6,7 @@ inputs:
     required: true
     default: '20.x'
   path:
-    description: "Path to the Node.js dir "
+    description: "Path to the Node.js directory"
     default: "."
     required: false
 runs:
@@ -16,7 +16,8 @@ runs:
       uses: actions/setup-node@8f152de45cc393bb48ce5d89d36b731f54556e65 # v4
       with:
         node-version: ${{ inputs.node-version }}
-    
+        cache: 'npm'
+
     - name: Install TS Project dependencies
       shell: bash
       run: npm ci
