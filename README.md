@@ -15,6 +15,7 @@ This repository contains GitHub Actions used across the MapColonies organization
 │   ├── build-docker/
 │   ├── build-and-push-helm/
 │   ├── helm-lint/
+│   ├── init-npm/
 │   ├── eslint/
 │   ├── openapi-lint/
 │   ├── push-docker/
@@ -51,6 +52,7 @@ Each action has a dedicated folder with:
 | `helm-lint`               | Lints and tests Helm charts |
 | `eslint`	                | Runs ESLint to check JavaScript/TypeScript code |
 | `openapi-lint`            | Validates OpenAPI specs using Redocly CLI |
+| `init-npm`                | Initializes the repo with npm |
 | `update-artifacts-file`   | Updates `artifacts.json` metadata |
 
 ---
