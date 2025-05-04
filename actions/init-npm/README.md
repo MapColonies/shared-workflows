@@ -6,7 +6,7 @@ This GitHub Action sets up Node.js, installs dependencies using npm, and builds 
 
 | Name           | Description                           | Default | Required |
 |----------------|---------------------------------------|---------|----------|
-| `node_version` | Node.js version to set up             | `20.x`  | false    |
+| `node_version` | Node.js version to set up ([supported versions](https://github.com/actions/setup-node#supported-version-syntax))             | `20.x`  | false    |
 | `path` | Path to the directory containing your Node.js project             | `.`  | false    |
 
 ## 🚀 Usage
