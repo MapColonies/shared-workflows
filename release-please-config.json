@@ -93,6 +93,11 @@
         "release-type": "simple",
         "package-name": "update-artifacts-file",
         "extra-files": ["README.md"]
+      },
+      "actions/init-npm": {
+        "release-type": "simple",
+        "package-name": "init-npm",
+        "extra-files": ["README.md"]
       }
     }
 }
