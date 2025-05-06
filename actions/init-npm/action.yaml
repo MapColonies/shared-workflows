@@ -17,6 +17,7 @@ runs:
       with:
         node-version: ${{ inputs.node-version }}
         cache: 'npm'
+        cache-dependency-path: ${{ inputs.path }}/package-lock.json
 
     - name: Install TS Project dependencies
       shell: bash
