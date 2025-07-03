@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.0.1](https://github.com/MapColonies/shared-workflows/compare/update-artifacts-file-v1.0.0...update-artifacts-file-v1.0.1) (2025-07-03)
+
+
+### 🐛 Bug Fixes
+
+* **update-artifacts-file:** artifacts.json will change in the remote helm-charts repo ([#75](https://github.com/MapColonies/shared-workflows/issues/75)) ([f5aa3f0](https://github.com/MapColonies/shared-workflows/commit/f5aa3f08e3499a75a924ab19af85d8edb82a5861))
+
 ## 1.0.0 (2025-04-22)
 
 
