@@ -36,7 +36,7 @@ This GitHub Action builds and publishes a Helm chart to a specified registry and
   with:
     domain: infra
     artifact_name: "sftpgo"
-    artifact_tag: "v1.0.1"
+    artifact_tag: "v2.0.2"
     type: "docker"
     registry: ${{ secrets.ACR_URL }}
     github_token: ${{ secrets.GH_PAT }}
