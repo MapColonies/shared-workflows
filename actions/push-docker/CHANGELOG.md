@@ -1,5 +1,17 @@
 # Changelog
 
+## [1.0.1](https://github.com/MapColonies/shared-workflows/compare/push-docker-v1.0.0...push-docker-v1.0.1) (2025-07-08)
+
+
+### 🐛 Bug Fixes
+
+* **docker-build-and-push:** add output to build image ([#80](https://github.com/MapColonies/shared-workflows/issues/80)) ([c97f7d2](https://github.com/MapColonies/shared-workflows/commit/c97f7d2cdbc642bef3169edda679809bc1bf0af5))
+
+
+### 📝 Documentation
+
+* change tags to sha ([#61](https://github.com/MapColonies/shared-workflows/issues/61)) ([1fc958d](https://github.com/MapColonies/shared-workflows/commit/1fc958d115218f9a928c489b085a806fd1fd6330))
+
 ## 1.0.0 (2025-04-22)
 
 

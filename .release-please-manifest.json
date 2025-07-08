@@ -3,7 +3,7 @@
     "actions/build-and-push-helm": "1.0.1",
     "actions/helm-lint": "1.0.0",
     "actions/eslint": "1.0.1",
-    "actions/push-docker": "1.0.0",
+    "actions/push-docker": "1.0.1",
     "actions/artifactory-login": "1.0.0",
     "actions/update-artifacts-file": "1.1.0",
     "actions/build-docker": "1.0.0",

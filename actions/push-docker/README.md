@@ -29,7 +29,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Login to Registry
-        uses: MapColonies/shared-workflows/actions/artifactory-login@9a05fd7a01e18746d69cc210b7e6defbd1cc79fc # v1.0.0
+        uses: MapColonies/shared-workflows/actions/artifactory-login@9a05fd7a01e18746d69cc210b7e6defbd1cc79fc # v1.0.1
         with:
           registry: ${{ secrets.ACR_URL }}
           username: ${{ secrets.ACR_PUSH_USER }}
@@ -37,14 +37,14 @@ jobs:
 
       - name: Build Docker Image
         id: build
-        uses: MapColonies/shared-workflows/actions/build-docker@e7220d24b1c7ee5c8eaac7e50edc60239e829eb4 # v1.0.0
+        uses: MapColonies/shared-workflows/actions/build-docker@e7220d24b1c7ee5c8eaac7e50edc60239e829eb4 # v1.0.1
         with:
           context: ./test
           domain: infra
           registry: ${{ secrets.ACR_URL }}
 
       - name: Push Docker Image
-        uses: MapColonies/shared-workflows/actions/push-docker@push-docker-v1.0.0
+        uses: MapColonies/shared-workflows/actions/push-docker@push-docker-v1.0.1
         with:
           image_name: ${{ steps.build.outputs.docker_image_name }}
           image_tag: ${{ steps.build.outputs.docker_image_tag }}
