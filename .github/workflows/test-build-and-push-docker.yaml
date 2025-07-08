@@ -27,6 +27,7 @@ jobs:
           context: ./test
           domain: infra
           registry: ${{ secrets.ACR_URL }}
+          tag: v1.0.0
       
       - name: Test Push Docker Image
         uses: ./actions/push-docker

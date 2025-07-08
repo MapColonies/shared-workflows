@@ -15,6 +15,10 @@ inputs:
   registry:
     description: "Azure Registry to authenticate against"
     required: true
+  tag:
+    description: "Tag for the Docker image"
+    required: false
+    default: ${{ github.ref_name }}
 outputs:
   docker_image_name:
     description: "The name of the Docker image"
@@ -31,7 +35,7 @@ runs:
     - name: Setup Docker image name and tag
       id: set_image_name_and_tag
       run: |
-        DOCKER_IMAGE_TAG="${{ github.ref_name }}"
+        DOCKER_IMAGE_TAG="${{ inputs.tag }}"
         REPO_NAME=$(basename "${{ inputs.repository }}")
         DOCKER_IMAGE_NAME="${{ inputs.registry }}/${{ inputs.domain }}/${REPO_NAME}"
         echo "docker_image_name=$DOCKER_IMAGE_NAME" >> $GITHUB_OUTPUT

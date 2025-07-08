@@ -10,6 +10,7 @@ This GitHub Action builds a Docker image from a specified context
 | `repository` | Repository name for the Docker image (defaults to current GitHub repository)| No       | `${{ github.repository }}` |
 | `domain`     | The image's domain (e.g. `3d`, `infra`).                                    | Yes      | —                      |
 | `registry`   | Azure Registry to authenticate against (e.g. ACR address).                  | Yes      | —                      |
+| `tag`        | Tag for the Docker image                                                    | No       | `${{ github.ref_name }}`   |
 
 ## 📤 Outputs
 
