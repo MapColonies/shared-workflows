@@ -33,11 +33,11 @@ This GitHub Action builds and publishes a Helm chart to a specified registry and
 
 ```yaml
 - name: Update artifacts.json
-  uses: MapColonies/shared-workflows/actions/update-artifacts-file@update-artifacts-file-v1.0.1
+  uses: MapColonies/shared-workflows/actions/update-artifacts-file@update-artifacts-file-v1.1.0
   with:
     domain: infra
     artifact_name: "sftpgo"
-    artifact_tag: "v2.0.2"
+    artifact_tag: "v1.1.0"
     type: "docker"
     registry: ${{ secrets.ACR_URL }}
     github_token: ${{ secrets.GH_PAT }}

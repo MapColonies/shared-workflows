@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.1.0](https://github.com/MapColonies/shared-workflows/compare/update-artifacts-file-v1.0.1...update-artifacts-file-v1.1.0) (2025-07-08)
+
+
+### 🎉 Features
+
+* **update-artifacts-file:** add branch support ([#78](https://github.com/MapColonies/shared-workflows/issues/78)) ([9fc57fa](https://github.com/MapColonies/shared-workflows/commit/9fc57fabadad2a5fcb9ab99b4273d49ca1616a6d))
+
 ## [1.0.1](https://github.com/MapColonies/shared-workflows/compare/update-artifacts-file-v1.0.0...update-artifacts-file-v1.0.1) (2025-07-03)
 
 
