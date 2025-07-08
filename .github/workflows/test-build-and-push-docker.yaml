@@ -21,6 +21,7 @@ jobs:
           password: ${{ secrets.ACR_PUSH_TOKEN }}
 
       - name: Test Build Docker Image
+        id: build_docker_image
         uses: ./actions/build-docker
         with:
           context: ./test
@@ -30,4 +31,5 @@ jobs:
       - name: Test Push Docker Image
         uses: ./actions/push-docker
         with:
-          image_name: $DOCKER_IMAGE_NAME
+          image_name: ${{ steps.build_docker_image.outputs.docker_image_name }}
+          image_tag: ${{ steps.build_docker_image.outputs.docker_image_tag }}

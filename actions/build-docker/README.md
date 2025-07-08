@@ -4,17 +4,19 @@ This GitHub Action builds a Docker image from a specified context
 
 ## 🛠 Inputs
 
-| Name         | Description                                                                 | Required | Default                        |
-|--------------|-----------------------------------------------------------------------------|----------|--------------------------------|
-| `context`    | Path to the Docker build context (e.g. `.` or `./app`).                     | ✅ Yes   | —                              |
-| `repository` | Full GitHub repository name. Used for image name.                           | ❌ No    | `${{ github.repository }}`     |
-| `domain`      | The image's domain (e.g. `3d`, `infra`).                                 | ✅ Yes   | —                              |
-| `registry`   | Registry URL (e.g. ACR address).                                            | ✅ Yes   | —                              |
+| Name         | Description                                                                 | Required | Default                |
+|--------------|-----------------------------------------------------------------------------|----------|------------------------|
+| `context`    | Path to the Docker build context                                            | No       | `.`                    |
+| `repository` | Repository name for the Docker image (defaults to current GitHub repository)| No       | `${{ github.repository }}` |
+| `domain`     | The image's domain (e.g. `3d`, `infra`).                                    | Yes      | —                      |
+| `registry`   | Azure Registry to authenticate against (e.g. ACR address).                  | Yes      | —                      |
+
 ## 📤 Outputs
 
-| Name    | Description                      |
-|---------|----------------------------------|
-| `DOCKER_IMAGE_NAME` | Fully qualified Docker image name to push (github output)|
+| Name                | Description                                      |
+|---------------------|--------------------------------------------------|
+| `docker_image_name` | The name of the Docker image                     |
+| `docker_image_tag`  | The version/tag of the Docker image              |
 
 ## 🚀 Usage
 
@@ -31,7 +33,6 @@ This GitHub Action builds a Docker image from a specified context
 - name: Build Docker Image
   uses: MapColonies/shared-workflows/actions/build-docker@build-docker-v1.0.0
   with:
-    context: .
     domain: infra
     registry: ${{ secrets.ACR_URL }}
 ```

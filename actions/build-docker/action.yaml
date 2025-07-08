@@ -2,33 +2,42 @@ name: "Build Docker Image"
 description: "Builds a Docker image"
 inputs:
   context:
-    description: "Path to the Docker build context."
-    required: true
+    description: "Path to the Docker build context"
+    required: false
+    default: "."
   repository:
-    description: "Repository name for the Docker image (defaults to current GitHub repository)."
+    description: "Repository name for the Docker image (defaults to current GitHub repository)"
     required: false
     default: ${{ github.repository }}
   domain:
-    description: "The image's domain."
+    description: "The image's domain"
     required: true
   registry:
-    description: Azure Registry to authenticate against.
+    description: "Azure Registry to authenticate against"
     required: true
+outputs:
+  docker_image_name:
+    description: "The name of the Docker image"
+    value: ${{ steps.set_image_name_and_tag.outputs.docker_image_name }}
+  docker_image_tag:
+    description: "The version of the Docker image"
+    value: ${{ steps.set_image_name_and_tag.outputs.docker_image_tag }}
 runs:
   using: "composite"
   steps:
     - name: Checkout code
       uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
 
-    - name: Setup docker image name
+    - name: Setup Docker image name and tag
+      id: set_image_name_and_tag
       run: |
-        IMAGE_TAG="${{ github.ref_name }}"
+        DOCKER_IMAGE_TAG="${{ github.ref_name }}"
         REPO_NAME=$(basename "${{ inputs.repository }}")
-        DOCKER_IMAGE_NAME="${{ inputs.registry }}/${{ inputs.domain }}/${REPO_NAME}:${IMAGE_TAG}"
-        echo "DOCKER_IMAGE_NAME=${DOCKER_IMAGE_NAME,,}" >> $GITHUB_ENV
+        DOCKER_IMAGE_NAME="${{ inputs.registry }}/${{ inputs.domain }}/${REPO_NAME}"
         echo "docker_image_name=$DOCKER_IMAGE_NAME" >> $GITHUB_OUTPUT
+        echo "docker_image_tag=$DOCKER_IMAGE_TAG" >> $GITHUB_OUTPUT
       shell: bash
 
     - name: Build the docker image
-      run: docker build ${{ inputs.context }} -t ${{ env.DOCKER_IMAGE_NAME }}
+      run: docker build ${{ inputs.context }} -t ${{ steps.set_image_name_and_tag.outputs.docker_image_name }}:${{ steps.set_image_name_and_tag.outputs.docker_image_tag }}
       shell: bash
