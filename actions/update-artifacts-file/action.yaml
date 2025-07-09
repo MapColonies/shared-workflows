@@ -43,12 +43,8 @@ runs:
         path: $TARGET_PATH
         ref: ${{ inputs.target_branch }}
 
-    - name: Set execute permission on modify script
-      run: chmod +x actions/update-artifacts-file/modify_artifacts.sh
-      shell: bash
-
     - name: Run modify artifacts script
-      run: actions/update-artifacts-file/modify_artifacts.sh
+      run: ${{ github.action_path }}/modify_artifacts.sh
       shell: bash
       env:
         DOMAIN: ${{ inputs.domain }}
@@ -58,12 +54,8 @@ runs:
         REGISTRY: ${{ inputs.registry }}
         TARGET_DIR: $TARGET_PATH
 
-    - name: Set execute permission on commit script
-      run: chmod +x actions/update-artifacts-file/commit_changes.sh
-      shell: bash
-
     - name: Commit and push changes
-      run: actions/update-artifacts-file/commit_changes.sh
+      run: ${{ github.action_path }}/commit_changes.sh
       shell: bash
       env:
         DOMAIN: ${{ inputs.domain }}
