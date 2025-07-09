@@ -8,7 +8,7 @@ inputs:
   repository:
     description: "Repository name for the Docker image (defaults to current GitHub repository)"
     required: false
-    default: ${{ github.repository }}
+    default: $(basename "${{ github.repository }}")
   domain:
     description: "The image's domain"
     required: true
@@ -39,13 +39,12 @@ runs:
       id: set_image_name_and_tag
       run: |
         DOCKER_IMAGE_TAG="${{ inputs.tag }}"
-        REPO_NAME=$(basename "${{ inputs.repository }}")
-        DOCKER_IMAGE_NAME="${{ inputs.registry }}/${{ inputs.domain }}/${REPO_NAME}"
-        echo "docker_image_name=$REPO_NAME" >> $GITHUB_OUTPUT
+        DOCKER_IMAGE_NAME="${{ inputs.registry }}/${{ inputs.domain }}/${{ inputs.repository }}"
+        echo "docker_image_name=${{ inputs.repository }}" >> $GITHUB_OUTPUT
         echo "docker_image_full_name=$DOCKER_IMAGE_NAME" >> $GITHUB_OUTPUT
         echo "docker_image_tag=$DOCKER_IMAGE_TAG" >> $GITHUB_OUTPUT
       shell: bash
 
     - name: Build the docker image
-      run: docker build ${{ inputs.context }} -t ${{ steps.set_image_name_and_tag.outputs.docker_image_name }}:${{ steps.set_image_name_and_tag.outputs.docker_image_tag }}
+      run: docker build ${{ inputs.context }} -t ${{ steps.set_image_name_and_tag.outputs.docker_image_full_name }}:${{ steps.set_image_name_and_tag.outputs.docker_image_tag }}
       shell: bash
