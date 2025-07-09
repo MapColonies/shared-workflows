@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.1.0](https://github.com/MapColonies/shared-workflows/compare/build-docker-v1.0.1...build-docker-v1.1.0) (2025-07-09)
+
+
+### 🎉 Features
+
+* **build-docker:** add image full name as output ([#83](https://github.com/MapColonies/shared-workflows/issues/83)) ([4360537](https://github.com/MapColonies/shared-workflows/commit/4360537dbbd36c65a1decfd54076d1cfed2b4128))
+
 ## [1.0.1](https://github.com/MapColonies/shared-workflows/compare/build-docker-v1.0.0...build-docker-v1.0.1) (2025-07-08)
 
 
