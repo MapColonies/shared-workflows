@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.1.1](https://github.com/MapColonies/shared-workflows/compare/update-artifacts-file-v1.1.0...update-artifacts-file-v1.1.1) (2025-07-09)
+
+
+### 🐛 Bug Fixes
+
+* **update-artifacts-file:** set the scripts as executable ([#81](https://github.com/MapColonies/shared-workflows/issues/81)) ([ac8755c](https://github.com/MapColonies/shared-workflows/commit/ac8755c3562efdf277de83dd8d0d0ea7f521cc19))
+
 ## [1.1.0](https://github.com/MapColonies/shared-workflows/compare/update-artifacts-file-v1.0.1...update-artifacts-file-v1.1.0) (2025-07-08)
 
 
