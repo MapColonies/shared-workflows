@@ -32,5 +32,5 @@ jobs:
       - name: Test Push Docker Image
         uses: ./actions/push-docker
         with:
-          image_name: ${{ steps.build_docker_image.outputs.docker_image_name }}
+          image_name: ${{ steps.build_docker_image.outputs.docker_image_full_name }}
           image_tag: ${{ steps.build_docker_image.outputs.docker_image_tag }}
