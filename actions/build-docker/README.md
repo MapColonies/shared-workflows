@@ -1,6 +1,6 @@
 # Build Docker Image Action
 
-This GitHub Action builds a Docker image from a specified context
+This GitHub Action builds a Docker image from a specified context and outputs useful image information for downstream steps
 
 ## 🛠 Inputs
 
@@ -14,10 +14,11 @@ This GitHub Action builds a Docker image from a specified context
 
 ## 📤 Outputs
 
-| Name                | Description                                      |
-|---------------------|--------------------------------------------------|
-| `docker_image_name` | The name of the Docker image                     |
-| `docker_image_tag`  | The version/tag of the Docker image              |
+| Name                   | Description                                      |
+|------------------------|--------------------------------------------------|
+| `docker_image_name`    | The name of the Docker image (repository name)   |
+| `docker_image_tag`     | The version/tag of the Docker image              |
+| `docker_image_full_name` | The full name of the Docker image (including registry, domain, and repository) |
 
 ## 🚀 Usage
 
@@ -38,3 +39,10 @@ This GitHub Action builds a Docker image from a specified context
     registry: ${{ secrets.ACR_URL }}
 ```
 <!-- x-release-please-end-version -->
+
+---
+
+**Notes:**
+- The `docker_image_name` output is just the repository name (e.g., `my-repo`).
+- The `docker_image_full_name` output is the full image name including registry, domain, and repository (e.g., `myregistry.azurecr.io/infra/my-repo`).
+- Use the outputs in downstream steps, such as for pushing the image.

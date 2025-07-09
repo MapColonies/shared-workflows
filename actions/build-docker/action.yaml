@@ -26,6 +26,9 @@ outputs:
   docker_image_tag:
     description: "The version of the Docker image"
     value: ${{ steps.set_image_name_and_tag.outputs.docker_image_tag }}
+  docker_image_full_name:
+    description: "The version of the Docker image"
+    value: ${{ steps.set_image_name_and_tag.outputs.docker_image_full_name }}
 runs:
   using: "composite"
   steps:
@@ -38,7 +41,8 @@ runs:
         DOCKER_IMAGE_TAG="${{ inputs.tag }}"
         REPO_NAME=$(basename "${{ inputs.repository }}")
         DOCKER_IMAGE_NAME="${{ inputs.registry }}/${{ inputs.domain }}/${REPO_NAME}"
-        echo "docker_image_name=$DOCKER_IMAGE_NAME" >> $GITHUB_OUTPUT
+        echo "docker_image_name=$REPO_NAME" >> $GITHUB_OUTPUT
+        echo "docker_image_full_name=$DOCKER_IMAGE_NAME" >> $GITHUB_OUTPUT
         echo "docker_image_tag=$DOCKER_IMAGE_TAG" >> $GITHUB_OUTPUT
       shell: bash
 
