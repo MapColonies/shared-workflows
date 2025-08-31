@@ -35,6 +35,12 @@ jobs:
           python-version: '3.x'
           check-latest: true
 
+      - name: Helm registry login
+        run: >
+          helm registry login ${{ secrets.ACR_URL }}
+          --username ${{ secrets.ACR_PUSH_USER }}
+          --password ${{ secrets.ACR_PUSH_TOKEN }}
+
       - name: Update Helm Dependencies
         run: |
           for dir in $(echo ${{ inputs.chartDirs }} | tr "," "\n"); do
@@ -52,12 +58,6 @@ jobs:
           if [[ -n "$changed" ]]; then
             echo "changed=true" >> "$GITHUB_OUTPUT"
           fi
-
-      - name: Helm registry login
-        run: >
-          helm registry login ${{ secrets.ACR_URL }}
-          --username ${{ secrets.ACR_PUSH_USER }}
-          --password ${{ secrets.ACR_PUSH_TOKEN }}
 
       - name: Run chart-testing (lint)
         if: steps.list-changed.outputs.changed == 'true'
