@@ -35,6 +35,12 @@ jobs:
           python-version: '3.x'
           check-latest: true
 
+      - name: Update Helm Dependencies
+        run: |
+          for dir in $(echo ${{ inputs.chartDirs }} | tr "," "\n"); do
+            helm dependency update $dir
+          done
+
       - name: Set up chart-testing
         uses: helm/chart-testing-action@v2.6.1
 
