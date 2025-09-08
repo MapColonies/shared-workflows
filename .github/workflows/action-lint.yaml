@@ -1,0 +1,13 @@
+name: Action Lint
+
+on:
+  pull_request:
+
+jobs:
+  action-lint:
+    runs-on: ubuntu-latest
+    steps:
+      - name: actionlint
+        uses: raven-actions/actionlint@v2
+        with:
+          files: ".github/workflows/*.yml, .github/workflows/*.yaml, actions/**/*.yml, actions/**/*.yaml"
