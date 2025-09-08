@@ -4,6 +4,7 @@ on:
   pull_request:
 
 permissions:
+  contents: read
   pull-requests: write
 
 jobs:
@@ -13,7 +14,4 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v5
       - name: actionlint
-        uses: raven-actions/actionlint@v2
-        with:
-          github_token: ${{ secrets.GH_PAT }}
-          files: ".github/workflows/*.yml, .github/workflows/*.yaml, actions/**/*.yml, actions/**/*.yaml"
+        uses: devops-actions/actionlint@v0.1.9
