@@ -12,6 +12,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v5
+        uses: actions/checkout@v4
       - name: actionlint
-        uses: devops-actions/actionlint@v0.1.9
+        uses: devops-actions/actionlint@v0.1.3
