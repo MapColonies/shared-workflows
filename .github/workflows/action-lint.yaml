@@ -17,4 +17,5 @@ jobs:
         with:
           github_token: ${{ secrets.GH_PAT }}
           reporter: github-pr-check
+          fail_level: error
           actionlint_flags: ".github/workflows/*.yml .github/workflows/*.yaml"
