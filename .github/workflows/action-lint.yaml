@@ -17,4 +17,4 @@ jobs:
         with:
           github_token: ${{ secrets.GH_PAT }}
           reporter: github-pr-check
-          actionlint_flags: ".github/workflows/*.yml, .github/workflows/*.yaml"
+          actionlint_flags: ".github/workflows/*.yml .github/workflows/*.yaml actions/**/*.yml actions/**/*.yaml"
