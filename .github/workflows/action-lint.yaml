@@ -15,4 +15,5 @@ jobs:
       - name: actionlint
         uses: raven-actions/actionlint@v2
         with:
+          github_token: ${{ secrets.GH_PAT }}
           files: ".github/workflows/*.yml, .github/workflows/*.yaml, actions/**/*.yml, actions/**/*.yaml"
