@@ -17,6 +17,6 @@ jobs:
         uses: reviewdog/action-actionlint@v1.65.2
         with:
           github_token: ${{ secrets.GH_PAT }}
-          reporter: github-pr-check
+          reporter: github-pr-review
           fail_level: error
           actionlint_flags: ".github/workflows/*.yml .github/workflows/*.yaml"
