@@ -9,7 +9,7 @@ This GitHub Action installs Node.js dependencies, runs code linting, and validat
 |----------------|---------------------------------------|---------|----------|
 | `node_version` | Node.js version to set up             | `20`    | ❌ No	    |
 | `path`         | Path to the directory containing your Node.js project| `.`     | ❌ No	    |
-| `openapi-file` | Path to the OpenAPI file (e.g. ./openapi3.yaml)	| `.` | ❌ No	 |
+| `openapi-file` | Path to the OpenAPI file (e.g. ./openapi3.yaml)	| `./openapi3.yaml` | ❌ No	 |
 
 ## 🚀 Usage
 
