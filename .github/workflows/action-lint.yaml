@@ -19,3 +19,4 @@ jobs:
         uses: reviewdog/action-actionlint@v1.65.2
         with:
           github_token: ${{ secrets.GH_PAT }}
+          reporter: github-pr-review
