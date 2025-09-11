@@ -1,11 +1,33 @@
 name: reviewdog
 on: [pull_request]
 jobs:
-  actionlint:
+  actionlint-workflows:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
       - uses: reviewdog/action-actionlint@a5524e1c19e62881d79c1f1b9b6f09f16356e281 # v1.65.2
         with:
-          github_token: ${{ secrets.GH_PAT }}
+          github_token: ${{ secrets.GITHUB_TOKEN }}
           reporter: github-pr-review
+  actionlint-actions:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: Install actionlint
+        run: |
+          version=$(curl -s https://api.github.com/repos/rhysd/actionlint/releases/latest | grep tag_name | cut -d '"' -f4)
+          curl -sSL "https://github.com/rhysd/actionlint/releases/download/${version}/actionlint_${version#v}_linux_amd64.tar.gz" | tar xz
+          sudo mv actionlint /usr/local/bin/
+      - name: Run actionlint
+        run: |
+          find actions -type f \( -name "*.yml" -o -name "*.yaml" \) -print0 | \
+            xargs -0 actionlint -format gcc 2>&1 | tee actionlint.log
+      - name: Install reviewdog
+        run: |
+          curl -sfL https://raw.githubusercontent.com/reviewdog/reviewdog/master/install.sh | sh -s -- -b /usr/local/bin
+      - name: Report with reviewdog
+        env:
+          REVIEWDOG_GITHUB_API_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          cat actionlint.log | reviewdog -efm="%f:%l:%c: %m" -name=actionlint -reporter=github-pr-review -fail-on-error=true
