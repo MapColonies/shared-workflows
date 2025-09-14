@@ -20,10 +20,10 @@ jobs:
           set -e
           ACTIONLINT_VERSION="v1.7.5"
           ACTIONLINT_TAR_FILENAME="actionlint_${ACTIONLINT_VERSION#v}_linux_amd64.tar.gz"
-          curl -sSL -o ${ACTIONLINT_TAR_FILENAME} "https://github.com/rhysd/actionlint/releases/download/${ACTIONLINT_VERSION}/${ACTIONLINT_TAR_FILENAME}"
+          curl -sSL -o "${ACTIONLINT_TAR_FILENAME}" "https://github.com/rhysd/actionlint/releases/download/${ACTIONLINT_VERSION}/${ACTIONLINT_TAR_FILENAME}"
           curl -sSL -o checksums.txt "https://github.com/rhysd/actionlint/releases/download/${ACTIONLINT_VERSION}/actionlint_${ACTIONLINT_VERSION#v}_checksums.txt"
           grep "${ACTIONLINT_TAR_FILENAME}" checksums.txt | sha256sum -c -
-          tar xzf ${ACTIONLINT_TAR_FILENAME}
+          tar xzf "${ACTIONLINT_TAR_FILENAME}"
       - name: Run actionlint
         run: |
           if [ -d actions ]; then
