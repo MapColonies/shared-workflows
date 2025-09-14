@@ -31,7 +31,7 @@ jobs:
           fi
       - name: Install reviewdog
         run: |
-          curl -sfL https://raw.githubusercontent.com/reviewdog/reviewdog/master/install.sh | sh -s -- -b /usr/local/bin
+          curl -sfL https://raw.githubusercontent.com/reviewdog/reviewdog/v0.17.3/install.sh | sh -s -- -b /usr/local/bin
       - name: Report with reviewdog
         env:
           REVIEWDOG_GITHUB_API_TOKEN: ${{ secrets.GITHUB_TOKEN }}
