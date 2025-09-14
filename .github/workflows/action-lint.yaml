@@ -17,9 +17,13 @@ jobs:
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
       - name: Install actionlint
         run: |
-          version=$(curl -s https://api.github.com/repos/rhysd/actionlint/releases/latest | grep tag_name | cut -d '"' -f4)
-          curl -sSL "https://github.com/rhysd/actionlint/releases/download/${version}/actionlint_${version#v}_linux_amd64.tar.gz" | tar xz
-          sudo mv actionlint /usr/local/bin/
+          set -e
+          ACTIONLINT_VERSION="v1.7.5"
+          ACTIONLINT_TAR_FILENAME="actionlint_${ACTIONLINT_VERSION#v}_linux_amd64.tar.gz"
+          curl -sSL -o ${ACTIONLINT_TAR_FILENAME} "https://github.com/rhysd/actionlint/releases/download/${ACTIONLINT_VERSION}/${ACTIONLINT_TAR_FILENAME}"
+          curl -sSL -o checksums.txt "https://github.com/rhysd/actionlint/releases/download/${ACTIONLINT_VERSION}/actionlint_${ACTIONLINT_VERSION#v}_checksums.txt"
+          grep "${ACTIONLINT_TAR_FILENAME}" checksums.txt | sha256sum -c -
+          tar xzf ${ACTIONLINT_TAR_FILENAME}
       - name: Run actionlint
         run: |
           if [ -d actions ]; then
