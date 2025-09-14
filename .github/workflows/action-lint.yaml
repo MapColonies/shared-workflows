@@ -31,7 +31,7 @@ jobs:
                 xargs -0 actionlint 2>&1 | tee actionlint.log
           else
             echo "No 'actions' directory found. Skipping actionlint for actions."
-            exit 1
+            exit 0
           fi
       - name: Install reviewdog
         run: |
