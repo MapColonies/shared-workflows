@@ -22,8 +22,13 @@ jobs:
           sudo mv actionlint /usr/local/bin/
       - name: Run actionlint
         run: |
-          find actions -type f \( -name "*.yml" -o -name "*.yaml" \) -print0 | \
-            xargs -0 actionlint 2>&1 | tee actionlint.log
+          if [ -d actions ]; then
+            find actions -type f \( -name "*.yml" -o -name "*.yaml" \) -print0 | \
+                xargs -0 actionlint 2>&1 | tee actionlint.log
+          else
+            echo "No 'actions' directory found. Skipping actionlint for actions."
+            exit 1
+          fi
       - name: Install reviewdog
         run: |
           curl -sfL https://raw.githubusercontent.com/reviewdog/reviewdog/master/install.sh | sh -s -- -b /usr/local/bin
