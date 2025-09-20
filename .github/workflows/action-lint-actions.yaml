@@ -1,5 +1,9 @@
 name: reviewdog
-on: [pull_request]
+on:
+  pull_request:
+    paths:
+      - "actions/**"
+
 jobs:
   actionlint-actions:
     runs-on: ubuntu-latest
@@ -8,7 +12,7 @@ jobs:
       - name: Build actionlint flags
         id: build_flags
         run: |
-          files="$(find actions -type f \( -name '*.yml' -o -name '*.yaml' \) | paste -sd' ' -)"
+          files="$(find actions -type f \( -name 'action.yml' -o -name 'action.yaml' \) | paste -sd' ' -)"
           # shellcheck disable=SC2086
           echo "flags=$files" >> $GITHUB_OUTPUT
       - uses: reviewdog/action-actionlint@a5524e1c19e62881d79c1f1b9b6f09f16356e281 # v1.65.2
