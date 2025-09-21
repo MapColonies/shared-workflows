@@ -21,7 +21,6 @@ This GitHub Action packages a Helm chart and pushes it to a Azure Container Regi
 ## 🚀 Usage
 
 <!-- x-release-please-start-version -->
-
 ```yaml
 - name: Artifactory Login
   uses: MapColonies/shared-workflows/actions/artifactory-login@9a05fd7a01e18746d69cc210b7e6defbd1cc79fc # v1.0.1
@@ -33,9 +32,8 @@ This GitHub Action packages a Helm chart and pushes it to a Azure Container Regi
 - name: Build and Push Helm Chart
   uses: MapColonies/shared-workflows/actions/build-and-push-helm@build-and-push-helm-v1.0.1
   with:
-    context: ./infra/monitoring
+    context: ./PATH/TO/HELM/CHART
     domain: infra
     registry: ${{ secrets.ACR_URL }}
 ```
-
 <!-- x-release-please-end-version -->

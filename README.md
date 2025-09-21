@@ -11,14 +11,9 @@ This repository contains GitHub Actions used across the MapColonies organization
 ```
 .
 ├── actions/                # Reusable composite actions
-│   ├── artifactory-login/
-│   ├── build-docker/
 │   ├── build-and-push-helm/
 │   ├── helm-lint/
 │   ├── init-npm/
-│   ├── eslint/
-│   ├── openapi-lint/
-│   ├── push-docker/
 │   └── update-artifacts-file/
 ├── test/                   # Assets for testing the actions
 ├── .github/workflows/      # Utility and Test workflows for each action
@@ -45,13 +40,8 @@ Each action has a dedicated folder with:
 
 | Action | Description |
 |--------|-------------|
-| `artifactory-login`       | Logs in to Azure Container Registry |
-| `build-docker`          | Builds Docker images                    |
-| `push-docker`           | Pushes Docker images                    |
 | `build-and-push-helm`     | Packages and publishes Helm charts |
 | `helm-lint`               | Lints and tests Helm charts |
-| `eslint`	                | Runs ESLint to check JavaScript/TypeScript code |
-| `openapi-lint`            | Validates OpenAPI specs using Redocly CLI |
 | `init-npm`                | Initializes the repo with npm |
 | `update-artifacts-file`   | Updates `artifacts.json` metadata |
 
