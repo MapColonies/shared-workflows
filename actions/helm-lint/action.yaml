@@ -1,7 +1,7 @@
 name: "Lint and Test Helm Charts"
 description: "An action to lint and test Helm charts using chart-testing and kind."
 inputs:
-  chartDirs:
+  chartPaths:
     description: "Comma-separated list of root directories containing Helm charts."
     required: false
     default: "."
@@ -29,7 +29,7 @@ runs:
     - name: Run chart-testing (list-changed)
       id: list_changed
       run: |
-        changed=$(ct list-changed --chart-dirs "${{ inputs.chartDirs }}" --target-branch "${{ github.base_ref || github.event.repository.default_branch }}")
+        changed=$(ct list-changed --chart-dirs "${{ inputs.chartPaths }}" --target-branch "${{ github.base_ref || github.event.repository.default_branch }}")
         if [[ -n "$changed" ]]; then
           echo "changed=true" >> "$GITHUB_OUTPUT"
         fi
@@ -37,7 +37,7 @@ runs:
 
     - name: Run chart-testing (lint)
       if: steps.list-changed.outputs.changed == 'true'
-      run: ct lint --chart-dirs "${{ inputs.chartDirs }}" --target-branch "${{ github.base_ref || github.event.repository.default_branch }}"
+      run: ct lint --chart-dirs "${{ inputs.chartPaths }}" --target-branch "${{ github.base_ref || github.event.repository.default_branch }}"
       shell: bash
 
     - name: Create kind cluster
@@ -46,5 +46,5 @@ runs:
 
     - name: Run chart-testing (install)
       if: steps.list-changed.outputs.changed == 'true'
-      run: ct install --chart-dirs "${{ inputs.chartDirs }}" --target-branch "${{ github.base_ref || github.event.repository.default_branch }}"
+      run: ct install --chart-dirs "${{ inputs.chartPaths }}" --target-branch "${{ github.base_ref || github.event.repository.default_branch }}"
       shell: bash

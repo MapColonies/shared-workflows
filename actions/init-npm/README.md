@@ -6,7 +6,7 @@ This GitHub Action sets up Node.js, installs dependencies using npm, and builds 
 
 | Name           | Description                           | Default | Required |
 |----------------|---------------------------------------|---------|----------|
-| `node_version` | Node.js version to set up ([supported versions](https://github.com/actions/setup-node#supported-version-syntax))             | `20.x`  | false    |
+| `node_version` | Node.js version to set up ([supported versions](https://github.com/actions/setup-node#supported-version-syntax))      | `22.x`  | false    |
 | `path` | Path to the directory containing your Node.js project             | `.`  | false    |
 
 ## 🚀 Usage
@@ -16,6 +16,6 @@ This GitHub Action sets up Node.js, installs dependencies using npm, and builds 
 - name: Initialize NPM Project
   uses: MapColonies/shared-workflows/actions/init-npm@init-npm-v1.0.0
   with:
-    node-version: '20.x'
+    node-version: '22.x'
 ```
 <!-- x-release-please-end-version -->

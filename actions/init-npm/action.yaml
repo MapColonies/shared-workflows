@@ -3,7 +3,7 @@ description: 'Initialize the repo with npm and install all the dependencies'
 inputs:
   node-version:
     description: 'Node.js version'
-    required: true
+    required: false
     default: '22.x'
   path:
     description: "Path to the Node.js directory"
