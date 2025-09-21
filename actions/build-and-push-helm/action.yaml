@@ -1,5 +1,6 @@
 name: "Build and Push Helm Chart"
 description: "Builds and publishes a Helm chart to the specified registry."
+
 inputs:
   domain:
     description: "The chart's domain."
@@ -44,6 +45,7 @@ runs:
         VER=$(grep '^version:' Chart.yaml | awk '{print $2}')
         echo "ver=$VER" >> $GITHUB_OUTPUT
       working-directory: ${{ inputs.context }}
+      shell: bash
 
     - name: Package chart into tgz file
       run: |
