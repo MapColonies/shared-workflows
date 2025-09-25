@@ -21,7 +21,7 @@ jobs:
         id: helm-lint
         with:
           repository: ${{ github.repository }}
-          chartDirs: "./test/helm"
+          chartPaths: "./test/helm"
 
       - name: Print on chart change
         if: steps.helm-lint.outputs.changed == 'true'
