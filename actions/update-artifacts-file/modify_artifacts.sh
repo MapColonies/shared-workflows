@@ -1,5 +1,5 @@
 #!/bin/bash
-ARTIFACTS_PATH="$TARGET_DIR/$DOMAIN/artifacts.json"
+ARTIFACTS_PATH="$TARGET_PATH/$DOMAIN/artifacts.json"
 
 # Make sure the directory exists
 mkdir -p "$(dirname "$ARTIFACTS_PATH")"

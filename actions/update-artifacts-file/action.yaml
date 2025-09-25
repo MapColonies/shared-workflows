@@ -52,7 +52,7 @@ runs:
         ARTIFACT_TAG: ${{ inputs.artifact_tag }}
         TYPE: ${{ inputs.type }}
         REGISTRY: ${{ inputs.registry }}
-        TARGET_DIR: $TARGET_PATH
+        TARGET_PATH: $TARGET_PATH
 
     - name: Commit and push changes
       run: ${{ github.action_path }}/commit_changes.sh
@@ -64,7 +64,7 @@ runs:
         TYPE: ${{ inputs.type }}
         GITHUB_TOKEN: ${{ inputs.github_token }}
         TARGET_REPO: ${{ inputs.target_repo }}
-        TARGET_DIR: $TARGET_PATH
+        TARGET_PATH: $TARGET_PATH
         TARGET_BRANCH: ${{ inputs.target_branch }}
 
     - name: Clean up target repo folder
