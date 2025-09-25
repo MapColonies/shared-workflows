@@ -17,7 +17,7 @@ This GitHub Action installs Node.js dependencies, runs code linting, and validat
 
 ```yaml
 - name: Run OpenAPI Lint
-  uses: MapColonies/shared-workflows/actions/openapi-lint@openapi-lint-v1.0.0
+  uses: MapColonies/shared-workflows/actions/openapi-lint@openapi-lint-v1.0.1
   with:
     node_version: "20"
     openapi-file: "./openapi3.yaml"
