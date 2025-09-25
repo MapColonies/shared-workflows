@@ -14,14 +14,16 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
 
       - name: helm lint
         uses: ./actions/helm-lint
         id: helm-lint
         with:
           repository: ${{ github.repository }}
-          chartDirs: "./test/helm"
+          chartPaths: "./test/helm"
 
       - name: Print on chart change
         if: steps.helm-lint.outputs.changed == 'true'
