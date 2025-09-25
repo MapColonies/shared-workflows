@@ -11,7 +11,6 @@ This repository contains GitHub Actions used across the MapColonies organization
 ```
 .
 ├── actions/                # Reusable composite actions
-│   ├── build-and-push-helm/
 │   ├── helm-lint/
 │   ├── init-npm/
 │   └── update-artifacts-file/
@@ -40,7 +39,6 @@ Each action has a dedicated folder with:
 
 | Action | Description |
 |--------|-------------|
-| `build-and-push-helm`     | Packages and publishes Helm charts |
 | `helm-lint`               | Lints and tests Helm charts |
 | `init-npm`                | Initializes the repo with npm |
 | `update-artifacts-file`   | Updates `artifacts.json` metadata |
