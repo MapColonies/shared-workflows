@@ -14,7 +14,7 @@ This GitHub Action sets up Node.js, installs dependencies using npm, and builds 
 <!-- x-release-please-start-version -->
 ```yaml
 - name: Initialize NPM Project
-  uses: MapColonies/shared-workflows/actions/init-npm@init-npm-v1.0.0
+  uses: MapColonies/shared-workflows/actions/init-npm@init-npm-v1.1.0
   with:
     node-version: '22.x'
 ```
