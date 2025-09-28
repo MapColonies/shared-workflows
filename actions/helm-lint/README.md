@@ -9,7 +9,7 @@ It detects which charts have changed and only tests those.
 
 | Name         | Description                                                  | Required |
 |--------------|--------------------------------------------------------------|----------|
-| `chartDirs`  | Comma-separated list of root directories with Helm charts.   | ✅ Yes     |
+| `chartPaths` | Comma-separated list of root directories with Helm charts.   | No       |
 
 ## 📤 Outputs
 
@@ -25,6 +25,6 @@ It detects which charts have changed and only tests those.
 - name: Lint and Test Charts
   uses: MapColonies/shared-workflows/actions/helm-lint@helm-lint-v1.0.0
   with:
-    chartDirs: infra/monitoring,infra/sftpgo
+    chartPaths: infra/monitoring,infra/sftpgo
 ```
 <!-- x-release-please-end-version -->

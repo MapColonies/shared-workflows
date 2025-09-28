@@ -1,10 +1,8 @@
 #!/bin/bash
-cd "$TARGET_DIR"
+cd "$TARGET_PATH"
 
 git config user.name "mapcolonies[bot]"
 git config user.email "devops[bot]@mapcolonies.com"
-
-git checkout "$TARGET_BRANCH"
 
 git add "$DOMAIN/artifacts.json"
 git commit -m "chore: update artifacts.json for $DOMAIN" -m "with $TYPE artifact: $ARTIFACT_NAME:$ARTIFACT_TAG" || echo "Nothing to commit"

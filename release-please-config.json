@@ -54,39 +54,9 @@
     "include-v-in-tag": true,
     "separate-pull-requests": true,
     "packages": {
-      "actions/artifactory-login": {
-        "release-type": "simple",
-        "package-name": "artifactory-login",
-        "extra-files": ["README.md"]
-      },
-      "actions/build-docker": {
-        "release-type": "simple",
-        "package-name": "build-docker",
-        "extra-files": ["README.md"]
-      },
-      "actions/push-docker": {
-        "release-type": "simple",
-        "package-name": "push-docker",
-        "extra-files": ["README.md"]
-      },
-      "actions/build-and-push-helm": {
-        "release-type": "simple",
-        "package-name": "build-and-push-helm",
-        "extra-files": ["README.md"]
-      },
-      "actions/eslint": {
-        "release-type": "simple",
-        "package-name": "eslint",
-        "extra-files": ["README.md"]
-      },
       "actions/helm-lint": {
         "release-type": "simple",
         "package-name": "helm-lint",
-        "extra-files": ["README.md"]
-      },
-      "actions/openapi-lint": {
-        "release-type": "simple",
-        "package-name": "openapi-lint",
         "extra-files": ["README.md"]
       },
       "actions/update-artifacts-file": {
