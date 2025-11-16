@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.2.0](https://github.com/MapColonies/shared-workflows/compare/init-npm-v1.1.0...init-npm-v1.2.0) (2025-11-16)
+
+
+### 🎉 Features
+
+* **init-npm:** update default Node.js version to 24.x ([#96](https://github.com/MapColonies/shared-workflows/issues/96)) ([96ff9b0](https://github.com/MapColonies/shared-workflows/commit/96ff9b0a0f87665aca08dfb36fdb1b93f1afb3fb))
+
 ## [1.1.0](https://github.com/MapColonies/shared-workflows/compare/init-npm-v1.0.0...init-npm-v1.1.0) (2025-09-28)
 
 
