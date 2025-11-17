@@ -1,0 +1,30 @@
+name: validate-domain
+description: "Validate that helm/Chart.yaml contains annotations.domain with an allowed value"
+
+inputs:
+  chart-file:
+    description: "Path to Chart.yaml"
+    required: false
+    default: "helm/Chart.yaml"
+
+runs:
+  using: composite
+  steps:
+    - name: Read domain annotation from Chart.yaml
+      id: get_domain
+      uses: mikefarah/yq@v4.48.2
+      with:
+        cmd: yq e '.annotations.domain' "${{ inputs.chart-file }}"
+
+    - name: Validate domain
+      env:
+        ALLOWED_DOMAINS: "raster,vector,infra,3d,app,dem,common"
+      shell: bash
+      run: |
+        DOMAIN="${{ steps.get_domain.outputs.result }}"
+        IFS=',' read -ra ALLOWED <<< "${{ env.ALLOWED_DOMAINS }}"
+
+        if ! printf "%s\n" "${ALLOWED[@]}" | grep -qx "$DOMAIN"; then
+          echo "Invalid domain: $DOMAIN"
+          exit 1
+        fi
