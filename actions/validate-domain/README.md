@@ -12,12 +12,19 @@ Checks if the `Chart.yaml` has the "domain" annotation and validates that the do
 | Name | Required | Default | Description |
 |------|----------|---------|-------------|
 | `chart-file` | no | `helm/Chart.yaml` | Path to the Helm chart file whose `annotations.domain` will be validated. |
-| `allowed-domains` | no | `raster,vector,infra,3d,app,dem,common` | Comma-separated list of allowed domain values. |
+
+The set of allowed domains is constant (not configurable):
+
+```
+raster, vector, infra, 3d, app, dem, common
+```
+
+If you need to change or extend this list, update the action source or open a PR.
 
 
 ## 🚀 Usage
 
 ```yaml
-      - name: Validate with custom domains
+      - name: Validate domain
         uses: MapColonies/shared-workflows/actions/validate-domain@v1
 ```

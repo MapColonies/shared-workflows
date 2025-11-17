@@ -2,14 +2,15 @@ name: test-validate-domain
 
 on:
   pull_request:
-
+    paths:
+    - "actions/validate-domain/**"
+  
 jobs:
   validate-domain:
-    name: Validate composite action
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
+      - name: Checkout code
+        uses: actions/checkout@v5
 
       - name: Test validate domain action
         uses: ./actions/validate-domain
