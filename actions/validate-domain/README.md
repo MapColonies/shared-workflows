@@ -24,7 +24,9 @@ If you need to change or extend this list, update the action source or open a PR
 
 ## 🚀 Usage
 
+<!-- x-release-please-start-version -->
 ```yaml
       - name: Validate domain
         uses: MapColonies/shared-workflows/actions/validate-domain@v1
 ```
+<!-- x-release-please-end-version -->
