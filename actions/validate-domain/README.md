@@ -5,9 +5,7 @@ Validate that a Helm chart (`Chart.yaml`) contains an `annotations.domain` value
 ## ✨ What It Does
 
 The action:
-- Reads `.annotations.domain` from the chart using `yq`.
-- Splits the `allowed-domains` input on commas only.
-- Fails the job if the domain value is not an exact match for one of the allowed items.
+Checks if the `Chart.yaml` has the "domain" annotation and validates that the domain is in the domains list
 
 ## Inputs
 
