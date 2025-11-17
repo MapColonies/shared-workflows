@@ -1,0 +1,49 @@
+name: validate-domain
+description: "Validate that helm/Chart.yaml contains annotations.domain with an allowed value"
+
+inputs:
+  chart-file:
+    description: "Path to Chart.yaml"
+    required: false
+    default: "helm/Chart.yaml"
+  allowed-domains:
+    description: "Space-separated list of allowed domain values"
+    required: false
+    default: "raster vector infra 3d app dem common"
+
+runs:
+  using: composite
+  steps:
+    - name: Read domain annotation from Chart.yaml
+      id: get_domain
+      uses: mikefarah/yq@v4.44.1
+      with:
+        cmd: yq e '.annotations.domain // "null"' "${{ inputs.chart-file }}"
+
+    - name: Validate domain value
+      shell: bash
+      run: |
+        chart_file="${{ inputs.chart-file }}"
+        domain="${{ steps.get_domain.outputs.result }}"
+        # Convert space/comma/semicolon/pipe separated list to array
+        IFS=' ,;|' read -r -a allowed <<< "${{ inputs.allowed-domains }}"
+
+        if [ -z "${domain}" ] || [ "${domain}" = "null" ]; then
+          echo "::error file=${chart_file}::annotations.domain is missing under .annotations in Chart.yaml"
+          exit 1
+        fi
+
+        match=false
+        for v in "${allowed[@]}"; do
+          if [ "${domain}" = "${v}" ]; then
+            match=true
+            break
+          fi
+        done
+
+        if [ "${match}" = false ]; then
+          echo "::error file=${chart_file}::annotations.domain ('${domain}') must be one of: ${allowed[*]}"
+          exit 1
+        fi
+
+        echo "annotations.domain is valid."
