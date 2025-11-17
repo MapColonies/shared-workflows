@@ -9,14 +9,7 @@ inputs:
   allowed-domains:
     description: "List of allowed domain values"
     required: false
-    default: |
-      - raster
-      - vector
-      - infra
-      - 3d
-      - app
-      - dem
-      - common
+    default: "raster,vector,infra,3d,app,dem,common"
 
 runs:
   using: composite
@@ -31,7 +24,9 @@ runs:
       shell: bash
       run: |
         DOMAIN="${{ steps.get_domain.outputs.result }}"
-        allowed=(${{ toJson(inputs.allowed-domains) }})
+        IFS=',' read -ra ALLOWED <<< "${{ inputs.allowed-domains }}"
 
-        printf "%s\n" "${allowed[@]}" | grep -qx "$DOMAIN" \
-          || { echo "Invalid domain: $DOMAIN"; exit 1; }
+        if ! printf "%s\n" "${ALLOWED[@]}" | grep -qx "$DOMAIN"; then
+          echo "Invalid domain: $DOMAIN"
+          exit 1
+        fi
