@@ -68,6 +68,11 @@
         "release-type": "simple",
         "package-name": "init-npm",
         "extra-files": ["README.md"]
+      },
+      "actions/validate-domain": {
+        "release-type": "simple",
+        "package-name": "validate-domain",
+        "extra-files": ["README.md"]
       }
     }
 }
