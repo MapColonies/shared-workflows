@@ -51,5 +51,3 @@ This GitHub Action checks out a the MapColonies site-values repository (can be o
 ```
 
 <!-- x-release-please-end-version -->
-
----
