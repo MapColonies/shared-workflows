@@ -1,0 +1,68 @@
+name: "Update site-values and create PR"
+description: "Checks out the site-values repo, updates the chart tag for the current service, and opens a PR"
+
+inputs:
+  tag:
+    description: "Chart tag (version) to set for this service"
+    required: true
+  domain:
+    description: "Domain folder in site-values (e.g. raster, vector, app)"
+    required: true
+  github_token:
+    description: "GitHub token with write access to the site-values repository"
+    required: true
+  repository:
+    description: "Target repository"
+    required: false
+    default: "site-values"
+  branch:
+    description: "Target base branch in repository"
+    required: false
+    default: "master"
+  service_repo:
+    description: "Name of the service repository to update in site-values"
+    required: false
+    default: ${{ github.event.repository.name }}
+  environment:
+    description: "Environment YAML to update under environments/ (e.g. dev)"
+    required: false
+    default: "dev"
+  pr_labels:
+    description: "Labels to apply on the created PR (newline or comma separated)"
+    required: false
+    default: |
+      dev
+      auto-merge
+
+runs:
+  using: "composite"
+  steps:
+    - name: Checkout ${{ inputs.repository }} repo
+      uses: actions/checkout@v5
+      with:
+        repository: MapColonies/${{ inputs.repository }}
+        token: ${{ inputs.github_token }}
+        path: ${{ inputs.repository }}
+        ref: ${{ inputs.branch }}
+
+    - name: Update tag in ${{ inputs.repository }} (yq)
+      uses: mikefarah/yq@v4.48.2
+      with:
+        cmd: >-
+          yq eval -i
+          ".chartsVersions[\"${{ inputs.service_repo }}\"] = \"${{ inputs.tag }}\""
+          "${{ inputs.repository }}/${{ inputs.domain }}/environments/${{ inputs.environment }}.yaml"
+
+    - name: Create Pull Request
+      uses: peter-evans/create-pull-request@v6
+      with:
+        path: ${{ inputs.repository }}
+        token: ${{ inputs.github_token }}
+        commit-message: >-
+          feat: update ${{ inputs.domain }}/${{ inputs.service_repo }} to ${{ inputs.tag }}
+        title: >-
+          feat: update ${{ inputs.domain }}/${{ inputs.service_repo }} to ${{ inputs.tag }}
+        body: |
+          Trigger commit: https://github.com/${{ github.repository }}/commit/${{ github.sha }}
+        labels: ${{ inputs.pr_labels }}
+        branch: ${{ inputs.service_repo }}-${{ github.sha }}
