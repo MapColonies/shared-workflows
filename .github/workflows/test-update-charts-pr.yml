@@ -1,16 +1,7 @@
 name: Test update-charts-pr action
 
 on:
-  workflow_dispatch:
-    inputs:
-      tag:
-        description: "Chart tag (version) to set"
-        required: true
-        type: string
-      domain:
-        description: "Domain folder in site-values (e.g. raster, vector, app)"
-        required: true
-        type: string
+  workflow_call:
 
 jobs:
   test-action:

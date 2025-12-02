@@ -23,6 +23,11 @@
         "release-type": "simple",
         "package-name": "validate-domain",
         "extra-files": ["README.md"]
+      },
+      "actions/update-charts-pr": {
+        "release-type": "simple",
+        "package-name": "update-charts-pr",
+        "extra-files": ["README.md"]
       }
     }
 }
