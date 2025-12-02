@@ -5,9 +5,13 @@ inputs:
   tag:
     description: "Chart tag (version) to set for this service"
     required: true
-  domain:
-    description: "Domain folder in site-values (e.g. raster, vector, app)"
+  update_path:
+    description: "Path to the YAML file to update"
     required: true
+  service_repo:
+    description: "Name of the service repository to update in site-values"
+    required: false
+    default: ${{ github.event.repository.name }}
   github_token:
     description: "GitHub token with write access to the site-values repository"
     required: true
@@ -19,20 +23,10 @@ inputs:
     description: "Target base branch in repository"
     required: false
     default: "master"
-  service_repo:
-    description: "Name of the service repository to update in site-values"
-    required: false
-    default: ${{ github.event.repository.name }}
-  environment:
-    description: "Environment YAML to update under environments/ (e.g. dev)"
-    required: false
-    default: "dev"
   pr_labels:
     description: "Labels to apply on the created PR (newline or comma separated)"
     required: false
-    default: |
-      dev
-      auto-merge
+    default: dev, auto-merge
 
 runs:
   using: "composite"
@@ -45,13 +39,23 @@ runs:
         path: ${{ inputs.repository }}
         ref: ${{ inputs.branch }}
 
+    - name: extract values from update_path
+      shell: bash
+      run: |
+        IFS='/' read -r -a path_parts <<< "${{ inputs.update_path }}"
+        DOMAIN="${path_parts[0]}"
+        FILE_NAME="${path_parts[${#path_parts[@]}-1]}"
+        ENVIRONMENT="${FILE_NAME%.*}"
+        echo "DOMAIN=$DOMAIN" >> $GITHUB_ENV
+        echo "ENVIRONMENT=$ENVIRONMENT" >> $GITHUB_ENV
+
     - name: Update tag in ${{ inputs.repository }} (yq)
       uses: mikefarah/yq@v4.48.2
       with:
         cmd: >-
           yq eval -i
           ".chartsVersions[\"${{ inputs.service_repo }}\"] = \"${{ inputs.tag }}\""
-          "${{ inputs.repository }}/${{ inputs.domain }}/environments/${{ inputs.environment }}.yaml"
+          "${{ inputs.repository }}/${{ env.DOMAIN }}/environments/${{ env.ENVIRONMENT }}.yaml"
 
     - name: Create Pull Request
       uses: peter-evans/create-pull-request@v6
@@ -59,9 +63,9 @@ runs:
         path: ${{ inputs.repository }}
         token: ${{ inputs.github_token }}
         commit-message: >-
-          feat: update ${{ inputs.domain }}/${{ inputs.service_repo }} to ${{ inputs.tag }}
+          feat: update ${{ env.DOMAIN }}/${{ inputs.service_repo }} to ${{ inputs.tag }}
         title: >-
-          feat: update ${{ inputs.domain }}/${{ inputs.service_repo }} to ${{ inputs.tag }}
+          feat: update ${{ env.DOMAIN }}/${{ inputs.service_repo }} to ${{ inputs.tag }}
         body: |
           Trigger commit: https://github.com/${{ github.repository }}/commit/${{ github.sha }}
         labels: ${{ inputs.pr_labels }}

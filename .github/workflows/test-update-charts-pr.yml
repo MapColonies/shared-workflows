@@ -14,6 +14,6 @@ jobs:
         uses: ./actions/update-charts-pr
         with:
           tag: 0.0.0
-          domain: infra
           github_token: ${{ secrets.GH_PAT }}
           service_repo: test-service-repo
+          update_path: infra/environments/dev.yaml
