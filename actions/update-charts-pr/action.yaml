@@ -5,8 +5,8 @@ inputs:
   tag:
     description: "Chart tag (version) to set for this service"
     required: true
-  update_path:
-    description: "Path to the YAML file to update"
+  update_paths:
+    description: "One or more YAML paths to update (newline or comma separated)"
     required: true
   service_repo:
     description: "Name of the service repository to update in site-values"
@@ -38,23 +38,26 @@ runs:
         path: ${{ inputs.repository }}
         ref: ${{ inputs.branch }}
 
-    - name: extract values from update_path
-      shell: bash
-      run: |
-        IFS='/' read -r -a path_parts <<< "${{ inputs.update_path }}"
-        DOMAIN="${path_parts[0]}"
-        FILE_NAME="${path_parts[${#path_parts[@]}-1]}"
-        ENVIRONMENT="${FILE_NAME%.*}"
-        echo "DOMAIN=$DOMAIN" >> $GITHUB_ENV
-        echo "ENVIRONMENT=$ENVIRONMENT" >> $GITHUB_ENV
-
-    - name: Update tag in ${{ inputs.repository }} (yq)
+    - name: Update tags in ${{ inputs.repository }}
       uses: mikefarah/yq@v4.48.2
       with:
-        cmd: >-
-          yq eval -i
-          ".chartsVersions[\"${{ inputs.service_repo }}\"] = \"${{ inputs.tag }}\""
-          "${{ inputs.repository }}/${{ env.DOMAIN }}/environments/${{ env.ENVIRONMENT }}.yaml"
+        cmd: |
+          set -euo pipefail
+
+          echo "Updating chartsVersions[\"${{ inputs.service_repo }}\"] to \"${{ inputs.tag }}\" in:"
+          # Support newline or comma separated list
+          echo '${{ inputs.update_paths }}' | tr ',' '\n' | while IFS= read -r relpath; do
+            # skip empty lines
+            [ -z "$relpath" ] && continue
+
+            # trim possible leading/trailing spaces
+            relpath="$(echo "$relpath" | xargs)"
+
+            echo "  - $relpath"
+            yq eval -i \
+              ".chartsVersions[\"${{ inputs.service_repo }}\"] = \"${{ inputs.tag }}\"" \
+              "${{ inputs.repository }}/$relpath"
+          done
 
     - name: Create Pull Request
       uses: peter-evans/create-pull-request@v6
@@ -62,10 +65,14 @@ runs:
         path: ${{ inputs.repository }}
         token: ${{ inputs.github_token }}
         commit-message: >-
-          feat: update ${{ env.DOMAIN }}/${{ inputs.service_repo }} to ${{ inputs.tag }}
+          feat: update ${{ inputs.service_repo }} to ${{ inputs.tag }}
         title: >-
-          feat: update ${{ env.DOMAIN }}/${{ inputs.service_repo }} to ${{ inputs.tag }}
+          feat: update ${{ inputs.service_repo }} to ${{ inputs.tag }}
         body: |
           Trigger commit: https://github.com/${{ github.repository }}/commit/${{ github.sha }}
+
+          Updated files:
+          ${{ inputs.update_paths }}
         labels: ${{ inputs.pr_labels }}
         branch: ${{ inputs.service_repo }}-${{ github.sha }}
+        base: ${{ inputs.branch }}
