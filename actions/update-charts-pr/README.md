@@ -1,8 +1,6 @@
 # Update site-values and create PR Action
 
-This GitHub Action checks out the MapColonies site-values repository (can be overridden),
-updates the chart version for a given service under a specific domain/environment file, 
-and opens a pull request with the change.
+This GitHub Action creates a PR for updating a chart version presented in a file.
 
 ---
 
