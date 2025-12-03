@@ -26,7 +26,6 @@ inputs:
   pr_labels:
     description: "Labels to apply on the created PR (newline or comma separated)"
     required: false
-    default: dev, auto-merge
 
 runs:
   using: "composite"

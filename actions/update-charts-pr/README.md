@@ -6,9 +6,9 @@ This GitHub Action creates a PR for updating a chart version presented in a file
 
 ## ✨ What It Does
 
-- Checks out the target site-values repository (default: `MapColonies/site-values`)
-- Updates the service chart version in the file specified by `update_path` (e.g., `<domain>/environments/<environment>.yaml`) to the provided tag
-- Creates a pull request with the changes to the master branch with desired labels.
+- Checks out the target repository (default: `MapColonies/site-values`)
+- Sets `chartsVersions[service_repo] = tag` in the YAML file at `update_path`
+- Opens a pull request and applies optional labels
 
 ---
 
@@ -22,7 +22,7 @@ This GitHub Action creates a PR for updating a chart version presented in a file
 | `repository`   | Repository name (under `MapColonies/`) to update                                             | ❌ No    | `site-values`             |
 | `branch`       | Base branch of the target repository                                                         | ❌ No    | `master`                  |
 | `service_repo` | Service repository name to use as the key under `chartsVersions`                             | ❌ No    | calling repo name         |
-| `pr_labels`    | Labels to apply on the created PR (comma separated)                                          | ❌ No    | `dev`, `auto-merge`       |
+| `pr_labels`    | Labels to apply on the created PR (comma separated)                                          | ❌ No    |        |
 
 > Note: If `service_repo` is not supplied, the action uses the calling repository name.
 
@@ -36,14 +36,9 @@ This GitHub Action creates a PR for updating a chart version presented in a file
 - name: Update site-values and open PR
   uses: MapColonies/shared-workflows/actions/update-charts-pr@update-charts-pr-v1.0.0
   with:
-    tag: 1.0.1
+    tag: 1.0.0
     update_path: infra/environments/dev.yaml
     github_token: ${{ secrets.GH_PAT }}
-    # # Optional overrides
-    # repository: site-values
-    # branch: master
-    # service_repo: test-repo
-    # pr_labels: dev, auto-merge
 ```
 
 <!-- x-release-please-end-version -->
