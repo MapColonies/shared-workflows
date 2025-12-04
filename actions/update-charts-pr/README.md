@@ -37,7 +37,7 @@ This GitHub Action creates a PR for updating a chart version presented in a file
   uses: MapColonies/shared-workflows/actions/update-charts-pr@update-charts-pr-v1.0.0
   with:
     tag: 1.0.0
-    update_paths: |
+    paths: |
         infra/environments/dev.yaml
         common/environments/dev.yaml
     github_token: ${{ secrets.GH_PAT }}
