@@ -21,7 +21,7 @@ This GitHub Action creates a PR for updating a chart version presented in a file
 | `github_token` | GitHub token with write access to the target repository                                      | ✅ Yes   |                           |
 | `repository`   | Repository name (under `MapColonies/`) to update                                             | ❌ No    | `site-values`             |
 | `branch`       | Base branch of the target repository                                                         | ❌ No    | `master`                  |
-| `service_repo` | Service repository name to use as the key under `chartsVersions`                             | ❌ No    | calling repo name         |
+| `chart` | Chart name to use as the key under `chartsVersions`                             | ❌ No    | calling repo name         |
 | `pr_labels`    | Labels to apply on the created PR (comma separated)                                          | ❌ No    |        |
 
 > Note: If `service_repo` is not supplied, the action uses the calling repository name.
