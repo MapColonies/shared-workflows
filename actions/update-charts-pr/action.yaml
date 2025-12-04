@@ -8,7 +8,7 @@ inputs:
   paths:
     description: "One or more YAML paths to update (newline or comma separated)"
     required: true
-  service_repo:
+  chart:
     description: "Name of the service repository to update in site-values"
     required: false
     default: ${{ github.event.repository.name }}
@@ -44,7 +44,7 @@ runs:
         cmd: |
           set -euo pipefail
 
-          echo "Updating chartsVersions[\"${{ inputs.service_repo }}\"] to \"${{ inputs.tag }}\" in:"
+          echo "Updating chartsVersions[\"${{ inputs.chart }}\"] to \"${{ inputs.tag }}\" in:"
           # Support newline or comma separated list
           echo '${{ inputs.paths }}' | tr ',' '\n' | while IFS= read -r relpath; do
             # skip empty lines
@@ -55,7 +55,7 @@ runs:
 
             echo "  - $relpath"
             yq eval -i \
-              ".chartsVersions[\"${{ inputs.service_repo }}\"] = \"${{ inputs.tag }}\"" \
+              ".chartsVersions[\"${{ inputs.chart }}\"] = \"${{ inputs.tag }}\"" \
               "${{ inputs.repository }}/$relpath"
           done
 
@@ -65,14 +65,14 @@ runs:
         path: ${{ inputs.repository }}
         token: ${{ inputs.github_token }}
         commit-message: >-
-          feat: update ${{ inputs.service_repo }} to ${{ inputs.tag }}
+          feat: update ${{ inputs.chart }} to ${{ inputs.tag }}
         title: >-
-          feat: update ${{ inputs.service_repo }} to ${{ inputs.tag }}
+          feat: update ${{ inputs.chart }} to ${{ inputs.tag }}
         body: |
           Trigger commit: https://github.com/${{ github.repository }}/commit/${{ github.sha }}
 
           Updated files:
           ${{ inputs.paths }}
         labels: ${{ inputs.pr_labels }}
-        branch: ${{ inputs.service_repo }}-${{ github.sha }}
+        branch: ${{ inputs.chart }}-${{ github.sha }}
         base: ${{ inputs.branch }}
