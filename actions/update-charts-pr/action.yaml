@@ -5,7 +5,7 @@ inputs:
   tag:
     description: "Chart tag (version) to set for this service"
     required: true
-  update_paths:
+  paths:
     description: "One or more YAML paths to update (newline or comma separated)"
     required: true
   service_repo:
@@ -46,7 +46,7 @@ runs:
 
           echo "Updating chartsVersions[\"${{ inputs.service_repo }}\"] to \"${{ inputs.tag }}\" in:"
           # Support newline or comma separated list
-          echo '${{ inputs.update_paths }}' | tr ',' '\n' | while IFS= read -r relpath; do
+          echo '${{ inputs.paths }}' | tr ',' '\n' | while IFS= read -r relpath; do
             # skip empty lines
             [ -z "$relpath" ] && continue
 
@@ -72,7 +72,7 @@ runs:
           Trigger commit: https://github.com/${{ github.repository }}/commit/${{ github.sha }}
 
           Updated files:
-          ${{ inputs.update_paths }}
+          ${{ inputs.paths }}
         labels: ${{ inputs.pr_labels }}
         branch: ${{ inputs.service_repo }}-${{ github.sha }}
         base: ${{ inputs.branch }}

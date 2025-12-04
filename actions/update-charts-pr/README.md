@@ -17,7 +17,7 @@ This GitHub Action creates a PR for updating a chart version presented in a file
 | Name           | Description                                                                                  | Required | Default                   |
 |----------------|----------------------------------------------------------------------------------------------|----------|---------------------------|
 | `tag`          | Chart tag/version to set for the service (e.g., `1.2.3`)                                     | ✅ Yes   |                           |
-| `update_path`  | Path (relative to repo root) to the YAML file to update (e.g., `raster/environments/dev.yaml`)| ✅ Yes   |                           |
+| `paths`  | One or more YAML paths to update (newline or comma separated) (e.g., `raster/environments/dev.yaml`)| ✅ Yes   |                           |
 | `github_token` | GitHub token with write access to the target repository                                      | ✅ Yes   |                           |
 | `repository`   | Repository name (under `MapColonies/`) to update                                             | ❌ No    | `site-values`             |
 | `branch`       | Base branch of the target repository                                                         | ❌ No    | `master`                  |

@@ -16,6 +16,6 @@ jobs:
           tag: 0.0.0
           github_token: ${{ secrets.GH_PAT }}
           service_repo: test-service-repo
-          update_paths: |
+          paths: |
             infra/environments/dev.yaml
             infra/environments/prod.yaml
