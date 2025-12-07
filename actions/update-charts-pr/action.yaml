@@ -6,7 +6,7 @@ inputs:
     description: "Chart tag (version) to set for this service"
     required: true
   paths:
-    description: "One or more YAML paths to update (newline or comma separated)"
+    description: "One or more YAML paths to update"
     required: true
   chart:
     description: "Name of the chart to update in site-values"
@@ -24,7 +24,7 @@ inputs:
     required: false
     default: "master"
   pr_labels:
-    description: "Labels to apply on the created PR (newline or comma separated)"
+    description: "Labels to apply on the created PR"
     required: false
 
 runs:
@@ -39,25 +39,24 @@ runs:
         ref: ${{ inputs.branch }}
 
     - name: Update tags in ${{ inputs.repository }}
-      uses: mikefarah/yq@v4.48.2
-      with:
-        cmd: |
-          set -euo pipefail
+      shell: bash
+      run: |
+        set -euo pipefail
 
-          echo "Updating chartsVersions[\"${{ inputs.chart }}\"] to \"${{ inputs.tag }}\" in:"
-          # Support newline or comma separated list
-          echo '${{ inputs.paths }}' | tr ',' '\n' | while IFS= read -r relpath; do
-            # skip empty lines
-            [ -z "$relpath" ] && continue
+        echo "Updating chartsVersions[\"${{ inputs.chart }}\"] to \"${{ inputs.tag }}\" in:"
+        # Support newline or comma separated list
+        echo '${{ inputs.paths }}' | tr ',' '\n' | while IFS= read -r relpath; do
+          # skip empty lines
+          [ -z "$relpath" ] && continue
 
-            # trim possible leading/trailing spaces
-            relpath="$(echo "$relpath" | xargs)"
+          # trim possible leading/trailing spaces
+          relpath="$(echo "$relpath" | xargs)"
 
-            echo "  - $relpath"
-            yq eval -i \
-              ".chartsVersions[\"${{ inputs.chart }}\"] = \"${{ inputs.tag }}\"" \
-              "${{ inputs.repository }}/$relpath"
-          done
+          echo "  - $relpath"
+          yq eval -i \
+            ".chartsVersions[\"${{ inputs.chart }}\"] = \"${{ inputs.tag }}\"" \
+            "${{ inputs.repository }}/$relpath"
+        done
 
     - name: Create Pull Request
       uses: peter-evans/create-pull-request@v6
