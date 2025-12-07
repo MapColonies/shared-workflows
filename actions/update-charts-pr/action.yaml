@@ -9,7 +9,7 @@ inputs:
     description: "One or more YAML paths to update (newline or comma separated)"
     required: true
   chart:
-    description: "Name of the service repository to update in site-values"
+    description: "Name of the chart to update in site-values"
     required: false
     default: ${{ github.event.repository.name }}
   github_token:
