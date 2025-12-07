@@ -17,6 +17,7 @@ jobs:
           repository: test-site
           github_token: ${{ secrets.GH_PAT }}
           chart: test-service-repo
+          environment: prod
           paths: |
             infra/environments/dev.yaml
             infra/environments/prod.yaml

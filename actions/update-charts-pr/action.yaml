@@ -12,6 +12,10 @@ inputs:
     description: "Name of the chart to update in site-values"
     required: false
     default: ${{ github.event.repository.name }}
+  environment:
+    description: "Deployment environment"
+    required: false
+    default: "dev"
   github_token:
     description: "GitHub token with write access to the site-values repository"
     required: true
@@ -65,15 +69,18 @@ runs:
         token: ${{ inputs.github_token }}
         author: "mapcolonies[bot] <devops[bot]@mapcolonies.com>"
         committer: "mapcolonies[bot] <devops[bot]@mapcolonies.com>"
+        team_reviewers: |
+          Infra
         commit-message: >-
-          feat: update ${{ inputs.chart }} to ${{ inputs.tag }}
-        title: >-
-          feat: update ${{ inputs.chart }} to ${{ inputs.tag }}
+          feat: update ${{ inputs.chart }} to ${{ inputs.tag }} in ${{ inputs.environment }} environment
+        title: "${{ inputs.environment == 'prod' && 'feat!: prod changes' ||
+         format('feat: update {0} to {1} in {2} environment', inputs.chart, inputs.tag, inputs.environment) }}"
         body: |
           Trigger commit: https://github.com/${{ github.repository }}/commit/${{ github.sha }}
 
           Updated files:
           ${{ inputs.paths }}
         labels: ${{ inputs.pr_labels }}
-        branch: ${{ inputs.chart }}-${{ github.sha }}
+        branch: "${{ inputs.environment == 'prod' && 'prod' ||
+         format('{0}-{1}-{2}', inputs.environment, inputs.chart, github.sha) }}"
         base: ${{ inputs.branch }}
