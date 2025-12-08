@@ -30,6 +30,9 @@ inputs:
   pr_labels:
     description: "Labels to apply on the created PR"
     required: false
+  assignees:
+    description: "Comma-separated list of assignees to assign to the PR"
+    required: false
   reviewers:
     description: "Comma-separated list of reviewers to request review from"
     required: false
@@ -75,6 +78,7 @@ runs:
         token: ${{ inputs.github_token }}
         author: "mapcolonies[bot] <devops[bot]@mapcolonies.com>"
         committer: "mapcolonies[bot] <devops[bot]@mapcolonies.com>"
+        assignees: ${{ inputs.assignees && inputs.assignees || '' }}
         reviewers: ${{ inputs.reviewers && inputs.reviewers || '' }}
         team-reviewers: ${{ inputs.team_reviewers && inputs.team_reviewers || '' }}
         commit-message: >-
