@@ -24,6 +24,8 @@ This GitHub Action creates a PR for updating a chart version presented in a file
 | `branch`       | Base branch of the target repository                                                         | ❌ No    | `master`                  |
 | `chart` | Chart name to use as the key under `chartsVersions`                             | ❌ No    | calling repo name         |
 | `pr_labels`    | Labels to apply on the created PR (comma separated)                                          | ❌ No    |        |
+| `reviewers`    | Comma-separated GitHub usernames to request review from (used only if non-empty)            | ❌ No    |        |
+| `team_reviewers` | Comma-separated GitHub team slugs to request review from (used only if non-empty)         | ❌ No    |        |
 
 > Branch naming: When `environment` is `prod`, the pull request branch will be named `prod`. Otherwise, the branch will be `<environment>-<chart>-<sha>` (e.g., `dev-my-service-<commit-sha>`).
 

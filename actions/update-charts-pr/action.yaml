@@ -30,6 +30,12 @@ inputs:
   pr_labels:
     description: "Labels to apply on the created PR"
     required: false
+  reviewers:
+    description: "Comma-separated list of reviewers to request review from"
+    required: false
+  team_reviewers:
+    description: "Comma-separated list of team reviewers to request review from"
+    required: false
 
 runs:
   using: "composite"
@@ -69,8 +75,8 @@ runs:
         token: ${{ inputs.github_token }}
         author: "mapcolonies[bot] <devops[bot]@mapcolonies.com>"
         committer: "mapcolonies[bot] <devops[bot]@mapcolonies.com>"
-        team_reviewers: |
-          Infra
+        reviewers: ${{ inputs.reviewers && inputs.reviewers || '' }}
+        team-reviewers: ${{ inputs.team_reviewers && inputs.team_reviewers || '' }}
         commit-message: >-
           feat: update ${{ inputs.chart }} to ${{ inputs.tag }} in ${{ inputs.environment }} environment
         title: "${{ inputs.environment == 'prod' && 'feat!: prod changes' ||
