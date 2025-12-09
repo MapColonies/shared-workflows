@@ -14,8 +14,7 @@ inputs:
     default: ${{ github.event.repository.name }}
   environment:
     description: "Deployment environment"
-    required: false
-    default: "dev"
+    required: true
   github_token:
     description: "GitHub token with write access to the site-values repository"
     required: true
