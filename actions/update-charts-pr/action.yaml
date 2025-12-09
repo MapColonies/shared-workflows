@@ -1,4 +1,4 @@
-name: "Update site-values and create PR"
+name: "Update Chart Version in Target Repository"
 description: "Checks out the site-values repo, updates the chart tag for the current service, and opens a PR"
 
 inputs:
