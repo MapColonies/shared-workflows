@@ -1,6 +1,6 @@
 # Changelog
 
-## [0.2.0](https://github.com/MapColonies/shared-workflows/compare/update-chart-version-v0.1.0...update-chart-version-v0.2.0) (2025-12-09)
+## [0.1.0](https://github.com/MapColonies/shared-workflows/compare/update-chart-version-v0.1.0...update-chart-version-v0.1.0) (2025-12-09)
 
 
 ### Features
