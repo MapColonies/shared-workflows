@@ -24,9 +24,9 @@
         "package-name": "validate-domain",
         "extra-files": ["README.md"]
       },
-      "actions/update-charts-pr": {
+      "actions/update-chart-version": {
         "release-type": "simple",
-        "package-name": "update-charts-pr",
+        "package-name": "update-chart-version",
         "extra-files": ["README.md"]
       }
     }

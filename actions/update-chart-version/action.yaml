@@ -1,5 +1,5 @@
 name: "Update Chart Version in Target Repository"
-description: "Checks out the site-values repo, updates the chart tag for the current service, and opens a PR"
+description: "Checks out the target repository, updates the chart tag for the current service, and opens a PR"
 
 inputs:
   tag:
@@ -9,14 +9,14 @@ inputs:
     description: "One or more YAML paths to update"
     required: true
   chart:
-    description: "Name of the chart to update in site-values"
+    description: "Name of the chart to update in target repository"
     required: false
     default: ${{ github.event.repository.name }}
   environment:
     description: "Deployment environment"
     required: true
   github_token:
-    description: "GitHub token with write access to the site-values repository"
+    description: "GitHub token with write access to the target repository"
     required: true
   repository:
     description: "Target repository"
