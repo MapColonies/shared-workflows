@@ -70,6 +70,24 @@ runs:
             "${{ inputs.repository }}/$relpath"
         done
 
+    - name: Compute PR title and commit message
+      shell: bash
+      run: |
+        set -euo pipefail
+
+        prefix=$([ "${{ inputs.environment }}" = "prod" ] && echo "deps" || echo "devdeps")
+        commit_msg="${prefix}: update ${{ inputs.chart }} to ${{ inputs.tag }} in ${{ inputs.environment }} environment"
+
+        if [ "${{ inputs.environment }}" = "prod" ]; then
+          title="deps: prod changes"
+        else
+          title="$commit_msg"
+        fi
+
+        echo "PR_COMMIT_MESSAGE=$commit_msg" >> "$GITHUB_ENV"
+        echo "PR_TITLE=$title" >> "$GITHUB_ENV"
+
+
     - name: Create Pull Request
       uses: peter-evans/create-pull-request@v7
       with:
@@ -80,10 +98,8 @@ runs:
         assignees: ${{ inputs.assignees && inputs.assignees || '' }}
         reviewers: ${{ inputs.reviewers && inputs.reviewers || '' }}
         team-reviewers: ${{ inputs.team_reviewers && inputs.team_reviewers || '' }}
-        commit-message: >-
-          feat: update ${{ inputs.chart }} to ${{ inputs.tag }} in ${{ inputs.environment }} environment
-        title: "${{ inputs.environment == 'prod' && 'feat!: prod changes' ||
-         format('feat: update {0} to {1} in {2} environment', inputs.chart, inputs.tag, inputs.environment) }}"
+        commit-message: ${{ env.PR_COMMIT_MESSAGE }}
+        title: ${{ env.PR_TITLE }}
         body: |
           Trigger commit: https://github.com/${{ github.repository }}/commit/${{ github.sha }}
 
