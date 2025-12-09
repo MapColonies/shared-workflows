@@ -1,7 +1,7 @@
 name: Test auto-merge action
 
 on:
-  workflow_call:
+  pull_request:
 
 jobs:
   test-action:
@@ -13,6 +13,6 @@ jobs:
       - name: Run auto-merge action
         uses: ./actions/auto-merge
         with:
-          pr_number: 46
+          pr_number: ${{ github.event.pull_request.number }}
           github_token: ${{ secrets.GH_PAT }}
           repository: MapColonies/test-site

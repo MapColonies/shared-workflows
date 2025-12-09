@@ -15,55 +15,52 @@ inputs:
 runs:
   using: "composite"
   steps:
-    - name: Install gh (for act)
-      shell: bash
-      run: |
-        if command -v gh >/dev/null; then
-          echo "gh already installed"; exit 0;
-        fi
-        sudo apt-get update -y
-        sudo apt-get install -y git curl
-        curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg \
-          | sudo tee /usr/share/keyrings/githubcli-archive-keyring.gpg >/dev/null
-        echo "deb [signed-by=/usr/share/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main" \
-          | sudo tee /etc/apt/sources.list.d/github-cli.list >/dev/null
-        sudo apt-get update -y
-        sudo apt-get install -y gh
+    # - name: Install gh (for act)
+    #   shell: bash
+    #   run: |
+    #     if command -v gh >/dev/null; then
+    #       echo "gh already installed"; exit 0;
+    #     fi
+    #     sudo apt-get update -y
+    #     sudo apt-get install -y git curl
+    #     curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg \
+    #       | sudo tee /usr/share/keyrings/githubcli-archive-keyring.gpg >/dev/null
+    #     echo "deb [signed-by=/usr/share/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main" \
+    #       | sudo tee /etc/apt/sources.list.d/github-cli.list >/dev/null
+    #     sudo apt-get update -y
+    #     sudo apt-get install -y gh
 
-    - name: Authenticate gh with github_token
-      shell: bash
-      env:
-        # Provide token to gh both ways for compatibility
-        GITHUB_TOKEN: ${{ inputs.github_token }}
-        GH_TOKEN: ${{ inputs.github_token }}
-      run: |
-        set -euo pipefail
-        # If GH_TOKEN/GITHUB_TOKEN is set, gh uses it automatically; avoid forcing login.
-        if gh auth status >/dev/null 2>&1; then
-          echo "gh is already authenticated"
-        else
-          # Probe API to confirm token works; this avoids storing credentials when env vars are set.
-          if gh api user >/dev/null 2>&1; then
-            echo "gh authenticated via environment token"
-          else
-            echo "Environment token appears invalid; attempting login via --with-token"
-            echo -n "$GITHUB_TOKEN" | gh auth login --with-token
-            gh auth status
-          fi
-        fi
+    # - name: Authenticate gh with github_token
+    #   shell: bash
+    #   env:
+    #     GITHUB_TOKEN: ${{ inputs.github_token }}
+    #     GH_TOKEN: ${{ inputs.github_token }}
+    #   run: |
+    #     set -euo pipefail
+    #     # If GH_TOKEN/GITHUB_TOKEN is set, gh uses it automatically; avoid forcing login.
+    #     if gh auth status >/dev/null 2>&1; then
+    #       echo "gh is already authenticated"
+    #     else
+    #       # Probe API to confirm token works; this avoids storing credentials when env vars are set.
+    #       if gh api user >/dev/null 2>&1; then
+    #         echo "gh authenticated via environment token"
+    #       else
+    #         echo "Environment token appears invalid; attempting login via --with-token"
+    #         echo -n "$GITHUB_TOKEN" | gh auth login --with-token
+    #         gh auth status
+    #       fi
+    #     fi
 
     - name: Check for 'auto-merge' label
       id: check_label
       shell: bash
       env:
-        GITHUB_TOKEN: ${{ inputs.github_token }}
         GH_TOKEN: ${{ inputs.github_token }}
       run: |
         set -euo pipefail
-        LABELS=$(gh pr view "${{ inputs.pr_number }}" --repo "${{ inputs.repository }}" --json labels -q '.labels[].name')
-        echo "Labels on PR #${{ inputs.pr_number }} in repo '${{ inputs.repository }}':"
-        echo "$LABELS" | tr ' ' '\n' || true
-        if echo "$LABELS" | grep -xq "auto-merge"; then
+        labels=$(gh pr view "${{ inputs.pr_number }}" --repo "${{ inputs.repository }}" --json labels -q '.labels[].name')
+
+        if grep -qx "auto-merge" <<< "$labels"; then
           echo "has_label=true" >> "$GITHUB_OUTPUT"
         else
           echo "has_label=false" >> "$GITHUB_OUTPUT"
@@ -73,12 +70,13 @@ runs:
       if: steps.check_label.outputs.has_label == 'true'
       shell: bash
       env:
-        GITHUB_TOKEN: ${{ inputs.github_token }}
+        GH_TOKEN: ${{ inputs.github_token }}
       run: |
         set -euo pipefail
-        echo "Merging PR #${{ inputs.pr_number }} in repo '${{ inputs.repository }}' (label 'auto-merge' found)"
-        # --merge creates a merge commit; adjust flags if you prefer --squash or --rebase
-        gh pr merge "${{ inputs.pr_number }}" --repo "${{ inputs.repository }}" --merge --delete-branch --admin
+        echo "Merging PR #${{ inputs.pr_number }} in '${{ inputs.repository }}' (label 'auto-merge' found)"
+        gh pr merge "${{ inputs.pr_number }}" \
+          --repo "${{ inputs.repository }}" \
+          --squash \
 
     - name: Skip merge (label missing)
       if: steps.check_label.outputs.has_label != 'true'
