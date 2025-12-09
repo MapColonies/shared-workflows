@@ -1,4 +1,4 @@
-name: Test update-charts-pr action
+name: Test auto-merge action
 
 on:
   workflow_call:
@@ -13,5 +13,6 @@ jobs:
       - name: Run auto-merge action
         uses: ./actions/auto-merge
         with:
-          pr_number: 1
+          pr_number: 46
           github_token: ${{ secrets.GH_PAT }}
+          repository: MapColonies/test-site
