@@ -73,7 +73,7 @@ runs:
         set -euo pipefail
 
         prefix=$([ "${{ inputs.environment }}" = "prod" ] && echo "deps" || echo "devdeps")
-        commit_msg="${prefix}: update ${{ inputs.chart }} to ${{ inputs.tag }} in ${{ inputs.environment }} environment"
+        commit_msg="${prefix}(${{ inputs.environment }}): update ${{ inputs.chart }} to ${{ inputs.tag }}"
 
         if [ "${{ inputs.environment }}" = "prod" ]; then
           title="deps: prod changes"
@@ -101,7 +101,7 @@ runs:
 
           Updated files:
           ${{ inputs.paths }}
-        labels: ${{ inputs.pr_labels }}
+        labels: ${{ inputs.pr_labels && inputs.pr_labels || '' }}, ${{ inputs.environment }}, ${{ inputs.environment == 'dev' && 'auto-merge' || '' }}
         branch: "${{ inputs.environment == 'prod' && 'prod' ||
          format('{0}-{1}-{2}', inputs.environment, inputs.chart, github.sha) }}"
         base: ${{ inputs.branch }}
