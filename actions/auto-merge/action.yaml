@@ -1,0 +1,52 @@
+name: "Auto-merge PR by label"
+description: "Checks if a PR has the 'auto-merge' label and merges it using gh if present"
+
+inputs:
+  pr_number:
+    description: "Pull Request number to check and merge"
+    required: true
+  github_token:
+    description: "GitHub token with permissions to merge PRs (repo scope)"
+    required: true
+
+runs:
+  using: "composite"
+  steps:
+    - name: Authenticate gh
+      shell: bash
+      env:
+        GITHUB_TOKEN: ${{ inputs.github_token }}
+      run: |
+        set -euo pipefail
+        echo "$GITHUB_TOKEN" | gh auth login --with-token
+
+    - name: Check for 'auto-merge' label
+      id: check_label
+      shell: bash
+      run: |
+        set -euo pipefail
+        LABELS=$(gh pr view "${{ inputs.pr_number }}" --json labels -q '.labels[].name')
+        echo "Labels on PR #${{ inputs.pr_number }}:"
+        echo "$LABELS" | tr ' ' '\n' || true
+        if echo "$LABELS" | grep -xq "auto-merge"; then
+          echo "has_label=true" >> "$GITHUB_OUTPUT"
+        else
+          echo "has_label=false" >> "$GITHUB_OUTPUT"
+        fi
+
+    - name: Merge PR if labeled
+      if: steps.check_label.outputs.has_label == 'true'
+      shell: bash
+      env:
+        GITHUB_TOKEN: ${{ inputs.github_token }}
+      run: |
+        set -euo pipefail
+        echo "Merging PR #${{ inputs.pr_number }} (label 'auto-merge' found)"
+        # --merge creates a merge commit; adjust flags if you prefer --squash or --rebase
+        gh pr merge "${{ inputs.pr_number }}" --merge --delete-branch --admin
+
+    - name: Skip merge (label missing)
+      if: steps.check_label.outputs.has_label != 'true'
+      shell: bash
+      run: |
+        echo "Skipping merge: PR #${{ inputs.pr_number }} does not have label 'auto-merge'"
