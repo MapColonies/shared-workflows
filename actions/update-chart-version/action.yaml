@@ -35,9 +35,6 @@ inputs:
   reviewers:
     description: "Comma-separated list of reviewers to request review from"
     required: false
-  team_reviewers:
-    description: "Comma-separated list of team reviewers to request review from"
-    required: false
 
 runs:
   using: "composite"
@@ -97,7 +94,6 @@ runs:
         committer: "mapcolonies[bot] <devops[bot]@mapcolonies.com>"
         assignees: ${{ inputs.assignees && inputs.assignees || '' }}
         reviewers: ${{ inputs.reviewers && inputs.reviewers || '' }}
-        team-reviewers: ${{ inputs.team_reviewers && inputs.team_reviewers || '' }}
         commit-message: ${{ env.PR_COMMIT_MESSAGE }}
         title: ${{ env.PR_TITLE }}
         body: |
