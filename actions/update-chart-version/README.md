@@ -37,9 +37,9 @@ This GitHub Action creates a PR for updating a chart version presented in a file
 
 ```yaml
 - name: Update site-values and open PR
-  uses: MapColonies/shared-workflows/actions/update-chart-version@update-chart-version-v1.0.0
+  uses: MapColonies/shared-workflows/actions/update-chart-version@update-chart-version-v0.2.0
   with:
-    tag: 1.0.0
+    tag: 0.2.0
     paths: |
         infra/environments/dev.yaml
         common/environments/dev.yaml
