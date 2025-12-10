@@ -73,6 +73,13 @@ runs:
         GH_TOKEN: ${{ inputs.github_token }}
       run: |
         set -euo pipefail
+        echo "Waiting for required checks to pass on PR #${{ inputs.pr_number }}"
+        # Wait for all required checks/workflows to complete successfully
+        gh pr checks "${{ inputs.pr_number }}" \
+          --repo "${{ inputs.repository }}" \
+          --watch \
+          --required
+
         echo "Merging PR #${{ inputs.pr_number }} in '${{ inputs.repository }}' (label 'auto-merge' found)"
         gh pr merge "${{ inputs.pr_number }}" \
           --repo "${{ inputs.repository }}" \
