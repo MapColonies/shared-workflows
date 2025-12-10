@@ -15,41 +15,41 @@ inputs:
 runs:
   using: "composite"
   steps:
-    # - name: Install gh (for act)
-    #   shell: bash
-    #   run: |
-    #     if command -v gh >/dev/null; then
-    #       echo "gh already installed"; exit 0;
-    #     fi
-    #     sudo apt-get update -y
-    #     sudo apt-get install -y git curl
-    #     curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg \
-    #       | sudo tee /usr/share/keyrings/githubcli-archive-keyring.gpg >/dev/null
-    #     echo "deb [signed-by=/usr/share/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main" \
-    #       | sudo tee /etc/apt/sources.list.d/github-cli.list >/dev/null
-    #     sudo apt-get update -y
-    #     sudo apt-get install -y gh
+    - name: Install gh (for act)
+      shell: bash
+      run: |
+        if command -v gh >/dev/null; then
+          echo "gh already installed"; exit 0;
+        fi
+        sudo apt-get update -y
+        sudo apt-get install -y git curl
+        curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg \
+          | sudo tee /usr/share/keyrings/githubcli-archive-keyring.gpg >/dev/null
+        echo "deb [signed-by=/usr/share/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main" \
+          | sudo tee /etc/apt/sources.list.d/github-cli.list >/dev/null
+        sudo apt-get update -y
+        sudo apt-get install -y gh
 
-    # - name: Authenticate gh with github_token
-    #   shell: bash
-    #   env:
-    #     GITHUB_TOKEN: ${{ inputs.github_token }}
-    #     GH_TOKEN: ${{ inputs.github_token }}
-    #   run: |
-    #     set -euo pipefail
-    #     # If GH_TOKEN/GITHUB_TOKEN is set, gh uses it automatically; avoid forcing login.
-    #     if gh auth status >/dev/null 2>&1; then
-    #       echo "gh is already authenticated"
-    #     else
-    #       # Probe API to confirm token works; this avoids storing credentials when env vars are set.
-    #       if gh api user >/dev/null 2>&1; then
-    #         echo "gh authenticated via environment token"
-    #       else
-    #         echo "Environment token appears invalid; attempting login via --with-token"
-    #         echo -n "$GITHUB_TOKEN" | gh auth login --with-token
-    #         gh auth status
-    #       fi
-    #     fi
+    - name: Authenticate gh with github_token
+      shell: bash
+      env:
+        GITHUB_TOKEN: ${{ inputs.github_token }}
+        GH_TOKEN: ${{ inputs.github_token }}
+      run: |
+        set -euo pipefail
+        # If GH_TOKEN/GITHUB_TOKEN is set, gh uses it automatically; avoid forcing login.
+        if gh auth status >/dev/null 2>&1; then
+          echo "gh is already authenticated"
+        else
+          # Probe API to confirm token works; this avoids storing credentials when env vars are set.
+          if gh api user >/dev/null 2>&1; then
+            echo "gh authenticated via environment token"
+          else
+            echo "Environment token appears invalid; attempting login via --with-token"
+            echo -n "$GITHUB_TOKEN" | gh auth login --with-token
+            gh auth status
+          fi
+        fi
 
     - name: Check for 'auto-merge' label
       id: check_label
