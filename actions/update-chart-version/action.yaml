@@ -1,0 +1,107 @@
+name: "Update Chart Version in Target Repository"
+description: "Checks out the target repository, updates the chart tag for the current service, and opens a PR"
+
+inputs:
+  tag:
+    description: "Chart tag (version) to set for this service"
+    required: true
+  paths:
+    description: "One or more YAML paths to update"
+    required: true
+  chart:
+    description: "Name of the chart to update in target repository"
+    required: false
+    default: ${{ github.event.repository.name }}
+  environment:
+    description: "Deployment environment"
+    required: true
+  github_token:
+    description: "GitHub token with write access to the target repository"
+    required: true
+  repository:
+    description: "Target repository"
+    required: false
+    default: "site-values"
+  branch:
+    description: "Target base branch in repository"
+    required: false
+    default: "master"
+  pr_labels:
+    description: "Labels to apply on the created PR"
+    required: false
+  assignees:
+    description: "Comma-separated list of assignees to assign to the PR"
+    required: false
+  reviewers:
+    description: "Comma-separated list of reviewers to request review from"
+    required: false
+
+runs:
+  using: "composite"
+  steps:
+    - name: Checkout ${{ inputs.repository }} repo
+      uses: actions/checkout@v5
+      with:
+        repository: MapColonies/${{ inputs.repository }}
+        token: ${{ inputs.github_token }}
+        path: ${{ inputs.repository }}
+        ref: ${{ inputs.branch }}
+
+    - name: Update tags in ${{ inputs.repository }}
+      shell: bash
+      run: |
+        set -euo pipefail
+
+        echo "Updating chartsVersions[\"${{ inputs.chart }}\"] to \"${{ inputs.tag }}\" in:"
+        # Support newline or comma separated list
+        echo '${{ inputs.paths }}' | tr ',' '\n' | while IFS= read -r relpath; do
+          # skip empty lines
+          [ -z "$relpath" ] && continue
+
+          # trim possible leading/trailing spaces
+          relpath="$(echo "$relpath" | xargs)"
+
+          echo "  - $relpath"
+          yq eval -i \
+            ".chartsVersions[\"${{ inputs.chart }}\"] = \"${{ inputs.tag }}\"" \
+            "${{ inputs.repository }}/$relpath"
+        done
+
+    - name: Compute PR title and commit message
+      shell: bash
+      run: |
+        set -euo pipefail
+
+        prefix=$([ "${{ inputs.environment }}" = "prod" ] && echo "deps" || echo "devdeps")
+        commit_msg="${prefix}(${{ inputs.environment }}): update ${{ inputs.chart }} to ${{ inputs.tag }}"
+
+        if [ "${{ inputs.environment }}" = "prod" ]; then
+          title="deps: prod changes"
+        else
+          title="$commit_msg"
+        fi
+
+        echo "PR_COMMIT_MESSAGE=$commit_msg" >> "$GITHUB_ENV"
+        echo "PR_TITLE=$title" >> "$GITHUB_ENV"
+
+
+    - name: Create Pull Request
+      uses: peter-evans/create-pull-request@v7
+      with:
+        path: ${{ inputs.repository }}
+        token: ${{ inputs.github_token }}
+        author: "mapcolonies[bot] <devops[bot]@mapcolonies.com>"
+        committer: "mapcolonies[bot] <devops[bot]@mapcolonies.com>"
+        assignees: ${{ inputs.assignees && inputs.assignees || '' }}
+        reviewers: ${{ inputs.reviewers && inputs.reviewers || '' }}
+        commit-message: ${{ env.PR_COMMIT_MESSAGE }}
+        title: ${{ env.PR_TITLE }}
+        body: |
+          Trigger commit: https://github.com/${{ github.repository }}/commit/${{ github.sha }}
+
+          Updated files:
+          ${{ inputs.paths }}
+        labels: ${{ inputs.pr_labels && inputs.pr_labels || '' }}, ${{ inputs.environment }}, ${{ inputs.environment == 'dev' && 'auto-merge' || '' }}
+        branch: "${{ inputs.environment == 'prod' && 'prod' ||
+         format('{0}-{1}-{2}', inputs.environment, inputs.chart, github.sha) }}"
+        base: ${{ inputs.branch }}
