@@ -2,6 +2,8 @@ name: Test auto-merge action
 
 on:
   pull_request:
+    paths:
+      - "actions/auto-merge/**"
 
 jobs:
   test-action:
@@ -15,4 +17,4 @@ jobs:
         with:
           pr_number: ${{ github.event.pull_request.number }}
           github_token: ${{ secrets.GH_PAT }}
-          repository: MapColonies/test-site
+          repository: ${{ github.repository }}
