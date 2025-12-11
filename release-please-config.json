@@ -24,6 +24,11 @@
         "package-name": "validate-domain",
         "extra-files": ["README.md"]
       },
+      "actions/update-chart-version": {
+        "release-type": "simple",
+        "package-name": "update-chart-version",
+        "extra-files": ["README.md"]
+      },
       "actions/auto-merge": {
         "release-type": "simple",
         "package-name": "auto-merge",
