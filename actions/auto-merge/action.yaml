@@ -66,20 +66,33 @@ runs:
           echo "has_label=false" >> "$GITHUB_OUTPUT"
         fi
 
-    - name: Merge PR if labeled
+    - name: Wait for PR checks
+      id: wait_checks
       if: steps.check_label.outputs.has_label == 'true'
       shell: bash
       env:
         GH_TOKEN: ${{ inputs.github_token }}
       run: |
         set -euo pipefail
-        echo "Waiting for required checks to pass on PR #${{ inputs.pr_number }}"
-        # Wait for all required checks/workflows to complete successfully
-        gh pr checks "${{ inputs.pr_number }}" \
-          --repo "${{ inputs.repository }}" \
-          --watch \
-          --required
+        echo "Waiting for all checks on PR #${{ inputs.pr_number }} to complete"
+        if gh pr checks "${{ inputs.pr_number }}" \
+             --repo "${{ inputs.repository }}" \
+             --watch; then
+          echo "All checks completed."
+          echo "passed=true" >> "$GITHUB_OUTPUT"
+        else
+          echo "Checks did not complete successfully."
+          echo "passed=false" >> "$GITHUB_OUTPUT"
+          exit 1
+        fi
 
+    - name: Merge PR if labeled
+      if: steps.check_label.outputs.has_label == 'true' && steps.wait_checks.outputs.passed == 'true'
+      shell: bash
+      env:
+        GH_TOKEN: ${{ inputs.github_token }}
+      run: |
+        set -euo pipefail
         echo "Merging PR #${{ inputs.pr_number }} in '${{ inputs.repository }}' (label 'auto-merge' found)"
         gh pr merge "${{ inputs.pr_number }}" \
           --repo "${{ inputs.repository }}" \
