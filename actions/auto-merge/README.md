@@ -20,6 +20,7 @@ Checks if a pull request has the `auto-merge` label, waits for all checks to pas
 | `pr_number` | Pull Request number to check and merge | ✅ Yes |  |
 | `github_token` | GitHub token with permissions to merge PRs | ✅ Yes |  |
 | `repository` | Target repository in `owner/repo` format (typically `${{ github.repository }}`) | ✅ Yes |  |
+| `merge_label` | Label that triggers auto-merge (if present on the PR) | ❌ No | `auto-merge` |
 
 ---
 

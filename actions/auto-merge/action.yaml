@@ -11,6 +11,10 @@ inputs:
   repository:
     description: "Target repository (owner/repo). Defaults to the current repository."
     required: true
+  merge_label:
+    description: "Label that triggers auto-merge"
+    required: false
+    default: "auto-merge"
 
 runs:
   using: "composite"
@@ -51,7 +55,7 @@ runs:
           fi
         fi
 
-    - name: Check for 'auto-merge' label
+    - name: Check for '${{ inputs.merge_label }}' label
       id: check_label
       shell: bash
       env:
@@ -60,7 +64,7 @@ runs:
         set -euo pipefail
         labels=$(gh pr view "${{ inputs.pr_number }}" --repo "${{ inputs.repository }}" --json labels -q '.labels[].name')
 
-        if grep -qx "auto-merge" <<< "$labels"; then
+        if grep -qx "${{ inputs.merge_label }}" <<< "$labels"; then
           echo "has_label=true" >> "$GITHUB_OUTPUT"
         else
           echo "has_label=false" >> "$GITHUB_OUTPUT"
@@ -93,7 +97,7 @@ runs:
         GH_TOKEN: ${{ inputs.github_token }}
       run: |
         set -euo pipefail
-        echo "Merging PR #${{ inputs.pr_number }} in '${{ inputs.repository }}' (label 'auto-merge' found)"
+        echo "Merging PR #${{ inputs.pr_number }} in '${{ inputs.repository }}' (label '${{ inputs.merge_label }}' found)"
         gh pr merge "${{ inputs.pr_number }}" \
           --repo "${{ inputs.repository }}" \
           --squash \
@@ -102,4 +106,4 @@ runs:
       if: steps.check_label.outputs.has_label != 'true'
       shell: bash
       run: |
-        echo "Skipping merge: PR #${{ inputs.pr_number }} in repo '${{ inputs.repository }}' does not have label 'auto-merge'"
+        echo "Skipping merge: PR #${{ inputs.pr_number }} in repo '${{ inputs.repository }}' does not have label '${{ inputs.merge_label }}'"
