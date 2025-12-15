@@ -21,8 +21,8 @@ Checks if a pull request has the `auto-merge` label, waits for all checks to pas
 | `github_token` | GitHub token with permissions to merge PRs | ✅ Yes |  |
 | `repository` | Target repository in `owner/repo` format (typically `${{ github.repository }}`) | ✅ Yes |  |
 | `merge_label` | Label that triggers auto-merge (if present on the PR) | ❌ No | `auto-merge` |
+| `merge_method` | Merge method to use (merge, squash, rebase). Defaults to `squash`. | ❌ No | `squash` |
 
----
 
 ## 🚀 Usage
 

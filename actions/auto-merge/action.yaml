@@ -15,6 +15,10 @@ inputs:
     description: "Label that triggers auto-merge"
     required: false
     default: "auto-merge"
+  merge_method:
+    description: "Merge method to use (merge, squash, rebase). Defaults to 'squash'."
+    required: false
+    default: "squash"
 
 runs:
   using: "composite"
@@ -100,7 +104,7 @@ runs:
         echo "Merging PR #${{ inputs.pr_number }} in '${{ inputs.repository }}' (label '${{ inputs.merge_label }}' found)"
         gh pr merge "${{ inputs.pr_number }}" \
           --repo "${{ inputs.repository }}" \
-          --squash \
+          --${{ inputs.merge_method }} \
 
     - name: Skip merge (label missing)
       if: steps.check_label.outputs.has_label != 'true'
