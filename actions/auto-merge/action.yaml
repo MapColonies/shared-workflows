@@ -27,7 +27,7 @@ runs:
       shell: bash
       run: |
         if command -v gh >/dev/null; then
-          echo "gh already installed"; exit 0;
+          echo "gh already instlled"; exit 0;
         fi
         sudo apt-get update -y
         sudo apt-get install -y git curl
