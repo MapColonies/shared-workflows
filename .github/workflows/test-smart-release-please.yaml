@@ -1,0 +1,23 @@
+name: Test Smart Release Please
+
+on:
+  push:
+    branches:
+      - next
+
+permissions:
+  contents: write
+
+jobs:
+  release-please:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Run Smart Release Please
+        uses: ./actions/smart-release-please
+        with:
+          token: ${{ secrets.GH_PAT }}
