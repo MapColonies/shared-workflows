@@ -38,9 +38,6 @@ jobs:
       - name: Set up chart-testing
         uses: helm/chart-testing-action@v2.6.1
 
-      - name: Install Yamllint and Yamale
-        run: pip install yamllint yamale
-
       - name: Run chart-testing (list-changed)
         id: list-changed
         run: |
@@ -56,17 +53,11 @@ jobs:
           --username ${{ secrets.ACR_PUSH_USER }}
           --password ${{ secrets.ACR_PUSH_TOKEN }}
 
-      - name: Helm lint (raw, shows real error)
-        if: steps.list-changed.outputs.changed == 'true'
-        run: |
-          helm lint helm -f helm/values.yaml --debug
-
       - name: Run chart-testing (lint)
         if: steps.list-changed.outputs.changed == 'true'
         run: > 
           ct lint 
-          --debug
-          --chart-dirs ${{ inputs.chartDirs }}
+          --chart-dirs ${{ inputs.chartDirs }} 
           --target-branch ${{ github.event.repository.default_branch }} 
           --config shared-workflows/.github/configs/ct.yaml 
           --lint-conf shared-workflows/.github/configs/lintconf.yaml

@@ -27,7 +27,7 @@ on:
         description: "The root dir or dirs (separated with commas)"
         type: string
         required: false
-        default: "."
+        default: "helm"
 
 jobs:
   helm-lint:
