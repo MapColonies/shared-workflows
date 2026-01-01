@@ -55,7 +55,6 @@ jobs:
           labels: auto-merge
 
       - name: Run auto-merge action
-        needs: create_pr
         uses: ./actions/auto-merge
         with:
           pr_number: ${{ steps.create_pr.outputs.pull-request-number }}
