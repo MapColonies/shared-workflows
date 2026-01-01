@@ -10,7 +10,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout this repo
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
 
       - name: Run auto-merge action
         uses: ./actions/auto-merge
@@ -25,17 +25,15 @@ jobs:
       - name: Checkout this repo
         uses: actions/checkout@v6
 
-      - name: Checkout test-site repo
+      - name: Checkout test repo
         uses: actions/checkout@v6
         with:
-          repository: michalby24/site-values-michal-test
+          repository: MapColonies/test-site
           token: ${{ secrets.GH_PAT }}
           ref: main
-          path: test-site
           persist-credentials: false
 
-      - name: Create empty commit in test-site
-        working-directory: test-site
+      - name: Create empty commit in test repo
         run: |
           git config user.name "GitHub Actions Bot"
           git config user.email "actions@github.com"
@@ -46,8 +44,7 @@ jobs:
         uses: peter-evans/create-pull-request@v6
         with:
           token: ${{ secrets.GH_PAT }}
-          path: test-site
-          repository: michalby24/site-values-michal-test
+          repository: MapColonies/test-site
           branch: "auto-merge-e2e-${{ github.sha }}"
           base: main
           title: 'chore: auto-merge e2e test'
@@ -62,4 +59,4 @@ jobs:
         with:
           pr_number: ${{ steps.create_pr.outputs.pull-request-number }}
           github_token: ${{ secrets.GH_PAT }}
-          repository: michalby24/site-values-michal-test
+          repository: MapColonies/test-site
