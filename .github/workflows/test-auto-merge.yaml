@@ -30,7 +30,7 @@ jobs:
         with:
           repository: MapColonies/test-site
           token: ${{ secrets.GH_PAT }}
-          ref: main
+          ref: master
           persist-credentials: false
 
       - name: Create empty commit in test repo
@@ -46,7 +46,7 @@ jobs:
           token: ${{ secrets.GH_PAT }}
           repository: MapColonies/test-site
           branch: "auto-merge-e2e-${{ github.sha }}"
-          base: main
+          base: master
           title: 'chore: auto-merge e2e test'
           body: |
             Trigger commit: https://github.com/${{ github.repository }}/commit/${{ github.sha }}
