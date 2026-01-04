@@ -30,7 +30,7 @@ runs:
         git config user.name "mapcolonies[bot]"
         git config user.email "devops[bot]@mapcolonies.com"
 
-        # Check if footer exists to prevent loop
+        # Check if footer exists (Loop Protection)
         TARGET_VER="${{ steps.calc.outputs.next_version }}"
         LAST_MSG=$(git log -1 --pretty=%B)
         
@@ -39,13 +39,37 @@ runs:
           exit 0
         fi
 
+        # Commit & Push
         git commit --allow-empty -m "chore: enforce correct rc version" -m "Release-As: $TARGET_VER"
         git push "https://x-access-token:${{ inputs.token }}@github.com/${{ github.repository }}.git" ${{ github.ref_name }}
 
         echo "SKIP_RELEASE=true" >> $GITHUB_ENV
 
+    - name: Close Stale Release PRs
+      # Only run if we are NOT skipping (meaning we are ready to run release-please)
+      if: env.SKIP_RELEASE != 'true'
+      shell: bash
+      env:
+        GH_TOKEN: ${{ inputs.token }}
+      run: |
+        echo "Checking for existing release PRs on branch ${{ github.ref_name }}..."
+        
+        # Find PRs with the autorelease label targeting our branch
+        # We store the PR number
+        PR_NUMBER=$(gh pr list \
+          --base "${{ github.ref_name }}" \
+          --label "autorelease: pending" \
+          --json number \
+          --jq '.[0].number')
+
+        if [ -n "$PR_NUMBER" ]; then
+          echo "Found stale release PR #$PR_NUMBER. Closing it to force a fresh regeneration..."
+          gh pr close "$PR_NUMBER" --delete-branch
+        else
+          echo "No stale release PRs found."
+        fi
+
     - name: Run release-please
-      # CRITICAL: Do not run if we just pushed a new commit, It will trigger another run. 
       if: env.SKIP_RELEASE != 'true'
       uses: googleapis/release-please-action@v4
       with:
