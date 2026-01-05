@@ -1,15 +1,17 @@
-# Smart Release Please Action
+# Smart Release Please
 
-This GitHub Action is a wrapper around [googleapis/release-please-action](https://github.com/googleapis/release-please-action). It's designed to enforce a specific versioning strategy for release candidates (RCs) on the `next` branch.
+This GitHub Action is a wrapper around [googleapis/release-please-action](https://github.com/googleapis/release-please-action).
+It's designed to enforce a specific versioning strategy for release candidates (RCs) on the `next` branch.
 
-When commits on the `next` branch consist only of `fix`, `chore`, or other non-`feat` types, this action ensures that `release-please` increments the RC number (e.g., `v1.2.3-rc.1` -> `v1.2.3-rc.2`) instead of incorrectly creating a new minor version release.
+It computes the intended `Release-As:` version from commit history and injects a bot commit if necessary to align RC versions before delegating to Release Please.
 
-It achieves this by:
-1.  Analyzing the commit history since the last `rc` tag on the `next` branch.
-2.  Calculating the correct semantic version for the next RC.
-3.  Creating an empty commit with a `Release-As: <version>` footer, which instructs `release-please` to use that specific version.
-
-This action is intended to be used on pushes to the `next` branch.
+## ✨ How It Works
+- Find the baseline tag:
+  - Use the latest RC tag like `vX.Y.Z-rc.N`; otherwise the latest stable tag `vX.Y.Z`. If there are no tags, treat the baseline as `0.0.0`.
+- Count real commits since the baseline (ignores bot commits and commits with a `Release-As:` footer).
+- Read commit messages based on SemVer
+- Decide the next version (RC tags look like `vMAJOR.MINOR.PATCH-rc.N`):
+- Apply the version on `next`
 
 ## 🛠 Inputs
 
@@ -17,22 +19,32 @@ This action is intended to be used on pushes to the `next` branch.
 |---------|-------------------------------------------------------------------|----------|--------------------|
 | `token` | GitHub Token (PAT) for pushing commits and triggering releases. It can be passed in order to trigger workflows after this one  | No       | `${{ github.token }}` |
 
-
 ## 🚀 Usage
+Add a workflow that runs on your RC branch (e.g., `next`) and uses this action:
 
 ```yaml
-name: Release Next
+name: Smart Release Please
 
 on:
   push:
     branches:
       - next
 
+permissions:
+  contents: write
+
 jobs:
-  release:
+  release-please:
     runs-on: ubuntu-latest
     steps:
-      - uses: MapColonies/shared-workflows/actions/smart-release-please@main
+      - name: Checkout
+        uses: actions/checkout@v6
         with:
-          token: ${{ secrets.PAT_TOKEN }} # A PAT is required for the subsequent workflow to be triggered
+          fetch-depth: 0
+
+      - name: Run Smart Release Please
+        uses: MapColonies/shared-workflows/actions/smart-release-please@smart-release-please-v1.0.0
+        with:
+          token: ${{ secrets.GH_PAT }}
 ```
+> Note: Ensure your repository contains `release-please-config.next.json` (and the appropriate `release-please-config.<branch>.json`).
