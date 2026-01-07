@@ -48,3 +48,5 @@ jobs:
           token: ${{ secrets.GH_PAT }}
 ```
 > Note: Ensure your repository contains `release-please-config.next.json` (and the appropriate `release-please-config.<branch>.json`).
+
+![Architecture Diagram](./images/architecture.png)
