@@ -19,5 +19,5 @@ jobs:
 
       - name: Run smart release-please action tests
         shell: bash
-        run: python3 -m pytest test/test_rc_align.py -v
+        run: python3 test/test_rc_align.py -v
 
