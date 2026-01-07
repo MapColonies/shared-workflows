@@ -35,7 +35,7 @@ permissions:
 
 steps:
   - name: Auto-merge PR by label
-    uses: MapColonies/shared-workflows/actions/auto-merge@auto-merge-v0.1.0
+    uses: MapColonies/shared-workflows/actions/auto-merge@auto-merge-v1.0.0
     with:
       pr_number: ${{ github.event.pull_request.number }}
       github_token: ${{ secrets.GH_PAT }}
