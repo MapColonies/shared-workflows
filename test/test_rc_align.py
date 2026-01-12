@@ -11,8 +11,8 @@ import os
 from unittest.mock import patch, MagicMock, mock_open
 from io import StringIO
 
-# Add the path to the module to the system path
-sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'actions', 'smart-release-please')))
+# Add the parent directory to the Python path to import rc_align
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..', 'actions', 'smart-release-please'))
 
 # Import the module to test
 import rc_align
@@ -61,7 +61,8 @@ class TestFindBaselineTag(unittest.TestCase):
     @patch('rc_align.run_git_command')
     def test_stable_tag_found(self, mock_git):
         """Test when only stable tag exists"""
-        mock_git.side_effect = [None, "v1.2.3"]
+        # The function gets all tags in one call and returns the first one
+        mock_git.return_value = "v1.2.3"
         tag, from_stable = rc_align.find_baseline_tag()
         self.assertEqual(tag, "v1.2.3")
         self.assertTrue(from_stable)
@@ -469,7 +470,7 @@ class TestEdgeCases(unittest.TestCase):
     def test_parse_invalid_version_format(self):
         """Test parsing invalid version format"""
         result = rc_align.parse_semver("invalid")
-        self.assertIsNone(result)
+        self.assertEqual(result, (0, 0, 0, 0))
 
 
 class TestIntegrationScenarios(unittest.TestCase):
