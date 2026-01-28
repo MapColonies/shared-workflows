@@ -1,52 +1,86 @@
 # Smart Release Please
 
-This GitHub Action is a wrapper around [googleapis/release-please-action](https://github.com/googleapis/release-please-action).
-It's designed to enforce a specific versioning strategy for release candidates (RCs) on the `next` branch.
-
-It computes the intended `Release-As:` version from commit history and injects a bot commit if necessary to align RC versions before delegating to Release Please.
+A GitHub Action that intelligently manages semantic versioning for both release candidates (RC) and stable releases. It wraps [googleapis/release-please-action](https://github.com/googleapis/release-please-action) and enforces consistent version calculation based on conventional commits.
 
 ## ✨ How It Works
-- Find the baseline tag:
-  - Use the latest RC tag like `vX.Y.Z-rc.N`; otherwise the latest stable tag `vX.Y.Z`. If there are no tags, treat the baseline as `0.0.0`.
-- Count real commits since the baseline (ignores bot commits and commits with a `Release-As:` footer).
-- Read commit messages based on SemVer
-- Decide the next version (RC tags look like `vMAJOR.MINOR.PATCH-rc.N`):
-- Apply the version on `next`
 
-## 🛠 Inputs
+### Next Branch (RC Releases)
+1. Finds baseline tag (latest RC or stable tag, defaults to `0.0.0`)
+2. Counts real commits since baseline (filters bot commits)
+3. Analyzes latest commit impact (breaking, feat, fix)
+4. Calculates next RC version
+5. Injects `Release-As:` footer if needed
+6. Closes stale PRs and runs release-please
 
-| Name    | Description                                                       | Required | Default            |
-|---------|-------------------------------------------------------------------|----------|--------------------|
-| `token` | GitHub Token (PAT) for pushing commits and triggering releases. It can be passed in order to trigger workflows after this one  | No       | `${{ github.token }}` |
+### Main/Master Branch (Stable Releases)
+1. Finds latest tag and strips RC suffix (`v1.2.3-rc.5` → `1.2.3`)
+2. Updates `.release-please-manifest.json`
+3. Runs release-please to create stable release
 
-## 🚀 Usage
-Add a workflow that runs on your RC branch (e.g., `next`) and uses this action:
+## 🔄 Version Examples
+
+| Baseline | Commit Type | Result |
+|----------|-------------|--------|
+| `v1.2.3` | `feat:` | `v1.3.0-rc.1` |
+| `v1.2.3` | `fix:` | `v1.2.4-rc.1` |
+| `v1.2.3` | `feat!:` | `v2.0.0-rc.1` |
+| `v1.3.0-rc.2` (+ 1 fix) | `fix:` | `v1.3.0-rc.3` |
+| `v1.3.0-rc.2` (+ 3 fixes) | `fix:` | `v1.3.0-rc.5` |
+
+##  Usage
 
 ```yaml
 name: Smart Release Please
 
 on:
   push:
-    branches:
-      - next
+    branches: [next, main]
 
 permissions:
   contents: write
+  pull-requests: write
 
 jobs:
   release-please:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
-        uses: actions/checkout@v6
+      - uses: actions/checkout@v6
         with:
           fetch-depth: 0
+          token: ${{ secrets.GH_PAT }}
 
-      - name: Run Smart Release Please
-        uses: MapColonies/shared-workflows/actions/smart-release-please@smart-release-please-v1.0.0
+      - uses: ./actions/smart-release-please
         with:
           token: ${{ secrets.GH_PAT }}
 ```
-> Note: Ensure your repository contains `release-please-config.next.json` (and the appropriate `release-please-config.<branch>.json`).
 
-![Architecture Diagram](./images/architecture.png)
+### Required Config Files
+
+- `release-please-config.next.json` - RC releases config
+- `release-please-config.main.json` - Stable releases config  
+- `.release-please-manifest.json` - Version manifest
+
+## 📝 Conventional Commits
+
+- `feat:` - Bumps minor version
+- `fix:` - Bumps patch version
+- `feat!:`, `fix!:`, `refactor!:` or `BREAKING CHANGE:` footer - Bumps major version
+
+## 🧪 Testing
+
+```bash
+python3 test_rc_align.py  # Run 65 comprehensive tests
+```
+
+See `TEST_CHECKLIST.md` for detailed coverage.
+
+## 🔗 Related
+
+- [Release Please](https://github.com/googleapis/release-please)
+- [Conventional Commits](https://www.conventionalcommits.org/)
+
+## 📐 Architecture
+
+For a visual overview of the workflow logic, see the architecture diagram:
+
+![Architecture](images/architecture.png)
