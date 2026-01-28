@@ -49,7 +49,7 @@ jobs:
           fetch-depth: 0
           token: ${{ secrets.GH_PAT }}
 
-      - uses: ./actions/smart-release-please
+      - uses: MapColonies/shared-workflows/actions/smart-release-please@smart-release-please-v0.1.0
         with:
           token: ${{ secrets.GH_PAT }}
 ```
@@ -72,7 +72,7 @@ jobs:
 python3 test_rc_align.py  # Run 65 comprehensive tests
 ```
 
-See `TEST_CHECKLIST.md` for detailed coverage.
+See `SRP-tests-coverage.md` for detailed coverage.
 
 ## 🔗 Related
 
