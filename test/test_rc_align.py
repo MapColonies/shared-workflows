@@ -423,10 +423,10 @@ class TestMainFunction(unittest.TestCase):
         mock_git.return_value = "feat: some feature"
         mock_baseline.side_effect = Exception("Test error")
 
-        # Main should handle exception and exit gracefully (exit 0)
+        # Main should handle exception and exit with error code 1
         with self.assertRaises(SystemExit) as cm:
             rc_align.main()
-        self.assertEqual(cm.exception.code, 0)
+        self.assertEqual(cm.exception.code, 1)
 
         output = mock_stdout.getvalue()
         self.assertIn("ERROR", output)
