@@ -24,6 +24,7 @@ A GitHub Action that intelligently manages semantic versioning for both release 
 | `v1.2.3` | `feat:` | `v1.3.0-rc.1` |
 | `v1.2.3` | `fix:` | `v1.2.4-rc.1` |
 | `v1.2.3` | `feat!:` | `v2.0.0-rc.1` |
+| `v1.2.3` | `chore:` | `v1.2.4-rc.1` |
 | `v1.3.0-rc.2` (+ 1 fix) | `fix:` | `v1.3.0-rc.3` |
 | `v1.3.0-rc.2` (+ 3 fixes) | `fix:` | `v1.3.0-rc.5` |
 
@@ -62,9 +63,35 @@ jobs:
 
 ## 📝 Conventional Commits
 
-- `feat:` - Bumps minor version
-- `fix:` - Bumps patch version
+### Supported Semver Types
+
+- `feat:` - Bumps minor version (new feature)
+- `fix:` - Bumps patch version (bug fix)
 - `feat!:`, `fix!:`, `refactor!:` or `BREAKING CHANGE:` footer - Bumps major version
+- `chore:`, `docs:`, `style:`, `test:`, `ci:`, `build:`, `perf:`, `refactor:` (without `!`) - **Still increment RC number** but don't trigger version bumps on stable
+
+### Chore Commits Behavior
+
+**Important:** Non-semver commits (like `chore:`, `docs:`, etc.) **still increment the RC counter**:
+
+```
+v1.3.0-rc.1 + chore: update deps  →  v1.3.0-rc.2
+v1.3.0-rc.2 + docs: fix typo      →  v1.3.0-rc.3
+v1.3.0-rc.3 + fix: bug            →  v1.3.0-rc.4
+```
+
+### When to Use `chore:` vs `fix:`
+
+- **Use `fix:`** when fixing bugs or issues that affect users
+  - Bug fixes, error handling, functionality corrections
+  - Will create changelog entries
+  - Bumps patch version on stable releases
+
+- **Use `chore:`** for maintenance work that doesn't affect functionality
+  - Dependency updates, configuration changes
+  - Refactoring without behavior changes
+  - Build scripts, CI/CD updates
+  - Won't appear in changelogs or affect stable version bumps
 
 ## 🧪 Testing
 
