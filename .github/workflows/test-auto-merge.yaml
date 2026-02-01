@@ -1,0 +1,62 @@
+name: Test auto-merge action
+
+on:
+  pull_request:
+    paths:
+      - "actions/auto-merge/**"
+
+jobs:
+  test-action:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout this repo
+        uses: actions/checkout@v6
+
+      - name: Run auto-merge action
+        uses: ./actions/auto-merge
+        with:
+          pr_number: ${{ github.event.pull_request.number }}
+          github_token: ${{ secrets.GH_PAT }}
+          repository: ${{ github.repository }}
+
+  test-action-with-labels:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout this repo
+        uses: actions/checkout@v6
+
+      - name: Checkout test repo
+        uses: actions/checkout@v6
+        with:
+          repository: MapColonies/test-site
+          token: ${{ secrets.GH_PAT }}
+          ref: master
+          persist-credentials: false
+
+      - name: Create empty commit in test repo
+        run: |
+          git config user.name "GitHub Actions Bot"
+          git config user.email "actions@github.com"
+          git commit --allow-empty -m "chore: empty PR for auto-merge test (${GITHUB_SHA})"
+
+      - name: Create Pull Request
+        id: create_pr
+        uses: peter-evans/create-pull-request@v6
+        with:
+          token: ${{ secrets.GH_PAT }}
+          repository: MapColonies/test-site
+          branch: "auto-merge-e2e-${{ github.sha }}"
+          base: master
+          title: 'chore: auto-merge e2e test'
+          body: |
+            Trigger commit: https://github.com/${{ github.repository }}/commit/${{ github.sha }}
+
+            Empty commit PR for auto-merge test.
+          labels: auto-merge
+
+      - name: Run auto-merge action
+        uses: ./actions/auto-merge
+        with:
+          pr_number: ${{ steps.create_pr.outputs.pull-request-number }}
+          github_token: ${{ secrets.GH_PAT }}
+          repository: MapColonies/test-site

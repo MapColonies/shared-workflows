@@ -1,0 +1,113 @@
+name: "Auto-merge PR by label"
+description: "Checks if a PR has the 'auto-merge' label and merges it using gh if present"
+
+inputs:
+  pr_number:
+    description: "Pull Request number to check and merge"
+    required: true
+  github_token:
+    description: "GitHub token with permissions to merge PRs (repo scope)"
+    required: true
+  repository:
+    description: "Target repository (owner/repo). Defaults to the current repository."
+    required: true
+  merge_label:
+    description: "Label that triggers auto-merge"
+    required: false
+    default: "auto-merge"
+  merge_method:
+    description: "Merge method to use (merge, squash, rebase). Defaults to 'squash'."
+    required: false
+    default: "squash"
+
+runs:
+  using: "composite"
+  steps:
+    - name: Install gh (for act)
+      shell: bash
+      run: |
+        if command -v gh >/dev/null; then
+          echo "gh already instlled"; exit 0;
+        fi
+        sudo apt-get update -y
+        sudo apt-get install -y git curl
+        curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg \
+          | sudo tee /usr/share/keyrings/githubcli-archive-keyring.gpg >/dev/null
+        echo "deb [signed-by=/usr/share/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main" \
+          | sudo tee /etc/apt/sources.list.d/github-cli.list >/dev/null
+        sudo apt-get update -y
+        sudo apt-get install -y gh
+
+    - name: Authenticate gh with github_token
+      shell: bash
+      env:
+        GITHUB_TOKEN: ${{ inputs.github_token }}
+        GH_TOKEN: ${{ inputs.github_token }}
+      run: |
+        set -euo pipefail
+        # If GH_TOKEN/GITHUB_TOKEN is set, gh uses it automatically; avoid forcing login.
+        if gh auth status >/dev/null 2>&1; then
+          echo "gh is already authenticated"
+        else
+          # Probe API to confirm token works; this avoids storing credentials when env vars are set.
+          if gh api user >/dev/null 2>&1; then
+            echo "gh authenticated via environment token"
+          else
+            echo "Environment token appears invalid; attempting login via --with-token"
+            echo -n "$GITHUB_TOKEN" | gh auth login --with-token
+            gh auth status
+          fi
+        fi
+
+    - name: Check for '${{ inputs.merge_label }}' label
+      id: check_label
+      shell: bash
+      env:
+        GH_TOKEN: ${{ inputs.github_token }}
+      run: |
+        set -euo pipefail
+        labels=$(gh pr view "${{ inputs.pr_number }}" --repo "${{ inputs.repository }}" --json labels -q '.labels[].name')
+
+        if grep -qx "${{ inputs.merge_label }}" <<< "$labels"; then
+          echo "has_label=true" >> "$GITHUB_OUTPUT"
+        else
+          echo "has_label=false" >> "$GITHUB_OUTPUT"
+        fi
+
+    - name: Wait for PR checks
+      id: wait_checks
+      if: steps.check_label.outputs.has_label == 'true'
+      shell: bash
+      env:
+        GH_TOKEN: ${{ inputs.github_token }}
+      run: |
+        set -euo pipefail
+        echo "Waiting for all checks on PR #${{ inputs.pr_number }} to complete"
+        if gh pr checks "${{ inputs.pr_number }}" \
+             --repo "${{ inputs.repository }}" \
+             --watch; then
+          echo "All checks completed."
+          echo "passed=true" >> "$GITHUB_OUTPUT"
+        else
+          echo "Checks did not complete successfully."
+          echo "passed=false" >> "$GITHUB_OUTPUT"
+          exit 1
+        fi
+
+    - name: Merge PR if labeled
+      if: steps.check_label.outputs.has_label == 'true' && steps.wait_checks.outputs.passed == 'true'
+      shell: bash
+      env:
+        GH_TOKEN: ${{ inputs.github_token }}
+      run: |
+        set -euo pipefail
+        echo "Merging PR #${{ inputs.pr_number }} in '${{ inputs.repository }}' (label '${{ inputs.merge_label }}' found)"
+        gh pr merge "${{ inputs.pr_number }}" \
+          --repo "${{ inputs.repository }}" \
+          --${{ inputs.merge_method }} \
+
+    - name: Skip merge (label missing)
+      if: steps.check_label.outputs.has_label != 'true'
+      shell: bash
+      run: |
+        echo "Skipping merge: PR #${{ inputs.pr_number }} in repo '${{ inputs.repository }}' does not have label '${{ inputs.merge_label }}'"

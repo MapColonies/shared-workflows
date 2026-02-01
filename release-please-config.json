@@ -29,6 +29,11 @@
         "package-name": "update-chart-version",
         "extra-files": ["README.md"]
       },
+      "actions/auto-merge": {
+        "release-type": "simple",
+        "package-name": "auto-merge",
+        "extra-files": ["README.md"]
+      },
       "actions/smart-release-please": {
         "release-type": "simple",
         "package-name": "smart-release-please",
