@@ -28,6 +28,11 @@
         "release-type": "simple",
         "package-name": "update-chart-version",
         "extra-files": ["README.md"]
+      },
+      "actions/smart-release-please": {
+        "release-type": "simple",
+        "package-name": "smart-release-please",
+        "extra-files": ["README.md"]
       }
     }
 }
