@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.0.1](https://github.com/MapColonies/shared-workflows/compare/smart-release-please-v1.0.0...smart-release-please-v1.0.1) (2026-02-10)
+
+
+### Bug Fixes
+
+* update merge branch condition to include master in version enforcement ([#112](https://github.com/MapColonies/shared-workflows/issues/112)) ([0de2edd](https://github.com/MapColonies/shared-workflows/commit/0de2edd4242bc82d630207be905269365f80ae5c))
+
 ## 1.0.0 (2026-02-01)
 
 
