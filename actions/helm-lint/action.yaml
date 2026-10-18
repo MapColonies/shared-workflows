@@ -61,6 +61,11 @@ runs:
       run: printf '%s' "$PASSWORD" | helm registry login "$REGISTRY" --username "$USERNAME" --password-stdin
       shell: bash
 
+    - name: Warn that lint is skipped
+      if: steps.list-changed.outputs.changed == 'true' && steps.login.outcome == 'skipped'
+      run: echo "::warning::Charts changed but were not linted. Pass registry, username and password to lint them."
+      shell: bash
+
     - name: Run chart-testing (lint)
       if: steps.login.outcome == 'success'
       run: ct lint --config "${{ github.action_path }}/ct.yaml" --lint-conf "${{ github.action_path }}/lintconf.yaml" --chart-dirs "${{ inputs.chartPaths }}" --target-branch "${{ github.base_ref || github.event.repository.default_branch }}"
