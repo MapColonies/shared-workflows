@@ -22,8 +22,10 @@ jobs:
         uses: ./actions/helm-lint
         id: helm-lint
         with:
-          repository: ${{ github.repository }}
-          chartPaths: "./test/helm"
+          chartPaths: "test"
+          registry: ${{ secrets.ACR_URL }}
+          username: ${{ secrets.ACR_PUSH_USER }}
+          password: ${{ secrets.ACR_PUSH_TOKEN }}
 
       - name: Print on chart change
         if: steps.helm-lint.outputs.changed == 'true'
