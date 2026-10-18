@@ -35,7 +35,7 @@ env:
   DB_USERNAME: postgres
   DB_PASSWORD: 1234
   DEFAULT_VERSIONS: 12-2.5,13-3.3,14-3.3,14-3.5,16-3.5,17-3.5
-  DEFAULT_NODE_VERSIONS: 20.x
+  DEFAULT_NODE_VERSIONS: 24.x
 
 jobs:
   set_version_inputs_if_empty:
@@ -94,7 +94,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Create comment
-        uses: peter-evans/create-or-update-comment@v4
+        uses: peter-evans/create-or-update-comment@v5
         with:
           issue-number: ${{ inputs.issue-number }}
           body: |
@@ -130,12 +130,12 @@ jobs:
 
     steps:
       - name: Check out Git repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
         with:
           ref: ${{ inputs.head-sha }}
 
       - name: Set up Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v7
         with:
           node-version: ${{ matrix.node }}
 
@@ -157,7 +157,7 @@ jobs:
 
       # Find our bot's comment
       - name: Find Comment
-        uses: peter-evans/find-comment@v3
+        uses: peter-evans/find-comment@v4
         if: always()
         id: fc
         with:
@@ -168,7 +168,7 @@ jobs:
       # If a comment exists, update it with the test result
       - name: Update comment
         if: always() && steps.fc.outputs.comment-id != ''
-        uses: peter-evans/create-or-update-comment@v4
+        uses: peter-evans/create-or-update-comment@v5
         with:
           comment-id: ${{ steps.fc.outputs.comment-id }}
           body: |

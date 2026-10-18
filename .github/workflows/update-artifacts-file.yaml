@@ -32,7 +32,7 @@ jobs:
 
     steps:
       - name: Checkout helm-charts repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
         with:
           repository: MapColonies/helm-charts
           ref: ${{ inputs.branch }}
@@ -40,9 +40,9 @@ jobs:
           token: ${{ secrets.GH_PAT }}
 
       - name: Set up Node.js
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v7
         with:
-          node-version: "20"
+          node-version: "24"
 
       - name: Modify artifacts.json
         run: |
