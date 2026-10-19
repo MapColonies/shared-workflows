@@ -4,6 +4,7 @@ on:
   pull_request:
     paths:
       - "actions/helm-lint/**"
+      - "test/helm/**"
       
 permissions:
   contents: write
@@ -18,6 +19,12 @@ jobs:
         with:
           fetch-depth: 0
 
+      # The action lints only charts changed vs the base branch.
+      - name: Touch test chart so list-changed picks it up
+        run: |
+          echo "# touched by CI" >> test/helm/values.yaml
+          git -c user.name=ci -c user.email=ci@example.com commit -qam "test: touch chart"
+
       - name: helm lint
         uses: ./actions/helm-lint
         id: helm-lint
@@ -29,4 +36,4 @@ jobs:
 
       - name: Print on chart change
         if: steps.helm-lint.outputs.changed == 'true'
-        run: echo "Charts were changed and linted."
+        run: echo "Charts were changed."

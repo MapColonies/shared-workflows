@@ -19,7 +19,7 @@ Lint (and install) run only when `registry`, `username` and `password` are all s
 `ct lint` builds chart dependencies and most charts depend on charts in the OCI registry.
 
 Lint uses the action's `ct.yaml` (no version-bump or maintainers check) and `lintconf.yaml`
-(`brackets`, `comments` and `trailing-spaces` only warn).
+(ct's default, except `brackets`, `comments` and `trailing-spaces` only warn).
 
 ## 📤 Outputs
 

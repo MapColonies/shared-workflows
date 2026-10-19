@@ -44,8 +44,11 @@ runs:
 
     - name: Run chart-testing (list-changed)
       id: list-changed
+      env:
+        CHART_DIRS: ${{ inputs.chartPaths }}
+        TARGET_BRANCH: ${{ github.base_ref || github.event.repository.default_branch }}
       run: |
-        changed=$(ct list-changed --config "${{ github.action_path }}/ct.yaml" --chart-dirs "${{ inputs.chartPaths }}" --target-branch "${{ github.base_ref || github.event.repository.default_branch }}")
+        changed=$(ct list-changed --config "$GITHUB_ACTION_PATH/ct.yaml" --chart-dirs "$CHART_DIRS" --target-branch "$TARGET_BRANCH")
         if [[ -n "$changed" ]]; then
           echo "changed=true" >> "$GITHUB_OUTPUT"
         fi
@@ -68,7 +71,10 @@ runs:
 
     - name: Run chart-testing (lint)
       if: steps.login.outcome == 'success'
-      run: ct lint --config "${{ github.action_path }}/ct.yaml" --lint-conf "${{ github.action_path }}/lintconf.yaml" --chart-dirs "${{ inputs.chartPaths }}" --target-branch "${{ github.base_ref || github.event.repository.default_branch }}"
+      env:
+        CHART_DIRS: ${{ inputs.chartPaths }}
+        TARGET_BRANCH: ${{ github.base_ref || github.event.repository.default_branch }}
+      run: ct lint --config "$GITHUB_ACTION_PATH/ct.yaml" --lint-conf "$GITHUB_ACTION_PATH/lintconf.yaml" --chart-dirs "$CHART_DIRS" --target-branch "$TARGET_BRANCH"
       shell: bash
 
     - name: Create kind cluster
@@ -77,5 +83,16 @@ runs:
 
     - name: Run chart-testing (install)
       if: inputs.install == 'true' && steps.login.outcome == 'success'
-      run: ct install --config "${{ github.action_path }}/ct.yaml" --chart-dirs "${{ inputs.chartPaths }}" --target-branch "${{ github.base_ref || github.event.repository.default_branch }}"
+      env:
+        CHART_DIRS: ${{ inputs.chartPaths }}
+        TARGET_BRANCH: ${{ github.base_ref || github.event.repository.default_branch }}
+      run: ct install --config "$GITHUB_ACTION_PATH/ct.yaml" --chart-dirs "$CHART_DIRS" --target-branch "$TARGET_BRANCH"
+      shell: bash
+
+    # Self-hosted runners keep the login in ~/.config/helm/registry/config.json.
+    - name: Log out of the registry
+      if: always() && steps.login.outcome == 'success'
+      env:
+        REGISTRY: ${{ inputs.registry }}
+      run: helm registry logout "$REGISTRY"
       shell: bash
