@@ -1,30 +1,28 @@
 name: validate-domain
-description: "Validate that helm/Chart.yaml contains annotations.domain with an allowed value"
+description: "Validate that Chart.yaml files contain annotations.domain with an allowed value"
 
 inputs:
   chart-file:
-    description: "Path to Chart.yaml"
+    description: "Path to Chart.yaml, or several whitespace-separated paths/globs (e.g. charts/*/Chart.yaml)"
     required: false
     default: "helm/Chart.yaml"
 
 runs:
   using: composite
   steps:
-    - name: Read domain annotation from Chart.yaml
-      id: get_domain
-      uses: mikefarah/yq@v4.48.2
-      with:
-        cmd: yq e '.annotations.domain' "${{ inputs.chart-file }}"
-
     - name: Validate domain
       env:
         ALLOWED_DOMAINS: "raster,vector,infra,3d,app,dem,common"
+        CHART_FILES: ${{ inputs.chart-file }}
       shell: bash
       run: |
-        DOMAIN="${{ steps.get_domain.outputs.result }}"
-        IFS=',' read -ra ALLOWED <<< "${{ env.ALLOWED_DOMAINS }}"
-
-        if ! printf "%s\n" "${ALLOWED[@]}" | grep -qx "$DOMAIN"; then
-          echo "Invalid domain: $DOMAIN"
-          exit 1
-        fi
+        failed=0
+        # Unquoted on purpose so globs expand; a glob matching nothing stays literal and yq fails on it.
+        for chart in $CHART_FILES; do
+          domain=$(yq e '.annotations.domain' "$chart") || { failed=1; continue; }
+          if ! tr ',' '\n' <<< "$ALLOWED_DOMAINS" | grep -qx "$domain"; then
+            echo "::error file=$chart::Invalid domain: $domain"
+            failed=1
+          fi
+        done
+        exit $failed
