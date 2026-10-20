@@ -4,6 +4,7 @@ on:
   pull_request:
     paths:
     - "actions/validate-domain/**"
+    - "test/validate-domain/**"
   
 jobs:
   validate-domain:
@@ -16,3 +17,30 @@ jobs:
         uses: ./actions/validate-domain
         with:
           chart-file: test/helm/Chart.yaml
+
+      - name: Test multiple charts via glob
+        uses: ./actions/validate-domain
+        with:
+          chart-file: test/helm/Chart.yaml test/validate-domain/valid-*/Chart.yaml
+
+      - name: Test invalid domain fails
+        id: invalid
+        continue-on-error: true
+        uses: ./actions/validate-domain
+        with:
+          chart-file: test/validate-domain/*/Chart.yaml
+
+      - name: Assert invalid domain failed
+        if: steps.invalid.outcome != 'failure'
+        run: exit 1
+
+      - name: Test unmatched glob fails
+        id: unmatched
+        continue-on-error: true
+        uses: ./actions/validate-domain
+        with:
+          chart-file: test/does-not-exist/*/Chart.yaml
+
+      - name: Assert unmatched glob failed
+        if: steps.unmatched.outcome != 'failure'
+        run: exit 1
