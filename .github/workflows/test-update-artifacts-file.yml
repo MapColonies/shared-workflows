@@ -22,3 +22,4 @@ jobs:
           registry: ${{ secrets.ACR_URL }}
           github_token: ${{ secrets.GH_PAT }}
           target_repo: "mapcolonies/helm-charts-test"
+          target_branch: "ci/update-artifacts-file-test"
