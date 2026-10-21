@@ -26,4 +26,3 @@ spec:
             - containerPort: 80
               name: http
           invalidField: true
-      restartPolicy: Never
