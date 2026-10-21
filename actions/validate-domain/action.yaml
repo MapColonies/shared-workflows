@@ -12,7 +12,7 @@ runs:
   steps:
     - name: Read domain annotation from Chart.yaml
       id: get_domain
-      uses: mikefarah/yq@v4.48.2
+      uses: mikefarah/yq@v4.54.1
       with:
         cmd: yq e '.annotations.domain' "${{ inputs.chart-file }}"
 

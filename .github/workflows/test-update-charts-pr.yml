@@ -8,7 +8,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout this repo
-        uses: actions/checkout@v5
+        uses: actions/checkout@v7
 
       - name: Run update-charts-pr action
         uses: ./actions/update-chart-version
