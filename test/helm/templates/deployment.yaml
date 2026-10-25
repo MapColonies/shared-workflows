@@ -20,9 +20,7 @@ spec:
         - name: {{ .Chart.Name }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
-          command: ["echo"]
-          args: ["hello world"]
+          command: ["sleep", "infinity"]
           ports:
             - containerPort: 80
               name: http
-          invalidField: true
