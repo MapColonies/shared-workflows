@@ -44,3 +44,19 @@ jobs:
       - name: Assert unmatched glob failed
         if: steps.unmatched.outcome != 'failure'
         run: exit 1
+
+      - name: Test recursive glob
+        uses: ./actions/validate-domain
+        with:
+          chart-file: test/validate-domain/**/valid-*/Chart.yaml
+
+      - name: Test empty chart-file fails
+        id: empty
+        continue-on-error: true
+        uses: ./actions/validate-domain
+        with:
+          chart-file: " "
+
+      - name: Assert empty chart-file failed
+        if: steps.empty.outcome != 'failure'
+        run: exit 1

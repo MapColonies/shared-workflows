@@ -11,7 +11,7 @@ Checks that each given `Chart.yaml` has the "domain" annotation and that the dom
 
 | Name | Required | Default | Description |
 |------|----------|---------|-------------|
-| `chart-file` | no | `helm/Chart.yaml` | Path to a `Chart.yaml`, or several whitespace-separated paths/globs (e.g. `charts/*/Chart.yaml`). A glob that matches nothing fails. |
+| `chart-file` | no | `helm/Chart.yaml` | Path to a `Chart.yaml`, or several whitespace-separated paths/globs (e.g. `charts/*/Chart.yaml`, `charts/**/Chart.yaml`). A glob that matches nothing, or an empty value, fails. |
 
 The set of allowed domains is constant (not configurable):
 

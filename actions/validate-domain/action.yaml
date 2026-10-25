@@ -16,13 +16,21 @@ runs:
         CHART_FILES: ${{ inputs.chart-file }}
       shell: bash
       run: |
+        shopt -s globstar
         failed=0
-        # Unquoted on purpose so globs expand; a glob matching nothing stays literal and yq fails on it.
+        count=0
+        # Unquoted on purpose so globs expand; a glob matching nothing stays literal and fails the -f check.
         for chart in $CHART_FILES; do
+          count=$((count + 1))
+          [ -f "$chart" ] || { echo "::error::No such Chart.yaml: $chart"; failed=1; continue; }
           domain=$(yq e '.annotations.domain' "$chart") || { failed=1; continue; }
-          if ! tr ',' '\n' <<< "$ALLOWED_DOMAINS" | grep -qx "$domain"; then
+          if [ "$domain" = null ]; then
+            echo "::error file=$chart::Missing annotations.domain"
+            failed=1
+          elif ! tr ',' '\n' <<< "$ALLOWED_DOMAINS" | grep -qx "$domain"; then
             echo "::error file=$chart::Invalid domain: $domain"
             failed=1
           fi
         done
+        [ "$count" -gt 0 ] || { echo "::error::chart-file is empty: no Chart.yaml to validate"; exit 1; }
         exit $failed
