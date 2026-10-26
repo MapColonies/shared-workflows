@@ -58,7 +58,7 @@ jobs:
         working-directory: ./helm
 
   update-helm-artifact-yaml:
-    uses: MapColonies/shared-workflows/.github/workflows/update-artifacts-file.yaml@v5
+    uses: MapColonies/shared-workflows/.github/workflows/update-artifacts-file.yaml@v6
     needs: build-and-push-helm
     secrets: inherit
     if: "${{ inputs.scope != '' }}"
