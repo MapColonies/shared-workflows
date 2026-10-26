@@ -22,12 +22,12 @@ jobs:
 
     steps:
       - name: Checkout repository from latest commit
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       - name: Setup helm
-        uses: azure/setup-helm@v3.5
+        uses: azure/setup-helm@v5
         with:
-          version: "v3.12.0"
+          version: "v3.22.1"
 
       - name: Login to registry
         run: |
@@ -58,7 +58,7 @@ jobs:
         working-directory: ./helm
 
   update-helm-artifact-yaml:
-    uses: MapColonies/shared-workflows/.github/workflows/update-artifacts-file.yaml@v5
+    uses: MapColonies/shared-workflows/.github/workflows/update-artifacts-file.yaml@v6
     needs: build-and-push-helm
     secrets: inherit
     if: "${{ inputs.scope != '' }}"

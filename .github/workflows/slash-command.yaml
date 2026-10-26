@@ -14,7 +14,7 @@ jobs:
     steps:
       - name: Slash Command Dispatch
         id: scd
-        uses: peter-evans/slash-command-dispatch@v4
+        uses: peter-evans/slash-command-dispatch@v5
         with:
           token: ${{ secrets.GH_PAT }}
           commands: |
@@ -26,7 +26,7 @@ jobs:
             comment-creation-date=${{ github.event.comment.created_at }}
       - name: Edit comment with error message
         if: steps.scd.outputs.error-message
-        uses: peter-evans/create-or-update-comment@v4
+        uses: peter-evans/create-or-update-comment@v5
         with:
           comment-id: ${{ github.event.comment.id }}
           body: |

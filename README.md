@@ -80,6 +80,8 @@ This workflow should be used in your pull requests; here linters run, Snyk check
 | enableOpenApiCheck | Flag to enable OpenAPI lint checks                       | boolean | no        | true            |
 | openApiFilePath    | Path to the OpenAPI file (if enableOpenApiCheck is true) | string  | no        | ./openapi3.yaml |
 | usePostgres    | Flag whether to initiate postgres service or not             | boolean | no        | false           |
+| nodeVersion        | Node.js version for the eslint and openapi-lint jobs     | string  | no        | 24.x            |
+| nodeVersions       | JSON array of Node.js versions for the test matrix       | string  | no        | ["22.x", "24.x"] |
 
 ```mermaid
 %%{
