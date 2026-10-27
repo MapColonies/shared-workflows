@@ -3,6 +3,18 @@ name: pull_request
 on:
   workflow_call:
     inputs:
+      pathFilters:
+        description: >-
+          dorny/paths-filter filters (YAML) gating jobs on changed files. Keys: lint, openapi, helm, deps (security),
+          tests, docker. A missing key, or an empty value, runs that job on every PR.
+        type: string
+        required: false
+        default: ""
+      skipReleasePleasePrs:
+        description: "Skip all jobs on release-please PRs (head branch release-please--*)"
+        type: boolean
+        required: false
+        default: true
       enableOpenApiCheck:
         description: "Flag to enable OpenAPI lint checks"
         type: boolean
@@ -25,13 +37,42 @@ on:
         default: true
 
 jobs:
+  changes:
+    # Every job needs this one, so skipping it on a release-please PR skips them all.
+    if: ${{ !(inputs.skipReleasePleasePrs && startsWith(github.head_ref, 'release-please--')) }}
+    runs-on: ubuntu-latest
+    outputs:
+      lint: ${{ steps.filter.outputs.lint }}
+      openapi: ${{ steps.filter.outputs.openapi }}
+      helm: ${{ steps.filter.outputs.helm }}
+      deps: ${{ steps.filter.outputs.deps }}
+      tests: ${{ steps.filter.outputs.tests }}
+      docker: ${{ steps.filter.outputs.docker }}
+    steps:
+      - name: Check out Git repository
+        if: ${{ inputs.pathFilters != '' }}
+        uses: actions/checkout@v7
+
+      - name: Detect changed files
+        id: filter
+        if: ${{ inputs.pathFilters != '' }}
+        uses: dorny/paths-filter@ceb8a2b8f2d89434be7ff52d3de7ec3738c5cc9d # v4.0.3
+        with:
+          filters: ${{ inputs.pathFilters }}
+          # Empty token makes the action diff with git instead of the PR files API,
+          # so callers don't have to grant pull-requests: read.
+          token: ""
+
   helm-lint:
-    if: ${{ inputs.enableHelmLint == true }}
+    needs: changes
+    if: ${{ inputs.enableHelmLint == true && needs.changes.outputs.helm != 'false' }}
     uses: MapColonies/shared-workflows/.github/workflows/helm-lint.yaml@v5
     secrets: inherit
 
   eslint:
     name: Run eslint
+    needs: changes
+    if: ${{ needs.changes.outputs.lint != 'false' }}
     runs-on: ubuntu-latest
 
     steps:
@@ -52,7 +93,8 @@ jobs:
   openapi-lint:
     name: Run openapi-lint
     runs-on: ubuntu-latest
-    if: ${{ inputs.enableOpenApiCheck == true }}
+    needs: changes
+    if: ${{ inputs.enableOpenApiCheck == true && needs.changes.outputs.openapi != 'false' }}
 
     steps:
       - name: Check out Git repository
@@ -73,6 +115,8 @@ jobs:
         run: npx @redocly/cli lint --format=github-actions ${{ inputs.openApiFilePath }}
 
   security:
+    needs: changes
+    if: ${{ needs.changes.outputs.deps != 'false' }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@master
@@ -84,6 +128,8 @@ jobs:
 
   tests:
     name: Run Tests
+    needs: changes
+    if: ${{ needs.changes.outputs.tests != 'false' }}
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -128,6 +174,8 @@ jobs:
 
   build_image:
     name: Build Image
+    needs: changes
+    if: ${{ needs.changes.outputs.docker != 'false' }}
     runs-on: ubuntu-latest
 
     steps:

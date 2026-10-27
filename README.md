@@ -80,6 +80,8 @@ This workflow should be used in your pull requests; here linters run, Snyk check
 | enableOpenApiCheck | Flag to enable OpenAPI lint checks                       | boolean | no        | true            |
 | openApiFilePath    | Path to the OpenAPI file (if enableOpenApiCheck is true) | string  | no        | ./openapi3.yaml |
 | usePostgres    | Flag whether to initiate postgres service or not             | boolean | no        | false           |
+| pathFilters | [dorny/paths-filter](https://github.com/dorny/paths-filter) filters (YAML) that gate jobs on changed files. Keys: `lint`, `openapi`, `helm`, `deps` (Snyk), `tests`, `docker`. A missing key, or an empty value, runs that job on every PR. | string | no | '' |
+| skipReleasePleasePrs | Skip all jobs on release-please PRs (head branch `release-please--*`) | boolean | no | true |
 
 ```mermaid
 %%{
