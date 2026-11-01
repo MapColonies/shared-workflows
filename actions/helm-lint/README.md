@@ -33,7 +33,7 @@ Lint uses the action's `ct.yaml` (no version-bump or maintainers check) and `lin
 
 ```yaml
 - name: Lint and Test Charts
-  uses: MapColonies/shared-workflows/actions/helm-lint@helm-lint-v1.1.0
+  uses: MapColonies/shared-workflows/actions/helm-lint@helm-lint-v1.2.0
   with:
     chartPaths: infra/monitoring,infra/sftpgo
     registry: ${{ secrets.ACR_URL }}
