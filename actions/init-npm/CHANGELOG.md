@@ -1,5 +1,17 @@
 # Changelog
 
+## [1.2.1](https://github.com/MapColonies/shared-workflows/compare/init-npm-v1.2.0...init-npm-v1.2.1) (2026-11-01)
+
+
+### Dependency Updates
+
+* bump actions to latest majors, Node to 24.x, and make deps/build releasable ([#116](https://github.com/MapColonies/shared-workflows/issues/116)) ([92aba05](https://github.com/MapColonies/shared-workflows/commit/92aba051f5f57c1ef61bf2c8747b93bc26162434))
+
+
+### Build System
+
+* upgrade setup-node action to version 6 ([#114](https://github.com/MapColonies/shared-workflows/issues/114)) ([7a939bf](https://github.com/MapColonies/shared-workflows/commit/7a939bf4564b9b954a3579c8fbe3306a084283c2))
+
 ## [1.2.0](https://github.com/MapColonies/shared-workflows/compare/init-npm-v1.1.0...init-npm-v1.2.0) (2025-11-16)
 
 
