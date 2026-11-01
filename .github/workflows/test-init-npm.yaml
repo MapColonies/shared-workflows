@@ -4,6 +4,7 @@ on:
   pull_request:
     paths:
       - "actions/init-npm/**"
+      - ".github/workflows/test-init-npm.yaml"
 
 jobs:
   test-init-npm:

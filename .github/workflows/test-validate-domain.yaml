@@ -5,6 +5,7 @@ on:
     paths:
     - "actions/validate-domain/**"
     - "test/validate-domain/**"
+    - ".github/workflows/test-validate-domain.yaml"
   
 jobs:
   validate-domain:

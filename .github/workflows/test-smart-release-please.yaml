@@ -4,6 +4,7 @@ on:
   pull_request:
     paths:
       - 'actions/smart-release-please/**'
+      - '.github/workflows/test-smart-release-please.yaml'
       
 jobs:
   test-action:
