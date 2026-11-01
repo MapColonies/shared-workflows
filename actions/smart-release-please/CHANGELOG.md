@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.0.2](https://github.com/MapColonies/shared-workflows/compare/smart-release-please-v1.0.1...smart-release-please-v1.0.2) (2026-11-01)
+
+
+### Dependency Updates
+
+* bump actions to latest majors, Node to 24.x, and make deps/build releasable ([#116](https://github.com/MapColonies/shared-workflows/issues/116)) ([92aba05](https://github.com/MapColonies/shared-workflows/commit/92aba051f5f57c1ef61bf2c8747b93bc26162434))
+
 ## [1.0.1](https://github.com/MapColonies/shared-workflows/compare/smart-release-please-v1.0.0...smart-release-please-v1.0.1) (2026-02-10)
 
 
