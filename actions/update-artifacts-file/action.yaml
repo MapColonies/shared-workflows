@@ -36,7 +36,7 @@ runs:
   using: "composite"
   steps:
     - name: Checkout helm chart repository
-      uses: actions/checkout@v5
+      uses: actions/checkout@v7
       with:
         repository: ${{ inputs.target_repo }}
         token: ${{ inputs.github_token }}

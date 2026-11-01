@@ -82,5 +82,5 @@ to indicate success or failure.
 | `issue-number` | The GitHub issue or PR number (used for commenting test results) |
 | `comment-creation-date` | The timestamp of the original slash command comment |
 | `versions` | (Optional) Comma-separated list of PostGIS versions to test (e.g., 14-3.3,15-3.5) |
-| `node-versions` | (Optional) Comma-separated list of Node.js versions to test (default: 20.x) |
+| `node-versions` | (Optional) Comma-separated list of Node.js versions to test (default: 24.x) |
 | `db-schema` | Schema name to create and apply migrations into |

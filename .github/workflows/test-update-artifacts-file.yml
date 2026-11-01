@@ -10,7 +10,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@v5
+        uses: actions/checkout@v7
 
       - name: Update artifacts.json
         uses: ./actions/update-artifacts-file
@@ -21,4 +21,5 @@ jobs:
           artifact_tag: "5.0.17"
           registry: ${{ secrets.ACR_URL }}
           github_token: ${{ secrets.GH_PAT }}
-          target_repo: "mapcolonies/helm-charts-test"
+          target_repo: "MapColonies/helm-charts-new"
+          target_branch: "ci/update-artifacts-file-test"
