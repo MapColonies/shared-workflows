@@ -33,7 +33,7 @@ This GitHub Action builds and publishes a Helm chart to a specified registry and
 
 ```yaml
 - name: Update artifacts.json
-  uses: MapColonies/shared-workflows/actions/update-artifacts-file@update-artifacts-file-v1.2.0
+  uses: MapColonies/shared-workflows/actions/update-artifacts-file@update-artifacts-file-v1.2.1
   with:
     domain: infra
     artifact_name: "sftpgo"
