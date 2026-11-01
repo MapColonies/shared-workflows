@@ -4,6 +4,7 @@ on:
   pull_request:
     paths:
       - "actions/auto-merge/**"
+      - ".github/workflows/test-auto-merge.yaml"
 
 jobs:
   test-action:

@@ -5,6 +5,7 @@ on:
     paths:
       - "actions/helm-lint/**"
       - "test/helm/**"
+      - ".github/workflows/test-helm-lint.yml"
       
 permissions:
   contents: write
