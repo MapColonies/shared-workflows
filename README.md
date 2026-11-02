@@ -83,6 +83,17 @@ This workflow should be used in your pull requests; here linters run, Snyk check
 | pathFilters | [dorny/paths-filter](https://github.com/dorny/paths-filter) filters (YAML) that gate jobs on changed files. Keys: `lint`, `openapi`, `helm`, `deps` (Snyk), `tests`, `docker`. A missing key, or an empty value, runs that job on every PR. | string | no | '' |
 | skipReleasePleasePrs | Skip all jobs on release-please PRs (head branch `release-please--*`) | boolean | no | true |
 
+Example `pathFilters`. Keep `tests` broad: a too-narrow filter silently skips tests.
+```yaml
+    with:
+      pathFilters: |
+        lint: ['src/**', 'tests/**', '*.json', '*.mjs']
+        openapi: ['openapi3.yaml']
+        helm: ['helm/**']
+        tests: ['src/**', 'tests/**', 'package*.json', 'config/**']
+        docker: ['Dockerfile', 'src/**', 'package*.json']
+```
+
 ```mermaid
 %%{
   init: {
