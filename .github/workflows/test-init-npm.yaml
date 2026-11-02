@@ -4,6 +4,9 @@ on:
   pull_request:
     paths:
       - "actions/init-npm/**"
+      - "test/package*.json"
+      - "test/*.ts"
+      - "test/tsconfig.json"
       - ".github/workflows/test-init-npm.yaml"
 
 jobs:

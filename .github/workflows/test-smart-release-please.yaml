@@ -4,6 +4,7 @@ on:
   pull_request:
     paths:
       - 'actions/smart-release-please/**'
+      - 'test/test_rc_align.py'
       - '.github/workflows/test-smart-release-please.yaml'
       
 jobs:
