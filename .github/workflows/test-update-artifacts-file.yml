@@ -4,6 +4,7 @@ on:
   pull_request:
     paths:
       - "actions/update-artifacts-file/**"
+      - ".github/workflows/test-update-artifacts-file.yml"
 
 jobs:
   update-artifacts-json:
